@@ -1,0 +1,96 @@
+body {
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+
+    // Helps fonts on OSX looks more consistent with other systems
+    // Isn't currently in button styles due to performance concerns
+    * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    *, *:hover, *:active, *:visited, *:enabled, *:default, *:disabled {
+        outline: 0 none transparent;
+    }
+
+    .app-root {
+        z-index: 15;
+    }
+
+    .container-fixed {
+        max-width: 980px;
+    }
+
+   }   .mat-sidenav {
+        width: 100%;
+        max-width: 325px;
+        background-color: #01579B !important;
+   }
+        #nav-logo {
+            width: auto;
+            padding: 15px;
+            height: auto;
+            display: block;
+            margin: 30px auto;
+        }
+
+        .mat-button {
+            width: 100%;
+            position: relative;
+            bottom: 0;
+            margin: 24px 0;
+         
+        }
+
+            .mat-list-item {
+                height: 64px;
+                color: #FFFFFF !important;
+			}
+
+                    .mat-icon {
+                        text-align: right;
+                        color: #FFFFFF;
+                        flex: 1 1 auto;
+                    }
+
+
+
+            .mat-list-item.active {
+                background-color: darken(#01579B, 3);
+            }
+
+
+
+    .app-content {
+        margin: 5%;
+        padding-left: 4%;
+    }
+
+    .mat-menu-item {
+        .mat-icon[svgicon] {
+            line-height: 1;
+        }
+    }
+
+    .mat-toolbar {
+        font-size: 400;
+	}
+        .mat-toolbar-row {
+            width: 85vw;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 600px) {
+            .mat-toolbar-row {
+                width: 100%;
+            }
+        }
+
+        span#logo {
+            margin-left: 10px;
+            font-size: 400;
+        }
+
+        .mat-icon {
+            cursor: pointer;
+        }
+

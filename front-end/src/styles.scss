@@ -1,0 +1,182 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-size: 14pt;
+    line-height: 28pt;
+    font-size: 300;
+}
+
+h1 {
+    font-size: 300;
+}
+
+h2 {
+    font-size: 400;
+}
+
+h1 > button {
+    vertical-align: bottom !important;
+}
+
+h1 > .mat-icon-button {
+    line-height: 25px !important;
+}
+
+.container-fluid {
+    width: 85vw;
+    max-width: 940px;
+    margin: 0 auto;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.text-container {
+    text-align: justify;
+
+    p {
+        margin: 10px 0 25px 0;
+    }
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid \9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+
+.mat-simple-snackbar-action {
+    color: #FF8F00;
+}
+
+body.mtor-app .hide-on-mtor {
+    display: none !important;
+}
+
+.mapboxgl-ctrl-compass, .mapbox-improve-map {
+    display: none !important;
+}
+
+@media (max-width: 480px) {
+    .mat-icon {
+        font-size: 24px !important;
+    }
+}
+
+.mat-datepicker-content {
+    line-height: 1;
+}
+
+/* Utility Classes */
+.p-0 {
+    padding: 0 !important;
+}
+
+.m-0 {
+    margin: 0 !important;
+}
+
+.full-width, .full-width-half-desktop {
+    width: 100%;
+}
+
+.full-width-imp {
+    width: 100% !important;
+}
+
+@media (max-width: 540px) {
+    .full-width-mobile {
+        width: 100%;
+    }
+}
+
+@media (min-width: 940px) {
+    .full-width-half-desktop {
+        width: 50%;
+    }
+}
+
+.mat-raised-button.mat-accent {
+    color: #FFF;
+}
+
+img.emojione {
+    width: 20px !important;
+    height: 20px !important;
+    vertical-align: -4px;
+    margin-right: 10px;
+}
+
+#badges {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+
+    @media (max-width: 480px) {
+        margin-top: 0;
+    }
+
+    .mat-list-item {
+        display: inline-block;
+        list-style-type: none;
+        margin-top: 30px;
+
+        img {
+            width: 204px;
+            height: 60px;
+            transition: 0.25s ease-in-out;
+
+            @media (max-width: 480px) {
+                width: 170px;
+                height: 50px;
+            }
+        }
+
+        img:hover {
+            transform: scale(1.05);
+        }
+    }
+}
+
+/* Calendar */
+/* @import '~angular-calendar/scss/angular-calendar'; */
+
+.cal-cell-row:hover, .cal-header > .cal-cell:hover, .cal-out-month:hover {
+    background-color: inherit !important;
+}
+
+.cal-out-month .cal-cell-top {
+    display: none;
+}
+
+.cal-disabled {
+    background-color: #F9F9F9;
+    pointer-events: none;
+}
+
+.cal-disabled .cal-day-number {
+    opacity: 0.1;
+}
+
+/* Bugfixes */
+.mat-tab-group.mat-primary .mat-tab-label:not(.mat-tab-disabled):focus, .mat-tab-group.mat-primary .mat-tab-link:not(.mat-tab-disabled):focus, .mat-tab-nav-bar.mat-primary .mat-tab-label:not(.mat-tab-disabled):focus, .mat-tab-nav-bar.mat-primary .mat-tab-link:not(.mat-tab-disabled):focus {
+    background-color: transparent !important;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

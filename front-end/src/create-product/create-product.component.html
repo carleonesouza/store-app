@@ -1,0 +1,84 @@
+<mat-toolbar color="primary">
+  <span>List of Products</span>
+  <span class="spacer"></span>
+  <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="container mat-elevation-z8">
+  <div class="form">
+    <mat-form-field floatPlaceholder="never" color="warn">
+      <input matInput #filter placeholder="Filter Products">
+    </mat-form-field>
+  </div>
+  <mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
+    <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.title}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="state">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>State</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.state}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="url">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Url</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.url}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="created_at">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Created at</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.created_at}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="updated_at">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Updated at</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.updated_at}}</mat-cell>
+    </ng-container>
+
+    <!-- actions -->
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> <span class="example-spacer "></span>Actions </mat-header-cell>
+
+      <mat-cell *matCellDef="let row; let i=index;">
+        <button mat-icon-button matTooltip="Edit button"
+          (click)="startEdit(i, row.id, row.title, row.state, row.url, row.created_at, row.updated_at)">
+          <mat-icon color="accent" aria-label="Edit">edit</mat-icon>
+        </button>
+
+        <span class="example-spacer "></span>
+
+        <button mat-icon-button matTooltip="Delete button"
+        (click)="deleteItem(i, row.id, row.title, row.state, row.url)">
+          <mat-icon color="warn" aria-label="Delete">delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+    <span class="example-spacer "></span>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  <div class="no-results" [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'">
+    No results
+  </div>
+
+  <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 25, 100]">
+  </mat-paginator>
+</div>
+<div class="corner-position">
+  <button mat-fab  matTooltip="Add button" (click)="addNew()">
+    <mat-icon color="primary" aria-label="Add ">add</mat-icon>
+  </button>
+</div>

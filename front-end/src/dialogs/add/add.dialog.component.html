@@ -1,0 +1,27 @@
+<div class="container" fxLayout="column" fxLayoutAlign="space-evenly none" >
+  <div class="card-header">Add a new Product</div>
+  <div class="item item-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Outline form field</mat-label>
+      <input matInput placeholder="Placeholder">
+    </mat-form-field>
+  </div>
+  <div class="item item-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Outline form field</mat-label>
+      <input matInput placeholder="Placeholder">
+    </mat-form-field>
+  </div>
+  <div class="item item-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Outline form field</mat-label>
+      <input matInput placeholder="Placeholder">
+    </mat-form-field>
+  </div>
+  <div class="item-buttons">
+    <button mat-button class="style-button" [type]="submit" [disabled]="!formControl.valid" [mat-dialog-close]="1"
+      (click)="confirmAdd()">Save</button>
+      <span class="spacer"></span>
+    <button mat-button class="style-button" (click)="onNoClick()" tabindex="-1">Cancel</button>
+  </div>
+</div>

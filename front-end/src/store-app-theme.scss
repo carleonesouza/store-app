@@ -1,0 +1,83 @@
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+$md-store-app-theme: (
+    50:#E0F2F1,
+	100:#B2DFDB,
+	200:#80CBC4,
+	300:#4DB6AC,
+	400:#26A69A,
+	500:#009688,
+	600:#00897B,
+	700:#00796B,
+	800:#00695C,
+	900:#004D40,
+	A100:#A7FFEB,
+	A200:#64FFDA,
+	A400:#1DE9B6,
+	A700:#00BFA5,
+	contrast: (
+		50 : #000000,
+		100 : #000000,
+		200 : #000000,
+		300 : #ffffff,
+		400 : #ffffff,
+		500 : #ffffff,
+		600 : #ffffff,
+		700 : #ffffff,
+		800 : #ffffff,
+		900 : #ffffff,
+		A100 : #000000,
+		A200 : #000000,
+		A400 : #ffffff,
+		A700 : #ffffff,
+	)
+);
+
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+
+$site-app-primary: mat-palette($md-store-app-theme,600,500);
+$site-app-accent:  mat-palette($md-store-app-them, A200, A100, A700);
+
+// The warn palette is optional (defaults to red).
+$store-app-warn:    mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$store-app-theme:    mat-light-theme($store-app-primary, $store-app-accent, $store-app-warn);
+$store-app-dark-theme:   mat-dark-theme($store-app-primary, $store-app-accent, $store-app-warn);
+
+$white: mat-palette($md-store-app-theme, 50, 50, 50);
+$white-theme: mat-light-theme($white, $white, $white);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($md-store-app-theme);
+
+.dark {
+    @include angular-material-theme($store-app-dark-theme);
+}
+
+.white {
+    @include angular-material-theme($white-theme);
+}
+
+.mat-toolbar.mat-primary {
+    background-color: mat-color($store-app-primary, 500);
+}
+
+a, a:visited, a:focus, a:active {
+    color: mat-color($store-app-accent);
+}
+
+a:hover {
+    color: mat-color($store-app-accent, 900);
+}
