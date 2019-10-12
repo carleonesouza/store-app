@@ -1,33 +1,43 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {Component, Inject} from '@angular/core';
-import {DataService} from '../../services/data.service';
-import {FormControl, Validators} from '@angular/forms';
-import {Issue} from '../../models/issue';
+import { Component, Inject, OnInit, Input } from '@angular/core';
+import { DataService } from '../../services/data.service';
+import { Product } from '../../models/product';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-add.dialog',
   templateUrl: './add.dialog.component.html',
   styleUrls: ['./add.dialog.component.scss']
 })
+export class AddDialogComponent implements OnInit {
+  action: string;
+  localData: any;
+  @Input() productForm: FormGroup;
 
-export class AddDialogComponent {
   constructor(public dialogRef: MatDialogRef<AddDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Issue,
-              public dataService: DataService) { }
+              @Inject(MAT_DIALOG_DATA) public data: Product,
+              public dataService: DataService, public snackBar: MatSnackBar, private formBuilder: FormBuilder) { }
 
-  formControl = new FormControl('', [
-    Validators.required
-    // Validators.email,
-  ]);
+              ngOnInit() {
+                this.productForm = this.formBuilder.group({
+                  nameProduct: ['', [Validators.required, Validators.minLength(3)]],
+                  descriptionProduct: ['', [Validators.required, Validators.minLength(3)]],
+                  priceProduct: ['', [Validators.required, Validators.minLength(2)]],
+                });
+              }
 
-  getErrorMessage() {
-    return this.formControl.hasError('required') ? 'Required field' :
-      this.formControl.hasError('email') ? 'Not a valid email' :
-        '';
+
+  get nameProduct() {
+    return this.productForm.get('nameProduct');
   }
 
-  submit() {
-  // emppty stuff
+  get descriptionProduct() {
+    return this.productForm.get('descriptionProduct');
+  }
+
+  get priceProduct() {
+    return this.productForm.get('priceProduct');
   }
 
   onNoClick(): void {
@@ -35,6 +45,20 @@ export class AddDialogComponent {
   }
 
   public confirmAdd(): void {
-    this.dataService.addIssue(this.data);
+    this.dataService.addProduct(this.data);
+  }
+
+  onSubmit() {
+    if (this.productForm.valid.valueOf()) {
+      const name = this.productForm.value.nameProduct;
+      const price = this.productForm.value.priceProduct;
+      const description = this.productForm.value.descriptionProduct;
+      const saveProduct = { name, price, description };
+      this.dataService.addProduct(new Product(saveProduct));
+      this.dialogRef.close();
+    } else {
+      this.dialogRef.close();
+      this.snackBar.open('The form is empty, please fill it!!', '', { duration: 3000 });
+    }
   }
 }

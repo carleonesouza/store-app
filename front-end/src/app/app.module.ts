@@ -7,7 +7,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { StoreAppMaterialModule } from '../store-app-material-module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FrontStoreComponent, DialogComponent } from '../front-store/front-store.component';
+import { FrontStoreComponent } from '../front-store/front-store.component';
 import { AppComponent } from './app.component';
 import { HomeComponent } from '../home/home.component';
 import { NotFoundComponent } from '../not-found/not-found.component';

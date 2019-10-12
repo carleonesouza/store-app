@@ -1,21 +1,21 @@
 <div class="container" fxLayout="column" fxLayoutAlign="space-evenly none" >
-  <div class="card-header">Add a new Product</div>
+  <div class="card-header">Are you sure to delete a Product ?</div>
   <div class="item item-4">
     <mat-form-field appearance="outline">
-      <mat-label>Outline form field</mat-label>
-      <input matInput placeholder="Placeholder">
+      <mat-label>Product Name</mat-label>
+      <input matInput #input class="form-control" placeholder="Product Name" [(ngModel)]="data.title" name="title">
+    </mat-form-field>
+  </div>
+  <div class="item item-4">
+    <mat-form-field appearance="outline">
+      <mat-label>Product Description</mat-label>
+      <input matInput #input class="form-control" placeholder="Product Description" [(ngModel)]="data.url" name="url">
     </mat-form-field>
   </div>
   <div class="item item-4">
     <mat-form-field appearance="outline">
       <mat-label>Outline form field</mat-label>
-      <input matInput placeholder="Placeholder">
-    </mat-form-field>
-  </div>
-  <div class="item item-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Outline form field</mat-label>
-      <input matInput placeholder="Placeholder">
+      <input matInput #input class="form-control" placeholder="Product Description" [(ngModel)]="data.state" name="state" >
     </mat-form-field>
   </div>
   <div class="item-buttons">

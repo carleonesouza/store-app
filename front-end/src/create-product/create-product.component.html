@@ -17,34 +17,19 @@
             The actual rendered columns are set as a property on the row definition" -->
 
     <!-- ID Column -->
-    <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="title">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.title}}</mat-cell>
+    <ng-container matColumnDef="description">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.description}}</mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="state">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>State</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.state}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="url">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Url</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.url}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="created_at">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Created at</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.created_at}}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="updated_at">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Updated at</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.updated_at}}</mat-cell>
+    <ng-container matColumnDef="price">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Price</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.price | currency:"BRL"}}</mat-cell>
     </ng-container>
 
     <!-- actions -->
@@ -53,14 +38,14 @@
 
       <mat-cell *matCellDef="let row; let i=index;">
         <button mat-icon-button matTooltip="Edit button"
-          (click)="startEdit(i, row.id, row.title, row.state, row.url, row.created_at, row.updated_at)">
+          (click)="startEdit(i, row._id, row.name, row.description, row.price)">
           <mat-icon color="accent" aria-label="Edit">edit</mat-icon>
         </button>
 
         <span class="example-spacer "></span>
 
         <button mat-icon-button matTooltip="Delete button"
-        (click)="deleteItem(i, row.id, row.title, row.state, row.url)">
+        (click)="deleteItem(i, row._id, row.name, row.description, row.price)">
           <mat-icon color="warn" aria-label="Delete">delete</mat-icon>
         </button>
       </mat-cell>

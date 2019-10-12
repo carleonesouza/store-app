@@ -4,12 +4,13 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Issue } from '../models/issue';
+import { Product } from '../models/product';
 import { TableDataSource } from '../services/table-data-source';
 import { AddDialogComponent } from '../dialogs/add/add.dialog.component';
 import { EditDialogComponent } from '../dialogs/edit/edit.dialog.component';
 import { DeleteDialogComponent } from '../dialogs/delete/delete.dialog.component';
 import { fromEvent } from 'rxjs';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-create-product',
@@ -18,11 +19,12 @@ import { fromEvent } from 'rxjs';
 })
 
 export class CreateProductComponent implements OnInit {
-  displayedColumns = ['id', 'title', 'state', 'url', 'created_at', 'updated_at', 'actions'];
+  displayedColumns = ['name', 'description', 'price', 'actions'];
   exampleDatabase: DataService | null;
+  snackBar: MatSnackBar |null;
   dataSource: TableDataSource | null;
   index: number;
-  id: number;
+  id: string;
 
   constructor(public httpClient: HttpClient, public dialog: MatDialog,
               public dataService: DataService) { }
@@ -39,9 +41,9 @@ export class CreateProductComponent implements OnInit {
     this.loadData();
   }
 
-  addNew(issue: Issue) {
+  addNew(product: Product) {
     const dialogRef = this.dialog.open(AddDialogComponent, {
-      data: { issue },
+      data: { product },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -54,19 +56,19 @@ export class CreateProductComponent implements OnInit {
     });
   }
 
-  startEdit(i: number, id: number, title: string, state: string, url: string, created_at: string, updated_at: string) {
-    this.id = id;
+  startEdit(i: number, _id: string, name: string, description: string, price: number) {
+    this.id = _id;
     // index row is used just for debugging proposes and can be removed
     this.index = i;
     console.log(this.index);
     const dialogRef = this.dialog.open(EditDialogComponent, {
-      data: { id, title, state, url, created_at, updated_at },
+      data: { _id, name, description, price },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
         // When using an edit things are little different, firstly we find record inside DataService by id
-        const foundIndex = this.exampleDatabase.dataChange.value.findIndex((x) => x.id === this.id);
+        const foundIndex = this.exampleDatabase.dataChange.value.findIndex((x) => x._id === this.id);
         // Then you update that record using data from dialogData (values you enetered)
         this.exampleDatabase.dataChange.value[foundIndex] = this.dataService.getDialogData();
         // And lastly refresh table
@@ -75,16 +77,16 @@ export class CreateProductComponent implements OnInit {
     });
   }
 
-  deleteItem(i: number, id: number, title: string, state: string, url: string) {
+  deleteItem(i: number, _id: string, name: string, description: string, price: number) {
     this.index = i;
-    this.id = id;
+    this.id = _id;
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
-      data: { id, title, state, url },
+      data: { _id, name, description, price },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
-        const foundIndex = this.exampleDatabase.dataChange.value.findIndex((x) => x.id === this.id);
+        const foundIndex = this.exampleDatabase.dataChange.value.findIndex((x) => x._id === this.id);
         // for delete we use splice in order to remove single object from DataService
         this.exampleDatabase.dataChange.value.splice(foundIndex, 1);
         this.refreshTable();
@@ -116,7 +118,7 @@ export class CreateProductComponent implements OnInit {
     }*/
 
   public loadData() {
-    this.exampleDatabase = new DataService(this.httpClient);
+    this.exampleDatabase = new DataService(this.httpClient, this.snackBar);
     this.dataSource = new TableDataSource(this.exampleDatabase, this.paginator, this.sort);
     fromEvent(this.filter.nativeElement, 'keyup')
       // .debounceTime(150)

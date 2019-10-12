@@ -10,8 +10,13 @@ const productSchema = new Schema({
 	
 },
 {
+	locale: {String}
+ }
+,
+{
 	timestamps: true,
-	collation:'products', locale: 'en_US' 
+	collation:'products'
+	
 });
 
 module.exports = mongoose.model('Product', productSchema);
