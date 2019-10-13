@@ -37,7 +37,7 @@ export class TableDataSource extends DataSource<Product> {
       this._paginator.page,
     ];
 
-    this._exampleDatabase.getAllIssues();
+    this._exampleDatabase.getAllProducts();
 
     return merge(...displayDataChanges).pipe(map(() => {
       // Filter data

@@ -1,27 +1,32 @@
 <div class="container" fxLayout="column" fxLayoutAlign="space-evenly none" >
-  <div class="card-header">Are you sure to delete a Product ?</div>
+  <div class="card-header">Are you sure about DELETE a Product ?</div>
+  <mat-dialog-content [formGroup]="productForm" (ngSubmit)="onSubmit()">
   <div class="item item-4">
     <mat-form-field appearance="outline">
       <mat-label>Product Name</mat-label>
-      <input matInput #input class="form-control" placeholder="Product Name" [(ngModel)]="data.title" name="title">
+      <input  matInput type="text" formControlName="nameProduct" class="form-control"/>
+      <mat-error *ngIf="nameProduct.errors">Please, type a valid name</mat-error>
     </mat-form-field>
   </div>
   <div class="item item-4">
     <mat-form-field appearance="outline">
       <mat-label>Product Description</mat-label>
-      <input matInput #input class="form-control" placeholder="Product Description" [(ngModel)]="data.url" name="url">
+      <input matInput placeholder="Product Description" type="text" formControlName="descriptionProduct">
+      <mat-error *ngIf="descriptionProduct.errors">Please, type a valid description</mat-error>
     </mat-form-field>
   </div>
   <div class="item item-4">
     <mat-form-field appearance="outline">
-      <mat-label>Outline form field</mat-label>
-      <input matInput #input class="form-control" placeholder="Product Description" [(ngModel)]="data.state" name="state" >
+      <mat-label>Product Price</mat-label>
+      <input matInput placeholder="Product Price" type="number" formControlName="priceProduct">
+      <mat-error *ngIf="priceProduct.errors">Please, type a valid price</mat-error>
     </mat-form-field>
   </div>
   <div class="item-buttons">
-    <button mat-button class="style-button" [type]="submit" [disabled]="!formControl.valid" [mat-dialog-close]="1"
-      (click)="confirmAdd()">Save</button>
+    <button mat-button class="style-button" [type]="submit" [disabled]="!productForm.valid" [mat-dialog-close]="1"
+      (click)="onSubmit()">Delete</button>
       <span class="spacer"></span>
     <button mat-button class="style-button" (click)="onNoClick()" tabindex="-1">Cancel</button>
   </div>
+</mat-dialog-content>
 </div>

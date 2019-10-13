@@ -6,9 +6,7 @@ exports.create = async (req, res) => {
 	const newProduct = new Product(req.body);
 	const product = await newProduct
 		.save()
-		.then(result =>
-			console.log(result),
-			res.status(200).json(result))
+		.then(()=> { console.log('Product Save Successfully!')})
 		.catch((err) => {
 			console.log(err)
 			res.status(500).json({
@@ -21,31 +19,21 @@ exports.create = async (req, res) => {
 // To list all products
 exports.findAll = async (req, res) => {
 	const products = await Product.find({});
-	return res.status(200).send(products)
-		.then(result =>
-			console.log(result),
-			res.status(200).json(result))
-		.catch((err) => {
-			console.log(err)
-			res.status(500).json({
-				error: err
-			})
-		});
-};
+	res.status(200).send(products);
+  };
+
 
 // To find a product by id
 exports.findById = async (req, res) => {
 	const myProduct = await Product.findById({ _id: req.params.id })
-		.then(result =>
-			console.log(result),
-			res.status(200).json(result))
+		.then(()=> { console.log('A Product was founded  Successfully!')})
 		.catch((err) => {
 			console.log(err)
 			res.status(500).json({
 				error: err
 			})
 		});
-	return res.status(200).send(myProduct);
+	res.status(200).send({ message: 'The product has been created successfully !',myProduct});
 };
 
 // To update a product by id
@@ -56,28 +44,25 @@ exports.update = async (req, res) => {
 	}
 	const changeProduct = await Product.updateOne({ _id: req.body._id },
 		{ $set: { name: req.body.name, description: req.body.description, price: req.body.price } })
-		.then(result =>
-			console.log(result))
+		.then(()=> { console.log('A Product  was updated Successfully!')})
 		.catch((err) => {
 			console.log(err)
 			res.status(500).json({
 				error: err
 			})
 		})
-	res.status(200).send(changeProduct);
+	res.status(200).send({ message: 'The product has been created successfully !', changeProduct});
 };
 
 // To delete a product by id
 exports.delete = async (req, res) => {
-	const deleteProduct = await Product.findByIdAndDelete(req.params._id)
-		.then(result =>
-			console.log(result),
-			res.status(200).json(result))
+	const deleteProduct = await Product.findOneAndDelete({ _id: req.body._id })
+		.then(()=> { console.log('A Product was DELETE Successfully!')})
 		.catch((err) => {
 			console.log(err)
 			res.status(500).json({
 				error: err
 			})
 		});
-	return res.status(200).send({ message: 'The product has deleted successfully!', deleteProduct });
+	res.status(200).send({ message: 'The product has deleted successfully!', deleteProduct });
 };
