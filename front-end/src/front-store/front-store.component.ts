@@ -4,40 +4,13 @@ import { trigger, transition, style, animate, state } from '@angular/animations'
 import { DataService } from '../services/data.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Product } from 'src/models/product';
-
-
-@Component({
-  selector: 'app-dialog',
-
-  styleUrls: ['./front-store.component.scss']
-})
-
-export class DialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<DialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-}
+import { PaymentDialogComponent } from 'src/dialogs/payment-dialog/payment-dialog.component';
+import { VenderService } from 'src/services/vender.service';
 
 @Component({
   selector: 'app-front-store',
   templateUrl: './front-store.component.html',
   styleUrls: ['./front-store.component.scss'],
-  animations: [
-    trigger('myAwesomeAnimation', [
-      state('hidden', style({
-        opacity: '0',
-      })),
-      state('show', style({
-        opacity: '1',
-        transform: 'translateY(-10%)'
-      })),
-      transition('hidden => show', animate('10ms ease-in')),
-    ]),
-  ]
 })
 export class FrontStoreComponent implements OnInit {
   sellProducts = [];
@@ -46,7 +19,6 @@ export class FrontStoreComponent implements OnInit {
   state = 'hidden';
   show = false;
   amount = 0;
-  productAmount = 0;
   test = [];
   id: any;
   errorMsg: any;
@@ -54,30 +26,30 @@ export class FrontStoreComponent implements OnInit {
 
 
   constructor(private dialog: MatDialog, private snackBar: MatSnackBar, private fb: FormBuilder,
-              private dataService: DataService) {
+              private dataService: DataService, private venderService: VenderService) {
     this.createForm();
   }
 
   ngOnInit() {
-   /*  this.storeService.getProducts()
-      .subscribe(
-        (data: Product[]) => this.sellProducts = data,
-        error => this.errorMsg = error
-      );
+    this.dataService.getProducts()
+    .subscribe(
+      (data: Product[]) => this.sellProducts = data,
+      error => this.snackBar.open('Sorry, occurred an error ' + error, 'RETRY', {
+        duration: 3000,
+      })
+    );
 
-    this.storeService.getProducts().subscribe( res => {
-        res.map((item) => {
-          this.id = item._id;
-        });
-      }); */
-
+    this.dataService.getProducts().subscribe( res => {
+      res.map((item) => {
+        this.id = item._id;
+      });
+    });
   }
 
   private createForm() {
     this.updateProductForm = this.fb.group({
       name: ['', Validators.required],
       price: ['', Validators.required],
-      amount: '',
       description: ['', Validators.required]
     });
   }
@@ -94,34 +66,28 @@ export class FrontStoreComponent implements OnInit {
     console.log('clicado');
   }
 
-  animateMe() {
-    this.state = (this.state === 'hidden' ? 'show' : 'hidden');
-    if (this.state === 'hidden') {
-      this.show = false;
-    } else {
-      this.show = true;
+  addAmount(product: Product) {
+    if (this.amount >= 0 ) {
+    this.dataService.setAmount(product);
     }
+    this.amount = this.dataService.getAmount();
+    console.log(this.amount);
   }
 
-  addAmount() {
-    if (this.amount >= 0) {
-      this.productAmount += this.amount + 1;
-    }
-  }
-
-  onClear() {
+  onClean(product: Product) {
     if (this.amount > 0) {
-      this.amount = this.amount - 1;
+      this.dataService.setOnClean(product);
     } else {
       this.snackBar.open('Amount is already 0!', '', {
         duration: 3000,
       });
     }
+    this.amount = this.dataService.getAmount();
   }
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogComponent, {
-      width: '350px',
-      data: {}
+  openDialog(product: Product): void {
+    const dialogRef = this.dialog.open(PaymentDialogComponent, {
+      disableClose: true,
+      data: product
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -130,4 +96,3 @@ export class FrontStoreComponent implements OnInit {
   }
 
 }
-

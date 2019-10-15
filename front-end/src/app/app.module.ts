@@ -13,10 +13,12 @@ import { HomeComponent } from '../home/home.component';
 import { NotFoundComponent } from '../not-found/not-found.component';
 import { CreateProductComponent } from '../create-product/create-product.component';
 import { SplashComponent } from '../splash/splash.component';
-import {DataService} from '../services/data.service';
-import {AddDialogComponent} from '../dialogs/add/add.dialog.component';
-import {EditDialogComponent} from '../dialogs/edit/edit.dialog.component';
-import {DeleteDialogComponent} from '../dialogs/delete/delete.dialog.component';
+import { DataService } from '../services/data.service';
+import { AddDialogComponent } from '../dialogs/add/add.dialog.component';
+import { EditDialogComponent } from '../dialogs/edit/edit.dialog.component';
+import { DeleteDialogComponent } from '../dialogs/delete/delete.dialog.component';
+import { PaymentDialogComponent } from '../dialogs/payment-dialog/payment-dialog.component';
+import { VenderService } from 'src/services/vender.service';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import {DeleteDialogComponent} from '../dialogs/delete/delete.dialog.component';
     DeleteDialogComponent,
     CreateProductComponent,
     SplashComponent,
+    PaymentDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,12 +43,13 @@ import {DeleteDialogComponent} from '../dialogs/delete/delete.dialog.component';
     FlexLayoutModule,
     HttpClientModule,
   ],
-  providers: [DataService],
+  providers: [DataService, VenderService],
   entryComponents: [
     AppComponent,
     AddDialogComponent,
     EditDialogComponent,
-    DeleteDialogComponent
+    DeleteDialogComponent,
+    PaymentDialogComponent
 ],
   exports: [ SplashComponent ],
   bootstrap: [AppComponent]

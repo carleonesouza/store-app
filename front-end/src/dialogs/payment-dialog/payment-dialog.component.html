@@ -1,0 +1,37 @@
+<div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
+  <div class="card-header">Payment Method</div>
+  <mat-dialog-content [formGroup]="venderForm" (ngSubmit)="onSubmit()">
+    <div class="item item-4">
+      <mat-form-field appearance="legacy">
+        <mat-label>Product Name</mat-label>
+        <input matInput type="text" formControlName="formName" class="form-control"/>
+      </mat-form-field>
+    </div>
+    <div class="item item-4">
+      <mat-form-field appearance="legacy">
+        <mat-label>Amount</mat-label>
+        <input matInput placeholder="Amount" type="number" formControlName="formAmount">
+      </mat-form-field>
+      <mat-form-field appearance="legacy">
+        <mat-label>Type Value of Payment</mat-label>
+        <input matInput placeholder="Value" type="number" formControlName="formSold">
+      </mat-form-field>
+    </div>
+    <div class="item item-4">
+      <mat-form-field appearance="legacy">
+        <mat-label>Total</mat-label>
+        <input matInput placeholder="Product Price" type="number" formControlName="formTotal">
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" >  
+      <button mat-button class="style-button" (click)="onCancel()" tabindex="-1">Cancel</button>     
+      <button mat-button class="style-button" [type]="submit" [disabled]="!venderForm.valid" [mat-dialog-close]="1"
+      (click)="onSubmit()">Cash</button>  
+      <button mat-button class="style-button" aria-label="Example icon-button with a heart icon" [type]="submit" [disabled]="!venderForm.valid" [mat-dialog-close]="1"
+      (click)="onSubmit()">Debit </button>  
+      <button mat-button  class="style-button" aria-label="Example icon-button with a heart icon" [type]="submit" [disabled]="!venderForm.valid" [mat-dialog-close]="1"
+      (click)="onSubmit()">Credit </button>
+    </div>
+  </mat-dialog-content>
+
+</div>

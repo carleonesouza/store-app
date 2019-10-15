@@ -58,7 +58,6 @@ export class EditDialogComponent implements OnInit {
   onSubmit() {
     if (this.productForm.valid.valueOf()) {
       const _id = this.data._id;
-      const amount = this.data.amount;
       const name = this.productForm.value.nameProduct;
       const price = this.productForm.value.priceProduct;
       const description = this.productForm.value.descriptionProduct;

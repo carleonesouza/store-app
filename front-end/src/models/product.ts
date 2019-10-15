@@ -8,7 +8,6 @@ export class Product {
   _id?: any;
   name: string;
   price: number;
-  amount?: number;
   description: string;
 
   constructor(obj?: any) {
@@ -20,6 +19,5 @@ export class Product {
     this.name = obj.name;
     this.description = obj.description;
     this.price = obj.price;
-    this.amount = 0;
   }
 }

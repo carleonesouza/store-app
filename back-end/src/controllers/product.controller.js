@@ -33,7 +33,7 @@ exports.findById = async (req, res) => {
 				error: err
 			})
 		});
-	res.status(200).send({ message: 'The product has been created successfully !',myProduct});
+	res.status(200).send(myProduct);
 };
 
 // To update a product by id
