@@ -1,23 +1,33 @@
 <div fxLayout="column" fxLayoutAlign="center">
   <h2>List of Product to sell</h2>
+  <app-splash *ngIf="loading"></app-splash>
   <mat-card class="example-card" *ngFor="let product of sellProducts">
-    <mat-grid-list cols="5" class="grid" rowHeight="100px">
-      <mat-grid-tile> {{product.name }}</mat-grid-tile>
-      <mat-grid-tile> {{product.description }}</mat-grid-tile>
-      <mat-grid-tile> {{product.price | currency:"BRL" }} </mat-grid-tile>
-      <mat-grid-tile> {{ amount }}</mat-grid-tile>
-      <mat-grid-tile>
-        <button mat-stroked-button class="payment-buttons" (click)="addAmount(product)">Add</button>
-      </mat-grid-tile>
-    </mat-grid-list>
-    <mat-divider></mat-divider>
-    <div fxLayout="row" fxLayoutAlign="end center">
-      <button mat-button  class="payment-buttons" aria-label="button clean amount" (click)="onClean(product)">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>{{product.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-grid-list cols="5" class="grid" rowHeight="100px">
+        <mat-grid-tile> {{product.description }}</mat-grid-tile>
+        <mat-grid-tile> {{product.price | currency:"BRL" }} </mat-grid-tile>
+        <mat-grid-tile>{{ product.quantity }}</mat-grid-tile>
+        <mat-grid-tile>
+          <button mat-stroked-button class="payment-buttons" (click)="addAmount(product)">Add</button>
+        </mat-grid-tile>
+      </mat-grid-list>
+      <mat-divider></mat-divider>
+      <div fxLayout="row" fxLayoutAlign="end end" class="position-end">
+        <!-- <button mat-button aria-label="button clean amount" (click)="onClean(product)">
         Clean <mat-icon>clear_all</mat-icon>
       </button>
-      <button mat-button class="payment-buttons" aria-label="button finish purchase " 
-      (click)="openDialog(product)">
+      <button mat-button class="payment-buttons" aria-label="button finish purchase " (click)="openDialog(product)">
         Finish <mat-icon>done_all</mat-icon>
+      </button> -->
+      </div>
+    </mat-card-content>
+    <div class="corner-position">
+      <button mat-fab matTooltip="finish purchase" (click)="openDialog(product)">
+        <mat-icon color="primary" aria-label="finish purchase">done_all</mat-icon>
       </button>
     </div>
   </mat-card>

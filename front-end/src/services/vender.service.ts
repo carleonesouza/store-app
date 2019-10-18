@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Product } from '../models/product';
+import { Product } from '../models/product.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
-import { Vender } from 'src/models/vender';
+import { Vender } from 'src/models/vender.model';
 
 @Injectable()
 export class VenderService {
-  private amountToSold = 0;
   productAmount = 0;
   private readonly API_URL = 'http://localhost:3000/api';
 

@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Class responsible to generate new Products on the Store
  */
@@ -9,6 +10,7 @@ export class Product {
   name: string;
   price: number;
   description: string;
+  quantity = 0 ;
 
   constructor(obj?: any) {
     if (!obj) {
@@ -19,5 +21,6 @@ export class Product {
     this.name = obj.name;
     this.description = obj.description;
     this.price = obj.price;
+    this.quantity = obj.quantity;
   }
 }

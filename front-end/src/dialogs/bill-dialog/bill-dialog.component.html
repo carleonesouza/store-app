@@ -25,12 +25,12 @@
     </div>
     <div fxLayout="row" fxLayoutAlign="end center" >  
       <button mat-button class="style-button" (click)="onCancel()" tabindex="-1">Cancel</button>     
-      <button mat-button class="style-button" [type]="submit" [disabled]="!venderForm.valid" [mat-dialog-close]="1"
-      (click)="onSubmit()">Cash</button>  
-      <button mat-button class="style-button" aria-label="Example icon-button with a heart icon" [type]="submit" [disabled]="!venderForm.valid" [mat-dialog-close]="1"
-      (click)="onSubmit()">Debit </button>  
-      <button mat-button  class="style-button" aria-label="Example icon-button with a heart icon" [type]="submit" [disabled]="!venderForm.valid" [mat-dialog-close]="1"
-      (click)="onSubmit()">Credit </button>
+      <button mat-button class="style-button"  aria-label="Cash button" [type]="submit" 
+      [disabled]="!venderForm.valid" [mat-dialog-close]="1"  (click)="onSubmit()">Cash</button>  
+      <button mat-button class="style-button" aria-label="Debit button" [type]="submit"
+       [disabled]="!venderForm.valid" [mat-dialog-close]="1"   (click)="onSubmit()">Debit </button>  
+      <button mat-button  class="style-button" aria-label="Credit button" [type]="submit"
+       [disabled]="!venderForm.valid" [mat-dialog-close]="1"  (click)="onSubmit()">Credit </button>
     </div>
   </mat-dialog-content>
 

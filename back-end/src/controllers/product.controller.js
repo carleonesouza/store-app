@@ -26,7 +26,7 @@ exports.findAll = async (req, res) => {
 // To find a product by id
 exports.findById = async (req, res) => {
 	const myProduct = await Product.findById({ _id: req.params.id })
-		.then(()=> { console.log('A Product was founded  Successfully!')})
+		.then((data)=> { return data })
 		.catch((err) => {
 			console.log(err)
 			res.status(500).json({
@@ -43,26 +43,27 @@ exports.update = async (req, res) => {
 		return res.status(400).send({ message: 'The fields is empty, please, fill it!' });
 	}
 	const changeProduct = await Product.updateOne({ _id: req.body._id },
-		{ $set: { name: req.body.name, description: req.body.description, price: req.body.price } })
-		.then(()=> { console.log('A Product  was updated Successfully!')})
+		{ $set: { name: req.body.name, description: req.body.description, price: req.body.price, amount: req.body.amount } })
+		.then((data)=> { return data })
 		.catch((err) => {
 			console.log(err)
 			res.status(500).json({
 				error: err
 			})
 		})
-	res.status(200).send({ message: 'The product has been created successfully !', changeProduct});
+	res.status(200).send(changeProduct);
 };
 
 // To delete a product by id
 exports.delete = async (req, res) => {
 	const deleteProduct = await Product.findOneAndDelete({ _id: req.body._id })
-		.then(()=> { console.log('A Product was DELETE Successfully!')})
+		.then(()=> { 
+			console.log('A Product was DELETE Successfully!')})
 		.catch((err) => {
 			console.log(err)
 			res.status(500).json({
 				error: err
 			})
 		});
-	res.status(200).send({ message: 'The product has deleted successfully!', deleteProduct });
+	res.status(200).send(deleteProduct);
 };

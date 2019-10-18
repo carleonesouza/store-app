@@ -4,10 +4,9 @@ import {
     ComponentFactoryResolver,
     ViewContainerRef,
     ViewEncapsulation} from '@angular/core';
-import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { CreateProductComponent } from 'src/create-product/create-product.component';
 import { DataService } from 'src/services/data.service';
+import { FrontStoreComponent } from 'src/front-store/front-store.component';
 
 
 @Component({
@@ -22,16 +21,16 @@ export class SplashComponent implements OnInit {
                 private viewContainerRef: ViewContainerRef, private dataService: DataService) { }
 
     ngOnInit() {
-        /* this.dataService.getAllIssues().
+        this.dataService.getProducts().
         pipe(take(1)).
         subscribe(() => {
             this.goToPage();
         })
-        .unsubscribe(); */
+        .unsubscribe();
     }
 
     goToPage() {
-        const factory = this.componentFactoryResolver.resolveComponentFactory(CreateProductComponent);
+        const factory = this.componentFactoryResolver.resolveComponentFactory(FrontStoreComponent);
         const ref = this.viewContainerRef.createComponent(factory);
         ref.changeDetectorRef.detectChanges();
     }

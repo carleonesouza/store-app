@@ -1,24 +1,24 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject, OnInit, Input } from '@angular/core';
 import { DataService } from '../../services/data.service';
-import { Vender } from '../../models/vender';
-import { Product } from '../../models/product';
+import { Vender } from '../../models/vender.model';
+import { Product } from '../../models/product.model';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { from } from 'rxjs';
 import { VenderService } from 'src/services/vender.service';
 
 @Component({
-  selector: 'app-payment-dialog',
-  templateUrl: './payment-dialog.component.html',
-  styleUrls: ['./payment-dialog.component.scss']
+  selector: 'app-bill-dialog',
+  templateUrl: './bill-dialog.component.html',
+  styleUrls: ['./bill-dialog.component.scss']
 })
-export class PaymentDialogComponent implements OnInit {
+export class BillDialogComponent implements OnInit {
   product: Product;
   localData: any;
   @Input() venderForm: FormGroup;
 
-  constructor(public dialogRef: MatDialogRef<PaymentDialogComponent>,
+  constructor(public dialogRef: MatDialogRef<BillDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Product,
               public dataService: DataService, public snackBar: MatSnackBar,
               private formBuilder: FormBuilder, private venderService: VenderService) { }
@@ -29,7 +29,7 @@ export class PaymentDialogComponent implements OnInit {
       formName: [{ value: this.data.name, disabled: true }, [Validators.compose([
         Validators.required, Validators.minLength(2),
         Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')])]],
-      formAmount: [{ value: this.dataService.getAmount(), disabled: true }, [Validators.compose([
+      formAmount: [{ value: '', disabled: true }, [Validators.compose([
         Validators.required, Validators.minLength(2),
         Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')])]],
       formSold: [this.data.price, [Validators.compose([

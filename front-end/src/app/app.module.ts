@@ -3,10 +3,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppRoutingModule } from './app-routing.module';
 import { StoreAppMaterialModule } from '../store-app-material-module';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FrontStoreComponent } from '../front-store/front-store.component';
 import { AppComponent } from './app.component';
 import { HomeComponent } from '../home/home.component';
@@ -17,8 +17,8 @@ import { DataService } from '../services/data.service';
 import { AddDialogComponent } from '../dialogs/add/add.dialog.component';
 import { EditDialogComponent } from '../dialogs/edit/edit.dialog.component';
 import { DeleteDialogComponent } from '../dialogs/delete/delete.dialog.component';
-import { PaymentDialogComponent } from '../dialogs/payment-dialog/payment-dialog.component';
-import { VenderService } from 'src/services/vender.service';
+import { VenderService } from '../services/vender.service';
+import { BillDialogComponent } from '../dialogs/bill-dialog/bill-dialog.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,7 @@ import { VenderService } from 'src/services/vender.service';
     DeleteDialogComponent,
     CreateProductComponent,
     SplashComponent,
-    PaymentDialogComponent,
+    BillDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,7 +49,7 @@ import { VenderService } from 'src/services/vender.service';
     AddDialogComponent,
     EditDialogComponent,
     DeleteDialogComponent,
-    PaymentDialogComponent
+    BillDialogComponent
 ],
   exports: [ SplashComponent ],
   bootstrap: [AppComponent]

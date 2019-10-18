@@ -10,7 +10,7 @@
 
 .mat-card-title{
 	text-align: center;
-	font-size: 0.8rem;
+	font-size: 1rem;
 }
 .header{
 	margin: 0%;
@@ -31,7 +31,7 @@
 	margin: 2px;
 }
 .payment-buttons {
-	padding: 5px;
+	padding: 10%;
   }
 
 .corner-position {
@@ -39,7 +39,11 @@
 	bottom: 5rem;
 	right: 1.6rem;
   }
-
+.example-header-image {
+	background-image: url('https://cervejariaarraialdajuda.com.br/wp-content/themes/cervejaria/imgs/cervejaria_arraial_y.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+  }
 .description-button {
 	margin-left: 5px;
 	padding: 0;
@@ -47,6 +51,16 @@
 	height: 3rem;
 	text-align: center;
 }
+.position-end{
+	float: right;
+	margin-top: 10px;
+	padding-right: 6%;
+}
+.corner-position {
+	position: fixed;
+	bottom: 1rem;
+	right: 1.6rem;
+  }
 
   @media(min-width: 1024px) {
 	 .app-fab--absolute {

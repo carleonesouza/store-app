@@ -1,96 +1,56 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
-import { trigger, transition, style, animate, state } from '@angular/animations';
+import {Component, OnInit, Input} from '@angular/core';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { DataService } from '../services/data.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Product } from 'src/models/product';
-import { PaymentDialogComponent } from 'src/dialogs/payment-dialog/payment-dialog.component';
-import { VenderService } from 'src/services/vender.service';
+import { Product } from 'src/models/product.model';
+import { BillDialogComponent } from 'src/dialogs/bill-dialog/bill-dialog.component';
+import { Quantity } from 'src/models/quantity.model';
+import { Vender } from 'src/models/vender.model';
 
 @Component({
   selector: 'app-front-store',
   templateUrl: './front-store.component.html',
   styleUrls: ['./front-store.component.scss'],
 })
+
 export class FrontStoreComponent implements OnInit {
   sellProducts = [];
-  sellProduct: Product;
-  condition: boolean;
-  state = 'hidden';
-  show = false;
-  amount = 0;
-  test = [];
-  id: any;
-  errorMsg: any;
-  updateProductForm: FormGroup;
+  @Input() sellQuantity: Quantity[];
+  loading = true;
 
 
-  constructor(private dialog: MatDialog, private snackBar: MatSnackBar, private fb: FormBuilder,
-              private dataService: DataService, private venderService: VenderService) {
-    this.createForm();
-  }
+
+  constructor(private dialog: MatDialog, private snackBar: MatSnackBar,
+              private dataService: DataService) {  }
 
   ngOnInit() {
     this.dataService.getProducts()
-    .subscribe(
-      (data: Product[]) => this.sellProducts = data,
-      error => this.snackBar.open('Sorry, occurred an error ' + error, 'RETRY', {
-        duration: 3000,
-      })
-    );
+      .subscribe(
+        (data: Product[]) => {
+        this.sellProducts = data,
+        this.loading = false;
+      },
+        (error: string) => this.snackBar.open('Sorry, occurred an error ' + error, 'RETRY', {
+          duration: 3000,
+        })
+      );
 
-    this.dataService.getProducts().subscribe( res => {
-      res.map((item) => {
-        this.id = item._id;
-      });
-    });
-  }
-
-  private createForm() {
-    this.updateProductForm = this.fb.group({
-      name: ['', Validators.required],
-      price: ['', Validators.required],
-      description: ['', Validators.required]
-    });
-  }
-
-
-  openSnackBar() {
-    this.snackBar.open('Payment complent Successfully !!', '', {
-      duration: 3000,
-    });
-  }
-
-  add() {
-    this.condition = true;
-    console.log('clicado');
   }
 
   addAmount(product: Product) {
-    if (this.amount >= 0 ) {
-    this.dataService.setAmount(product);
-    }
-    this.amount = this.dataService.getAmount();
-    console.log(this.amount);
+    this.dataService.changeQuantity(product);
   }
 
-  onClean(product: Product) {
-    if (this.amount > 0) {
-      this.dataService.setOnClean(product);
-    } else {
-      this.snackBar.open('Amount is already 0!', '', {
-        duration: 3000,
-      });
-    }
-    this.amount = this.dataService.getAmount();
+  onSelectedProducts(product: Product) {
+
   }
+
   openDialog(product: Product): void {
-    const dialogRef = this.dialog.open(PaymentDialogComponent, {
+    const dialogRef = this.dialog.open(BillDialogComponent, {
       disableClose: true,
       data: product
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');
     });
   }
