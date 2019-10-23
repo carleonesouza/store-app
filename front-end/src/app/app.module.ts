@@ -19,6 +19,7 @@ import { EditDialogComponent } from '../dialogs/edit/edit.dialog.component';
 import { DeleteDialogComponent } from '../dialogs/delete/delete.dialog.component';
 import { VenderService } from '../services/vender.service';
 import { BillDialogComponent } from '../dialogs/bill-dialog/bill-dialog.component';
+import { ConfirmationDialogComponent } from 'src/dialogs/confirmation/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { BillDialogComponent } from '../dialogs/bill-dialog/bill-dialog.componen
     CreateProductComponent,
     SplashComponent,
     BillDialogComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +51,8 @@ import { BillDialogComponent } from '../dialogs/bill-dialog/bill-dialog.componen
     AddDialogComponent,
     EditDialogComponent,
     DeleteDialogComponent,
-    BillDialogComponent
+    BillDialogComponent,
+    ConfirmationDialogComponent
 ],
   exports: [ SplashComponent ],
   bootstrap: [AppComponent]

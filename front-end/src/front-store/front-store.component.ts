@@ -5,6 +5,7 @@ import { Product } from 'src/models/product.model';
 import { BillDialogComponent } from 'src/dialogs/bill-dialog/bill-dialog.component';
 import { Quantity } from 'src/models/quantity.model';
 import { Vender } from 'src/models/vender.model';
+import { ConfirmationDialogComponent } from 'src/dialogs/confirmation/confirmation-dialog.component';
 
 @Component({
   selector: 'app-front-store',
@@ -40,15 +41,8 @@ export class FrontStoreComponent implements OnInit {
     this.dataService.changeQuantity(product);
   }
 
-  onSelectedProducts(product: Product) {
-
-  }
-
-  openDialog(product: Product): void {
-    const dialogRef = this.dialog.open(BillDialogComponent, {
-      disableClose: true,
-      data: product
-    });
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent);
 
     dialogRef.afterClosed().subscribe(() => {
       console.log('The dialog was closed');

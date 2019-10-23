@@ -56,7 +56,8 @@ exports.update = async (req, res) => {
 
 // To delete a product by id
 exports.delete = async (req, res) => {
-	const deleteProduct = await Product.findOneAndDelete({ _id: req.body._id })
+	console.log(req);
+	const deleteProduct = await Product.findByIdAndDelete({ _id: req.body._id })
 		.then(()=> { 
 			console.log('A Product was DELETE Successfully!')})
 		.catch((err) => {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Product } from '../models/product.model';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
 import { catchError } from 'rxjs/operators';
 import { Quantity } from 'src/models/quantity.model';
@@ -24,8 +24,13 @@ export class DataService {
   constructor(private httpClient: HttpClient, private snackBar: MatSnackBar) {
     this.quantity = [];
     this.vender = [];
-    this.localVender = new Vender();
   }
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+    })
+  };
 
   get data(): Product[] {
     return this.dataChange.value;
@@ -94,7 +99,7 @@ export class DataService {
 
   // To delete a Product by id
   deleteProduct(product: Product): void {
-    this.httpClient.request('delete', `${this.API_URL}/product/${product._id}`, { body: product })
+   this.httpClient.request('delete', `${this.API_URL}/products/${product._id}`, { body: product })
       .subscribe(() => {
         this.snackBar.open('The Product was Successifuly deleted', '', { duration: 4000 });
       },
@@ -127,19 +132,59 @@ export class DataService {
             } else {
               this.quantity.push(this.localQuantity);
             }
-
           }
-
-          console.log(this.quantity);
           this.quantity.map(item => {
             if (item.productId === data._id) {
               product.quantity = item.quantity;
+              this.onSelectedProducts(item);
             }
           });
         });
     return new Observable((observer) => {
       observer.next(product),
         observer.complete();
+    });
+  }
+// To set Vender
+  onSelectedProducts(quant: Quantity) {
+    this.getProductById(quant.productId)
+      .subscribe(
+        (data: Product) => {
+          if (this.vender.length === 0) {
+            this.localVender = new Vender();
+            this.localVender.productId = data._id;
+            this.localVender.amount = 0;
+            this.localVender.total = 0;
+            this.vender.push(this.localVender);
+          } else if (this.vender.length > 0) {
+            this.localVender = new Vender();
+            this.localVender.productId = data._id;
+            this.localVender.amount = 0;
+            this.localVender.total = 0;
+            if (this.vender.some(e => e.productId === data._id)) {
+              this.vender.filter((item) => {
+                if (item.productId === data._id) {
+                 item.amount = quant.quantity;
+                 item.total = item.amount * data.price;
+                }
+              });
+            } else {
+              this.vender.push(this.localVender);
+            }
+          }
+          console.log(this.vender);
+        });
+
+  }
+
+  onBackVender(): Observable<Vender[]> {
+    return new Observable((observer) => {
+      if (this.vender != null) {
+        observer.next(this.vender),
+        observer.complete();
+      } else {
+        console.log('Vender is empty!');
+      }
     });
   }
 
@@ -154,13 +199,3 @@ export class DataService {
     };
   }
 }
-
- /*  this.localVender.amount = this.localQuantity.quantity;
-            this.localVender.total = this.localVender.amount * data.price;
-            if (this.vender.filter(e => e.productId === this.localVender.productId).length > 0) {
-              this.vender.forEach(item => {
-                item.amount = this.localVender.amount;
-              });
-            }
-            this.vender.push(this.localVender); */
-

@@ -9,6 +9,6 @@ router.get('/product/:id', productController.findById);
 
 router.put('/product/:id', productController.update);
 
-router.delete('/product/:id', productController.delete);
+router.delete('/products/:id', productController.delete);
 
 module.exports = router;

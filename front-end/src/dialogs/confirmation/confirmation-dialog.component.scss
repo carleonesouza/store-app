@@ -3,12 +3,11 @@
     max-width: 100%;
     margin: 0%;
     padding: 0%;
+    color: #000000 !important;
   }
-  mat-form-field {
-      width: 100%;
-  }
-  
+   
   .item-buttons{
+      margin-top: 10%;
       display: table-row;
       float: right;
       position: relative;
@@ -17,20 +16,17 @@
       float: right;
       width: 5rem;
   }
-  .item{
-    width: 30%;
-    mat-form-field {
-        display: block;
-        display: inline-block;
-    }
-    
-  }
   
-  .example-spacer {
+  .example-mat-dialog-content spacer {
       margin: 1rem;
     }
-  .card-subtitle{
-      color: #ffffff;
+
+.mat-dialog-content {
+    color: #000000 !important;
+  }
+  
+  table {
+    width: 100%;
   }
   
   .card-header{
@@ -38,12 +34,12 @@
       margin-bottom: 5%;
       text-align: center;
       max-width: 100%;
+      color: #ffffff;
       border-radius: 4px 4px 4px 4px;
       background-color: darken(#01579B, 3);
-      color: #ffffff;
   }
   .spacer{
-      margin: 0.5rem;
+      margin-top: 5rem;
   }
   .corner-position {
       position: fixed;
@@ -69,7 +65,6 @@
           margin-bottom: 5%;
           border-radius: 4px 4px 4px 4px;
           background-color: darken(#01579B, 3);
-          color: #ffffff;
       }
       
     

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class Vender {
     _id?: string;
+    name?: string;
     productId: string;
     amount = 0;
     total = 0;
