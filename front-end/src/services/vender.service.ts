@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
 import { Vender } from 'src/models/vender.model';
+import { BillMethod } from '../models/bill-method';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class VenderService {
-  productAmount = 0;
+  private todo: BillMethod;
+  private groupTodo: Array<BillMethod>;
   private readonly API_URL = 'http://localhost:3000/api';
 
-  constructor(private httpClient: HttpClient, private snackBar: MatSnackBar) { }
+  constructor(private httpClient: HttpClient, private snackBar: MatSnackBar) {
+      this.groupTodo = [];
+  }
 
 
   // To get a list of all Venders
@@ -32,5 +37,30 @@ export class VenderService {
         this.snackBar.open('Error occurred. Details: ' + err.message, 'RETRY', { duration: 4000 });
       });
   }
+
+  onTodo(e: number, f: string) {
+      this.todo = {
+        id: Math.random() + e,
+        billValue: e,
+        paymentMethod: f
+      };
+      if (this.groupTodo.length === 0) {
+      this.groupTodo.push(this.todo);
+    } else if (this.groupTodo.some(d => d.id !== this.todo.id)) {
+      this.groupTodo.push(this.todo);
+    }
+  }
+
+  getTodo(): Observable<BillMethod[]> {
+    return new Observable((observer) => {
+      if (this.groupTodo != null) {
+        observer.next(this.groupTodo),
+        observer.complete();
+      } else {
+        console.log('Todo is empty!');
+      }
+    });
+  }
+
 
 }

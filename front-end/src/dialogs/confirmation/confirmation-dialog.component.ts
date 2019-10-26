@@ -43,11 +43,9 @@ export class ConfirmationDialogComponent implements OnInit {
 
     openDialog(): void {
         this.onNoClick();
-        const dialogBill = this.dialog.open(BillDialogComponent, {
-            data: this.dataSource
-        });
-        dialogBill.afterClosed().subscribe(() => {
-          console.log('The dialog was closed');
+        this.dialog.open(BillDialogComponent, {
+            data: this.dataSource,
+            disableClose: true
         });
       }
 
