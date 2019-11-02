@@ -1,5 +1,11 @@
-const app = require('./src/app');
+'use strict'
+const app = require('./src/api/app');
+const baseUtilite = require('./src/utilities/baseUtilite');
 
-const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`Server started at port: ${port}`));
+app.listen(baseUtilite.CONSTANTS.PORT, err => {
+   if(err) {
+       console.log('The connection cannot be established! ');
+   }
+   console.log('Connection was established!') 
+});
