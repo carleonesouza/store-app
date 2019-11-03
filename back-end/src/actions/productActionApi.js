@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 const Product = require('../models/product.model');
 
 // To create a new Product

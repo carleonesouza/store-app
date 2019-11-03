@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material';
 import { CurrencyPipe } from '@angular/common';
 import { BillMethod } from 'src/models/bill-method';
 import { VenderService } from 'src/services/vender.service';
+import { BagVenders } from 'src/models/bag-venders';
 
 @Component({
   selector: 'app-bill-dialog',
@@ -29,7 +30,7 @@ export class BillDialogComponent implements OnInit, OnDestroy {
 
   constructor(public dialogRef: MatDialogRef<BillDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Vender[], private venderService: VenderService,
-              public dataService: DataService, public snackBar: MatSnackBar,
+              public dataService: DataService, public snackBar: MatSnackBar, private bagVenders: BagVenders,
               private formBuilder: FormBuilder, private currencyPipe: CurrencyPipe) {
     this.onCreateForm();
   }
@@ -48,29 +49,10 @@ export class BillDialogComponent implements OnInit, OnDestroy {
       formPayable: ''
     });
 
-    // this.onChanges();
-
   }
 
   ngOnDestroy(): void {
-    // this.onChanges();
-  }
 
-  onChanges(): void {
-    let changeValue = this.total;
-    this.venderForm.get('formSold').valueChanges.subscribe(val => {
-      if (val > this.total) {
-        this.approval = false;
-        this.snackBar.open('The value typed does not be major the total', '', { duration: 3000 });
-      } else if (val < this.total) {
-        changeValue = this.total - val;
-        console.log(changeValue);
-      } else if (val === this.total) {
-        this.approval = true;
-        const formValue = this.currencyPipe.transform(changeValue, 'BRL', 'symbol-narrow', '1.2-2');
-        this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
-      }
-    });
   }
 
   onCreateForm() {
@@ -121,17 +103,20 @@ export class BillDialogComponent implements OnInit, OnDestroy {
 
     if (this.localValue === this.total) {
       this.approval = true;
-      console.log(this.venderForm.get('formSold').value);
       this.venderService.onTodo(this.venderForm.get('formSold').value, typePayble);
       const formValue = this.currencyPipe.transform(this.localValue, 'BRL', 'symbol-narrow', '1.2-2');
       this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
       this.dialogRef.close();
+      this.dataService.onBackVender().subscribe((v: Vender[]) => {
+        this.bagVenders.venders = v;
+      }),
       this.venderService.getTodo().subscribe(
         (dat: BillMethod []) => {
-          console.log(dat);
+            this.bagVenders.billsMethod = dat,
           this.dialogRef.disableClose = false;
         }
       );
+      this.venderService.addBags(this.bagVenders);
       this.snackBar.open('The Purchase was complete successfully!!', '', { duration: 3000 });
     }
   }

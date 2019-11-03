@@ -1,36 +1,46 @@
-<mat-sidenav-container class="app-root" fullscreen>
-  <mat-sidenav class="dark" #start>
-      <img id="nav-logo" src="../assets/favicon.ico" alt="Angular Logo">
+<header>
+    <mat-sidenav-container class="app-root" fullscreen>
+        <mat-sidenav mode="side" class="dark" #start>
+            <img id="nav-logo" src="../assets/favicon.ico" alt="Angular Logo">
+            <h4>Dashboard</h4>
+            <mat-nav-list>
+                <a *ngFor="let navItem of navItems" mat-list-item class="class-list-item" (click)="start.close()"
+                    routerLinkActive="active" #routerLinkActiveInstance="routerLinkActive"
+                    [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
+                    [routerLinkActiveOptions]="{exact: navItem.route == '/'}" [routerLink]="[navItem.route]">
+                    {{navItem.name}}<mat-icon *ngIf="navItem.icon">{{navItem.icon}}</mat-icon>
+                </a>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-toolbar color="primary" class="toolbar dark">
+            <mat-toolbar-row>
+                <button mat-icon-button (click)="start.open()">
+                    <mat-icon class="mat-24">menu</mat-icon>
+                </button>
 
-      <mat-nav-list>
-          <a *ngFor="let navItem of navItems"
-                  mat-list-item class="class-list-item"
-                  (click)="start.close()"
-                  routerLinkActive="active"
-                  #routerLinkActiveInstance="routerLinkActive"
-                  [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
-                  [routerLinkActiveOptions]="{exact: navItem.route == '/'}"
-                  [routerLink]="[navItem.route]">
-              {{navItem.name}}<mat-icon *ngIf="navItem.icon">{{navItem.icon}}</mat-icon>
-          </a>
-      </mat-nav-list>
-  </mat-sidenav>
+                <span id="logo">Store App</span>
+                <span class="spacer"></span>
+                <span class="example-spacer"></span>
+                <div>
+                    <button mat-button [matMenuTriggerFor]="userMenu" aria-label="menu-usuário">
+                        <img id="user-avatar" alt=""
+                            [src]="'https://material.angular.io/assets/img/examples/shiba1.jpg'" /> Joao Ninguem
+                        <i class="caret"></i>
+                    </button>
+                    <mat-menu #userMenu="matMenu">
+                        <ng-template matMenuContent let-name="name">
+                            <button mat-menu-item (click)="sairApp()">
+                                <mat-icon aria-hidden="true">subdirectory_arrow_right</mat-icon>
+                                Sair
+                            </button>
+                        </ng-template>
+                    </mat-menu>
+                </div>
 
-  <div id="mtor">
-      <mat-toolbar class="dark" color="primary">
-          <mat-toolbar-row>
-              <button mat-icon-button (click)="start.open()">
-                  <mat-icon class="mat-24">menu</mat-icon>
-              </button>
-
-              <span id="logo">Store App</span>
-              <span class="spacer"></span>
-
-          </mat-toolbar-row>
-      </mat-toolbar>
-
-      <div #root="dir" dir="ltr" class="app-content">
-          <router-outlet id="main"></router-outlet>
-      </div>
-  </div>
-</mat-sidenav-container>
+            </mat-toolbar-row>
+        </mat-toolbar>
+        <div #root="dir" dir="ltr" class="app-content">
+            <router-outlet id="main"></router-outlet>
+        </div>
+    </mat-sidenav-container>
+</header>

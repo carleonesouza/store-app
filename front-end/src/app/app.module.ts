@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ChartsModule } from 'ng2-charts';
 
 import { AppRoutingModule } from './app-routing.module';
 import { StoreAppMaterialModule } from '../store-app-material-module';
@@ -20,6 +21,7 @@ import { DeleteDialogComponent } from '../dialogs/delete/delete.dialog.component
 import { VenderService } from '../services/vender.service';
 import { BillDialogComponent } from '../dialogs/bill-dialog/bill-dialog.component';
 import { ConfirmationDialogComponent } from 'src/dialogs/confirmation/confirmation-dialog.component';
+import { BagVenders } from 'src/models/bag-venders';
 
 @NgModule({
   declarations: [
@@ -44,8 +46,9 @@ import { ConfirmationDialogComponent } from 'src/dialogs/confirmation/confirmati
     StoreAppMaterialModule,
     FlexLayoutModule,
     HttpClientModule,
+    ChartsModule,
   ],
-  providers: [DataService, VenderService],
+  providers: [DataService, VenderService, BagVenders],
   entryComponents: [
     AppComponent,
     AddDialogComponent,

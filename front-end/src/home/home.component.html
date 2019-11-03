@@ -1,6 +1,73 @@
-<div class="home-section" id="cover">
-    <div id="cover-content">
-        <img src="../assets/favicon.ico" alt="Mtor Icon" id="app-icon">
-        Home works!
+<div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+    <div class="item item-1" fxFlex>
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>All Purchase of Day</mat-card-title>
+                <mat-card-subtitle>{{ today }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <div>
+                    <div>
+                        <canvas baseChart width="400" height="400" [datasets]="barChartData" [labels]="barChartLabels"
+                            [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType">
+                        </canvas>
+                    </div>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <div>
+                    <button mat-button class="style-button">Save</button>
+                    <span class="spacer"></span>
+                    <button mat-button class="style-button">Cancel</button>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <div class="item item-2" fxFlex>
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>Day Finances</mat-card-title>
+                <mat-card-subtitle>{{ today }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                    <mat-list role="list">
+                        <mat-list-item role="listitem">Cash Total: R$ 100.00</mat-list-item>
+                        <mat-list-item role="listitem">Debit Total: R$ 190.00</mat-list-item>
+                        <mat-list-item role="listitem">Credit Total: R$ 230.00</mat-list-item>
+                    </mat-list>
+            </mat-card-content>
+            <mat-card-actions>
+                <div>
+                    <button mat-button class="style-button">Save</button>
+                    <span class="spacer"></span>
+                    <button mat-button class="style-button">Cancel</button>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <div class="item item-3" fxFlex>
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>The Most Bought product</mat-card-title>
+                <mat-card-subtitle>{{ today }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <p>
+                    The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+                    A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+                    bred for hunting.
+                </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <div>
+                    <button mat-button class="style-button">Save</button>
+                    <span class="spacer"></span>
+                    <button mat-button class="style-button">Cancel</button>
+                </div>
+            </mat-card-actions>
+        </mat-card>
     </div>
 </div>

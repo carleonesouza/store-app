@@ -5,6 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
 import { Vender } from 'src/models/vender.model';
 import { BillMethod } from '../models/bill-method';
+import { BagVenders } from 'src/models/bag-venders';
 
 @Injectable()
 export class VenderService {
@@ -18,8 +19,8 @@ export class VenderService {
 
 
   // To get a list of all Venders
-  getAllVenders(): void {
-    this.httpClient.get<Vender[]>(`${this.API_URL}/venders`).subscribe(data => {
+  getAllBags(): void {
+    this.httpClient.get<BagVenders[]>(`${this.API_URL}/venders`).subscribe(data => {
       return data;
     },
       (error: HttpErrorResponse) => {
@@ -28,8 +29,8 @@ export class VenderService {
       });
   }
   // To add a new Vender
-  addProduct(product: Product): void {
-    this.httpClient.post(`${this.API_URL}/vender/add`, product).subscribe(() => {
+  addBags(bags: BagVenders): void {
+    this.httpClient.post(`${this.API_URL}/venders/add`, bags).subscribe(() => {
       this.snackBar.open('The product was Successifuly sold ', '', { duration: 4000 });
     },
       (err: HttpErrorResponse) => {

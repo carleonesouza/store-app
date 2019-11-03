@@ -172,7 +172,6 @@ export class DataService {
               this.vender.push(this.localVender);
             }
           }
-          console.log(this.vender);
         });
 
   }
