@@ -1,6 +1,20 @@
-import { Component, OnInit
-} from '@angular/core';
-import { Chart } from 'chart.js';
+import { Component, OnInit } from '@angular/core';
+
+export interface PeriodicElement {
+  name: string;
+  quantity: number;
+  total: number;
+  cash: number;
+  debit: number;
+  credit: number;
+}
+
+const ELEMENT_DATA: PeriodicElement[] = [
+  {name: 'Caraipa', quantity: 19, total: 10.00,  cash: 12, debit: 12, credit: 45},
+  {name: 'Caraipa', quantity: 19, total: 10.00,  cash: 12, debit: 12, credit: 45},
+  {name: 'Caraipa', quantity: 19, total: 10.00,  cash: 12, debit: 12, credit: 45},
+];
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -8,7 +22,8 @@ import { Chart } from 'chart.js';
 })
 export class HomeComponent implements OnInit {
   today = new Date().toDateString();
-
+  displayedColumns: string[] = ['product', 'quantity', 'total', 'cash', 'debit', 'credit'];
+  dataSource = ELEMENT_DATA;
 
   constructor() {  }
 
@@ -17,19 +32,37 @@ export class HomeComponent implements OnInit {
     responsive: true
   };
   public barChartLabels = ['Arraiana', 'Caraipa', 'Coroa Vermelha', 'Mucugê', 'Raiz Negra', 'Pitinga'];
-  public barChartType = 'line';
+  public barChartType = 'bar';
   public barChartLegend = true;
   public barChartData = [
     {data: [65, 59, 80, 81, 56, 55, 40], label: '300m/L'},
     {data: [50, 54, 86, 71, 60, 54, 46], label: '500m/L'},
   ];
 
-  public pieChartLabels = ['Arraiana', 'Caraipa', 'Coroa Vermelha', 'Mucugê', 'Raiz Negra', 'Pitinga'];
-  public pieChartData = [120, 150, 180, 90, 10, 11];
-  public pieChartType = 'pie';
+  public lineChartType = 'line';
+  public lineChartData = [
+    {data: [65, 59, 80, 81, 56, 55, 40], label: '300m/L'},
+    {data: [50, 54, 86, 71, 60, 54, 46], label: '500m/L'},
+  ];
+
+  public lineChartLabels = ['Arraiana', 'Caraipa', 'Coroa Vermelha', 'Mucugê', 'Raiz Negra', 'Pitinga'];
 
   ngOnInit() {
   }
-
+  getTotalQuantity() {
+    return this.dataSource.map(t => t.quantity).reduce((acc, value) => acc + value, 0);
+  }
+  getTotalTotal() {
+    return this.dataSource.map(t => t.total).reduce((acc, value) => acc + value, 0);
+  }
+  getTotalCash() {
+    return this.dataSource.map(t => t.cash).reduce((acc, value) => acc + value, 0);
+  }
+  getTotalDebit() {
+    return this.dataSource.map(t => t.debit).reduce((acc, value) => acc + value, 0);
+  }
+  getTotalCredit() {
+    return this.dataSource.map(t => t.credit).reduce((acc, value) => acc + value, 0);
+  }
 
 }

@@ -30,7 +30,7 @@ export class FrontStoreComponent implements OnInit {
         this.sellProducts = data,
         this.loading = false;
       },
-        (error: string) => this.snackBar.open('Sorry, occurred an error ' + error, 'RETRY', {
+        (error: string) => this.snackBar.open('Sorry, occurred an error, try later', 'RETRY', {
           duration: 3000,
         })
       );
