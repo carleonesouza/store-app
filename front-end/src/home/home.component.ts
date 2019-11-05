@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { MatPaginator, MatSort } from '@angular/material';
 
 export interface PeriodicElement {
   name: string;
@@ -26,6 +27,10 @@ export class HomeComponent implements OnInit {
   dataSource = ELEMENT_DATA;
 
   constructor() {  }
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild('filter', { static: true }) filter: ElementRef;
 
   public barChartOptions = {
     scaleShowVerticalLines: false,

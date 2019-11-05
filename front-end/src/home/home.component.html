@@ -3,56 +3,31 @@
         <mat-card class="example-card">
             <mat-card-header>
                 <div mat-card-avatar class="example-header-image"></div>
-                <mat-card-title>All Purchase of Day</mat-card-title>
+                <mat-card-title>All Purchase of Chopp at the day</mat-card-title>
                 <mat-card-subtitle>{{ today }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
                 <div>
                     <div>
-                        <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels"
+                        <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
                             [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
 
                     </div>
                 </div>
             </mat-card-content>
-            <mat-card-actions>
-                <div>
-                    <button mat-button class="style-button">Save</button>
-                    <span class="spacer"></span>
-                    <button mat-button class="style-button">Cancel</button>
-                </div>
-            </mat-card-actions>
+            <span class="spacer"></span>
         </mat-card>
     </div>
-    <!--    <div class="item item-2" fxFlex>
-        <mat-card class="example-card">
-            <mat-card-header>
-                <div mat-card-avatar class="example-header-image"></div>
-                <mat-card-title>Day Finances</mat-card-title>
-                <mat-card-subtitle>{{ today }}</mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-                    <canvas baseChart width="400" height="400" [datasets]="barChartData" [labels]="barChartLabels"
-                    [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType">
-                </canvas>
-            </mat-card-content>
-            <mat-card-actions>
-                <div>
-                    <button mat-button class="style-button">Save</button>
-                    <span class="spacer"></span>
-                    <button mat-button class="style-button">Cancel</button>
-                </div>
-            </mat-card-actions>
-        </mat-card>
-    </div> -->
+</div>
+<div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
     <div class="item item-3" fxFlex>
-            <mat-toolbar color="primary">
-                    <span>List of Products Solds {{ today }}</span>
-                    <span class="spacer"></span>
-                    <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
-                      <mat-icon>refresh</mat-icon>
-                    </button>
-                  </mat-toolbar>
+        <mat-toolbar color="primary">
+            <span>List of Products Solds {{ today }}</span>
+            <span class="spacer"></span>
+            <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </mat-toolbar>
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
             <ng-container matColumnDef="product">
                 <th mat-header-cell *matHeaderCellDef> Product Name </th>
@@ -96,28 +71,69 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
         </table>
-
-
-        <!--    <mat-card class="example-card">
+        <mat-paginator #paginator [pageIndex]="0" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]">
+        </mat-paginator>
+        <span class="spacer"></span>
+    </div>
+</div>
+<div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+    <div class="item item-3" fxFlex>
+        <mat-card>
             <mat-card-header>
                 <div mat-card-avatar class="example-header-image"></div>
-                <mat-card-title>The Most Bought product</mat-card-title>
+                <mat-card-title>Report of all solds of the day</mat-card-title>
                 <mat-card-subtitle>{{ today }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
-                <p>
-                    The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
-                    A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
-                    bred for hunting.
-                </p>
+
             </mat-card-content>
             <mat-card-actions>
                 <div>
-                    <button mat-button class="style-button">Save</button>
+                    <button mat-button class="style-button">Generate</button>
                     <span class="spacer"></span>
-                    <button mat-button class="style-button">Cancel</button>
+                    <!-- <button mat-button class="style-button">Cancel</button> -->
                 </div>
+
             </mat-card-actions>
-        </mat-card> -->
+        </mat-card>
+    </div>
+    <div class="item item-3" fxFlex>
+        <mat-card>
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>Report of Solds of the Month</mat-card-title>
+                <mat-card-subtitle>{{ today }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+
+            </mat-card-content>
+            <mat-card-actions>
+                <div>
+                    <button mat-button class="style-button">Generate</button>
+                    <span class="spacer"></span>
+                    <!-- <button mat-button class="style-button">Cancel</button> -->
+                </div>
+
+            </mat-card-actions>
+        </mat-card>
     </div>
 </div>
+<span class="spacer"></span>
+<div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+        <div class="item item-3" fxFlex>
+        <mat-card class="example-card">
+            <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>The most bought product</mat-card-title>
+                <mat-card-subtitle>{{ today }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
+                    [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType">
+                </canvas>
+            </mat-card-content>
+            <span class="spacer"></span>
+        </mat-card>
+    </div>
+</div>
+<span class="spacer"></span>
