@@ -34,7 +34,9 @@ const billMethodSchema = new Schema({
 
 const bagVendersSchema = new Schema({
  venders: [venderSchema],
- billsMethod: [billMethodSchema ]
+ billsMethod: [billMethodSchema ],
+ createdAt: { type: Date, default: Date.now},
+ updatedAt: { type: Date, default: Date.now }
 
 
 },

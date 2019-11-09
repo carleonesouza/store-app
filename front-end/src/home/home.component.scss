@@ -1,22 +1,25 @@
 .example-card {
     width: auto;
   }
-
-  table {
+.card-inside{
+  text-align: center;
+}
+table {
     width: 100%;
   }
   
-  tr.mat-footer-row {
+tr.mat-footer-row {
     font-weight: bold;
   }
 
-  mat-toolbar{
+mat-toolbar{
     border-radius: 4px 4px 0 0;
   }
 
 .example-header-image {
-    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-    background-size: cover;
+    background-image: url('https://cervejariaarraialdajuda.com.br/wp-content/themes/cervejaria/imgs/cervejaria_arraial_y.png');
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 .item{
     margin: 10px;

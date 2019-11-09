@@ -64,6 +64,7 @@
       "timeEnd",
       "trace"
     ],
+    "ban-types": [false, ["Object", "Use {} instead."], ["String"]],
     "no-empty": false,
     "no-inferrable-types": [
       true,

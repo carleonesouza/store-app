@@ -6,10 +6,11 @@ import { MatSnackBar } from '@angular/material';
 import { catchError } from 'rxjs/operators';
 import { Quantity } from 'src/models/quantity.model';
 import { Vender } from 'src/models/vender.model';
+import { HandleError } from './handleError';
 
 @Injectable()
 export class DataService {
-  private readonly API_URL = 'http://localhost:3000/api';
+  private static readonly endpoint: String  = 'http://localhost:3000/api/product';
 
   dataChange: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
   // Temporarily stores data from dialogs
@@ -21,7 +22,8 @@ export class DataService {
   localVender: Vender;
   log: any;
 
-  constructor(private httpClient: HttpClient, private snackBar: MatSnackBar) {
+  constructor(private httpClient: HttpClient, private myHandleError: HandleError,
+              private snackBar: MatSnackBar) {
     this.quantity = [];
     this.vender = [];
   }
@@ -42,15 +44,15 @@ export class DataService {
 
   // To get a list of Products
   getProducts(): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(`${this.API_URL}/products`)
+    return this.httpClient.get<Product[]>(`${DataService.endpoint}`)
       .pipe(
-        catchError(this.handleError<Product[]>('getProducts', []))
+        catchError(this.myHandleError.handleError<Product[]>('getProducts', []))
       );
   }
 
   // To get a list of all Products to table on create-product.component
   getAllProducts() {
-    this.httpClient.get<Product[]>(`${this.API_URL}/products`).subscribe(data => {
+    this.httpClient.get<Product[]>(`${DataService.endpoint}`).subscribe(data => {
       this.dataChange.next(data);
     },
       (error: HttpErrorResponse) => {
@@ -61,23 +63,23 @@ export class DataService {
 
   // Get a specific Product from the Store
   getProductById(id: string): Observable<Product> {
-    return this.httpClient.get<Product>(`${this.API_URL}/product/${id}`)
+    return this.httpClient.get<Product>(`${DataService.endpoint}/${id}`)
       .pipe(
-        catchError(this.handleError<Product>('getProductById'))
+        catchError(this.myHandleError.handleError<Product>('getProductById'))
       );
   }
 
   // To update for getById
   updateById(product: Product): Observable<Product> {
-    return this.httpClient.put<Product>(`${this.API_URL}/product/${product._id}`, product)
+    return this.httpClient.put<Product>(`${DataService.endpoint}/${product._id}`, product)
       .pipe(
-        catchError(this.handleError('updateHero', product))
+        catchError(this.myHandleError.handleError('updateHero', product))
       );
   }
 
   // To add a new Product
   addProduct(product: Product): void {
-    this.httpClient.post(`${this.API_URL}/product/add`, product).subscribe(() => {
+    this.httpClient.post(`${DataService.endpoint}/add`, product).subscribe(() => {
       this.dialogData = product;
       this.snackBar.open('The Product was Successifuly created ', '', { duration: 4000 });
     },
@@ -88,7 +90,7 @@ export class DataService {
 
   // To upadate a Product by id
   updateProduct(product: Product): void {
-    this.httpClient.put(`${this.API_URL}/product/${product._id}`, product).subscribe(() => {
+    this.httpClient.put(`${DataService.endpoint}/${product._id}`, product).subscribe(() => {
       this.dialogData = product;
       this.snackBar.open('The Product was Successifuly updated', '', { duration: 4000 });
     },
@@ -99,7 +101,7 @@ export class DataService {
 
   // To delete a Product by id
   deleteProduct(product: Product): void {
-   this.httpClient.request('delete', `${this.API_URL}/products/${product._id}`, { body: product })
+   this.httpClient.request('delete', `${DataService.endpoint}/${product._id}`, { body: product })
       .subscribe(() => {
         this.snackBar.open('The Product was Successifuly deleted', '', { duration: 4000 });
       },
@@ -119,20 +121,24 @@ export class DataService {
             this.localQuantity.productId = data._id;
             this.localQuantity.quantity = 0;
             this.quantity.push(this.localQuantity);
+
           } else if (this.quantity.length > 0) {
             this.localQuantity = new Quantity();
             this.localQuantity.productId = data._id;
             this.localQuantity.quantity = 0;
+
             if (this.quantity.some(e => e.productId === data._id)) {
               this.quantity.filter((item) => {
                 if (item.productId === data._id) {
                  item.quantity = item.quantity + 1;
                 }
+
               });
             } else {
               this.quantity.push(this.localQuantity);
             }
           }
+
           this.quantity.map(item => {
             if (item.productId === data._id) {
               product.quantity = item.quantity;
@@ -156,17 +162,20 @@ export class DataService {
             this.localVender.amount = 0;
             this.localVender.total = 0;
             this.vender.push(this.localVender);
+
           } else if (this.vender.length > 0) {
             this.localVender = new Vender();
             this.localVender.productId = data._id;
             this.localVender.amount = 0;
             this.localVender.total = 0;
+
             if (this.vender.some(e => e.productId === data._id)) {
               this.vender.filter((item) => {
                 if (item.productId === data._id) {
                  item.amount = quant.quantity;
                  item.total = item.amount * data.price;
                 }
+
               });
             } else {
               this.vender.push(this.localVender);
@@ -185,16 +194,5 @@ export class DataService {
         console.log('Vender is empty!');
       }
     });
-  }
-
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
   }
 }

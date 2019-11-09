@@ -11,6 +11,7 @@ import { EditDialogComponent } from '../dialogs/edit/edit.dialog.component';
 import { DeleteDialogComponent } from '../dialogs/delete/delete.dialog.component';
 import { fromEvent } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
+import { HandleError } from 'src/services/handleError';
 
 @Component({
   selector: 'app-create-product',
@@ -27,7 +28,7 @@ export class CreateProductComponent implements OnInit {
   id: string;
 
   constructor(public httpClient: HttpClient, public dialog: MatDialog,
-              public dataService: DataService) { }
+              public dataService: DataService, private myHandleError: HandleError) { }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -60,7 +61,6 @@ export class CreateProductComponent implements OnInit {
     this.id = _id;
     // index row is used just for debugging proposes and can be removed
     this.index = i;
-    console.log(this.index);
     const dialogRef = this.dialog.open(EditDialogComponent, {
       data: { _id, name, description, price },
     });
@@ -118,7 +118,7 @@ export class CreateProductComponent implements OnInit {
     }*/
 
   public loadData() {
-    this.exampleDatabase = new DataService(this.httpClient, this.snackBar);
+    this.exampleDatabase = new DataService(this.httpClient, this.myHandleError, this.snackBar);
     this.dataSource = new TableDataSource(this.exampleDatabase, this.paginator, this.sort);
     fromEvent(this.filter.nativeElement, 'keyup')
       // .debounceTime(150)

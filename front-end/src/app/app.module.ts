@@ -22,6 +22,8 @@ import { VenderService } from '../services/vender.service';
 import { BillDialogComponent } from '../dialogs/bill-dialog/bill-dialog.component';
 import { ConfirmationDialogComponent } from 'src/dialogs/confirmation/confirmation-dialog.component';
 import { BagVenders } from 'src/models/bag-venders';
+import { HandleError } from 'src/services/handleError';
+import { ManagementService } from 'src/services/management.service';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { BagVenders } from 'src/models/bag-venders';
     HttpClientModule,
     ChartsModule,
   ],
-  providers: [DataService, VenderService, BagVenders],
+  providers: [DataService, VenderService,
+     BagVenders, HandleError, ManagementService],
   entryComponents: [
     AppComponent,
     AddDialogComponent,

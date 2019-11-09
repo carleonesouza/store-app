@@ -9,15 +9,15 @@ router.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 
 router.post('/product/add', productActionApi.createProduct);
-router.post('/venders/add', vendersActionApi.createBag);
+router.post('/vender/add', vendersActionApi.createBag);
 
-router.get('/products', productActionApi.findAllProducts);
-router.get('/venders', vendersActionApi.findAllBags);
+router.get('/product', productActionApi.findAllProducts);
+router.get('/vender', vendersActionApi.findAllBags);
 
 router.get('/product/:id', productActionApi.findByIdProduct);
 
 router.put('/product/:id', productActionApi.updateProduct);
 
-router.delete('/products/:id', productActionApi.deleteProduct);
+router.delete('/product/:id', productActionApi.deleteProduct);
 
 module.exports = router;

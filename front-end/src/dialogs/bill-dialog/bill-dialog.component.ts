@@ -94,7 +94,7 @@ export class BillDialogComponent implements OnInit, OnDestroy {
     if (this.localValue < this.total ) {
       this.dialogRef.disableClose = true;
       this.approval = false;
-      this.venderService.onTodo(this.venderForm.get('formSold').value, typePayble);
+      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble);
       const formValue = this.currencyPipe.transform(this.localValue, 'BRL', 'symbol-narrow', '1.2-2');
       this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
       this.venderForm.get('formSold').reset();
@@ -103,20 +103,20 @@ export class BillDialogComponent implements OnInit, OnDestroy {
 
     if (this.localValue === this.total) {
       this.approval = true;
-      this.venderService.onTodo(this.venderForm.get('formSold').value, typePayble);
+      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble);
       const formValue = this.currencyPipe.transform(this.localValue, 'BRL', 'symbol-narrow', '1.2-2');
       this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
       this.dialogRef.close();
       this.dataService.onBackVender().subscribe((v: Vender[]) => {
         this.bagVenders.venders = v;
       }),
-      this.venderService.getTodo().subscribe(
+      this.venderService.onGetBillMehthod().subscribe(
         (dat: BillMethod []) => {
             this.bagVenders.billsMethod = dat,
           this.dialogRef.disableClose = false;
         }
       );
-      this.venderService.addBags(this.bagVenders);
+      // this.venderService.(this.bagVenders);
       this.snackBar.open('The Purchase was complete successfully!!', '', { duration: 3000 });
     }
   }

@@ -7,5 +7,7 @@ export class BagVenders {
 
  venders: Vender [];
  billsMethod: BillMethod [];
+ createdAt?: Date;
+ updatedAt?: Date;
 }
 
