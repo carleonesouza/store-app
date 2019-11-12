@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { MatPaginator, MatSort, MatDatepicker } from '@angular/material';
-import { VenderService } from 'src/services/vender.service';
-import { ManagementService } from 'src/services/management.service';
+import { MatPaginator, MatSort, MatDatepicker, MatDatepickerInputEvent } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 
@@ -11,11 +9,8 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/
 // Since Moment.js doesn't have a default export, we normally need to import using the `* as`
 // syntax. However, rollup creates a synthetic default module and we thus need to import it using
 // the `default as` syntax.
-import * as _moment from 'moment';
+import * as moment from 'moment';
 
-import { Moment } from 'moment';
-
-const moment = _moment;
 
 export interface PeriodicElement {
   name: string;
@@ -32,42 +27,36 @@ const ELEMENT_DATA: PeriodicElement[] = [
   {name: 'Caraipa', quantity: 19, total: 10.00,  cash: 12, debit: 12, credit: 45},
 ];
 
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'DD/MM/YYYY',
-  },
-  display: {
-    dateInput: 'DD/MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
+    // The locale would typically be provided on the root module of your application. We do it at
+    // the component level here, due to limitations of our example generation script.
+    {provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+
+    // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
+    // `MatMomentDateModule` in your applications root module. We provide it at the component level
+    // here, due to limitations of our example generation script.
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
-
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
   ],
 })
 export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['product', 'quantity', 'total', 'cash', 'debit', 'credit'];
   dataSource = ELEMENT_DATA;
   loading = true;
-  @Input() reportMonthForm: FormGroup;
+  events: string[] = [];
   @Input() reportDayForm: FormGroup;
   @Input() cashierForm: FormGroup;
+  @Input() dateValue: string;
+
   public barChartOptions = {
     scaleShowVerticalLines: false,
     responsive: true
@@ -93,38 +82,27 @@ export class HomeComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild('filter', { static: true }) filter: ElementRef;
 
-  constructor(private formBuilder: FormBuilder) {  }
+  constructor(private formBuilder: FormBuilder) {
+    }
 
   ngOnInit() {
+
     this.loading = false;
     // this.managementService.onDataForHome();
-    this.reportMonthForm = this.formBuilder.group({
-      dateMonth: {value: moment(), disabled: true},
-    });
     this.reportDayForm = this.formBuilder.group({
-      dateDay: { value: moment().format('DD.MM.YYYY'), disabled: true}
+      dateDay: { value: '', disabled: true}
     });
     this.cashierForm = this.formBuilder.group({
-      dateNow: { value: moment().format('l'), disabled: true}
+      dateNow: { value: '', disabled: true}
     });
     }
-    chosenYearHandler(normalizedYear: Moment) {
-      const ctrlValue = this.reportMonthForm.get('dateMonth').value;
-      console.log(ctrlValue);
-      ctrlValue.year(normalizedYear.year());
-      this.reportMonthForm.setValue({
-        dateMonth: ctrlValue
-      });
-    }
 
-    chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
-      const ctrlValue = this.reportMonthForm.get('dateMonth').value;
-      ctrlValue.month(normalizedMonth.month());
-      this.reportMonthForm.setValue({
-        dateMonth: ctrlValue
-      });
-      datepicker.close();
-    }
+
+  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.events.push(`${type}: ${event.value}`);
+    this.dateValue = moment(event.value).locale('pt-br').format('l');
+
+  }
 
   getTotalQuantity() {
     return this.dataSource.map(t => t.quantity).reduce((acc, value) => acc + value, 0);

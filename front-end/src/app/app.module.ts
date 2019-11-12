@@ -24,6 +24,7 @@ import { ConfirmationDialogComponent } from 'src/dialogs/confirmation/confirmati
 import { BagVenders } from 'src/models/bag-venders';
 import { HandleError } from 'src/services/handleError';
 import { ManagementService } from 'src/services/management.service';
+import { DatepickerComponent } from '../datepicker/datepicker.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ManagementService } from 'src/services/management.service';
     CreateProductComponent,
     SplashComponent,
     BillDialogComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    DatepickerComponent
   ],
   imports: [
     BrowserModule,

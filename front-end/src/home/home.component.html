@@ -10,9 +10,11 @@
                 </mat-card-header>
                 <mat-card-content class="card-inside" [formGroup]="cashierForm">
                     <mat-form-field>
-                        <input matInput [matDatepicker]="picker1" placeholder="Date Chooser" formControlName="dateNow">
+                        <input matInput [matDatepicker]="picker1" placeholder="Date Chooser"
+                         formControlName="dateNow" (dateInput)="addEvent('input', $event)" 
+                         (dateChange)="addEvent('change', $event)">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                        <mat-datepicker  touchUi  #picker1 disabled="false"></mat-datepicker>
                     </mat-form-field>
                 </mat-card-content>
                 <mat-card-actions>
@@ -37,7 +39,7 @@
                         <input matInput [matDatepicker]="picker2" placeholder="Select the day"
                             formControlName="dateDay">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+                        <mat-datepicker touchUi #picker2 disabled="false"></mat-datepicker>
                     </mat-form-field>
 
                 </mat-card-content>
@@ -57,19 +59,8 @@
                     <div mat-card-avatar class="example-header-image"></div>
                     <mat-card-title>Report of solds of the month</mat-card-title>
                 </mat-card-header>
-                <mat-card-content class="card-inside" [formGroup]="reportMonthForm">
-                        <mat-form-field>
-                                <input matInput [matDatepicker]="dp" placeholder="Month and Year" formControlName="dateMonth">
-                                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-                                <mat-datepicker #dp
-                                                startView="year"
-                                                (yearSelected)="chosenYearHandler($event)"
-                                                (monthSelected)="chosenMonthHandler($event, dp)"
-                                                panelClass="example-month-picker"
-                                                disabled="false">
-                                </mat-datepicker>
-                              </mat-form-field>
-
+                <mat-card-content class="card-inside">
+                      <app-datepicker></app-datepicker>
                 </mat-card-content>
                 <mat-card-actions>
                     <div>
