@@ -14,11 +14,11 @@ import { HomeComponent } from '../home/home.component';
 import { NotFoundComponent } from '../not-found/not-found.component';
 import { CreateProductComponent } from '../create-product/create-product.component';
 import { SplashComponent } from '../splash/splash.component';
-import { DataService } from '../services/data.service';
+import { ProductService } from '../services/product.service';
 import { AddDialogComponent } from '../dialogs/add/add.dialog.component';
 import { EditDialogComponent } from '../dialogs/edit/edit.dialog.component';
 import { DeleteDialogComponent } from '../dialogs/delete/delete.dialog.component';
-import { VenderService } from '../services/vender.service';
+import { VendorService } from '../services/vendor.service';
 import { BillDialogComponent } from '../dialogs/bill-dialog/bill-dialog.component';
 import { ConfirmationDialogComponent } from 'src/dialogs/confirmation/confirmation-dialog.component';
 import { BagVenders } from 'src/models/bag-venders';
@@ -52,7 +52,7 @@ import { DatepickerComponent } from '../datepicker/datepicker.component';
     HttpClientModule,
     ChartsModule,
   ],
-  providers: [DataService, VenderService,
+  providers: [ProductService, VendorService,
      BagVenders, HandleError, ManagementService],
   entryComponents: [
     AppComponent,

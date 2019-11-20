@@ -30,7 +30,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
         <div class="item-buttons">
-            <button mat-button class="style-button" (click)="openDialog()">Finish</button>
+            <button mat-button class="style-button" (click)="onConfirmation()">Confirm</button>
             <span class="spacer"></span>
             <button mat-button class="style-button" (click)="onNoClick()">Cancel</button>
         </div>

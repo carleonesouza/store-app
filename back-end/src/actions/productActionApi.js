@@ -7,7 +7,6 @@ exports.createProduct = async (req, res) => {
     .save()
     .then(() => { console.log('Product Save Successfully!'); })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({
         error: err,
       });
@@ -27,7 +26,6 @@ exports.findByIdProduct = async (req, res) => {
   const myProduct = await Product.findById({ _id: req.params.id })
     .then((data) => data)
     .catch((err) => {
-      console.log(err);
       res.status(400).json({ status: 400, message: 'is a not id valid', _id: req.params._id }).end();
     });
   res.status(200).send(myProduct);
@@ -50,7 +48,6 @@ exports.updateProduct = async (req, res) => {
     })
     .then((data) => data)
     .catch((err) => {
-      console.log(err);
       res.status(500).json({
         error: err,
       });
@@ -60,15 +57,14 @@ exports.updateProduct = async (req, res) => {
 
 // To delete a product by id
 exports.deleteProduct = async (req, res) => {
-  const deleteProduct = await Product.findByIdAndDelete({ _id: req.body._id })
+  await Product.findByIdAndDelete({ _id: req.body._id })
     .then(() => {
       console.log('A Product was DELETE Successfully!');
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({
         error: err,
       });
     });
-  res.status(200).send(deleteProduct);
+  res.status(200).send({message: 'A Product was DELETE Successfully!'});
 };

@@ -1,10 +1,8 @@
 import {Component, OnInit, Input} from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { DataService } from '../services/data.service';
+import { ProductService } from '../services/product.service';
 import { Product } from 'src/models/product.model';
-import { BillDialogComponent } from 'src/dialogs/bill-dialog/bill-dialog.component';
 import { Quantity } from 'src/models/quantity.model';
-import { Vender } from 'src/models/vender.model';
 import { ConfirmationDialogComponent } from 'src/dialogs/confirmation/confirmation-dialog.component';
 
 @Component({
@@ -21,16 +19,16 @@ export class FrontStoreComponent implements OnInit {
 
 
   constructor(private dialog: MatDialog, private snackBar: MatSnackBar,
-              private dataService: DataService) {  }
+              private productService: ProductService) {  }
 
   ngOnInit() {
-    this.dataService.getProducts()
+    this.productService.getProducts()
       .subscribe(
         (data: Product[]) => {
         this.sellProducts = data,
         this.loading = false;
       },
-        (error: string) => this.snackBar.open('Sorry, occurred an error, try later', 'RETRY', {
+        () => this.snackBar.open('Sorry, occurred an error, try later', 'RETRY', {
           duration: 3000,
         })
       );
@@ -38,7 +36,7 @@ export class FrontStoreComponent implements OnInit {
   }
 
   addAmount(product: Product) {
-    this.dataService.changeQuantity(product);
+    this.productService.changeQuantity(product);
   }
 
   openDialog(): void {

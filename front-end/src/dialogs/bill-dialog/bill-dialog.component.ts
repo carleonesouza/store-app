@@ -1,13 +1,13 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject, OnInit, Input, OnDestroy } from '@angular/core';
-import { DataService } from '../../services/data.service';
-import { Vender } from '../../models/vender.model';
+import { ProductService } from '../../services/product.service';
+import { Vendor } from '../../models/vendor.model';
 import { Product } from '../../models/product.model';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { CurrencyPipe } from '@angular/common';
 import { BillMethod } from 'src/models/bill-method';
-import { VenderService } from 'src/services/vender.service';
+import { VendorService } from 'src/services/vendor.service';
 import { BagVenders } from 'src/models/bag-venders';
 
 @Component({
@@ -18,7 +18,7 @@ import { BagVenders } from 'src/models/bag-venders';
 })
 export class BillDialogComponent implements OnInit, OnDestroy {
   product: Product;
-  localData: Vender[];
+  localData: Vendor[];
   amount = 0;
   NUMBERPATTERN = '^[0-9.,]+$';
   approval = false;
@@ -29,8 +29,8 @@ export class BillDialogComponent implements OnInit, OnDestroy {
   @Input() venderForm: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<BillDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Vender[], private venderService: VenderService,
-              public dataService: DataService, public snackBar: MatSnackBar, private bagVenders: BagVenders,
+              @Inject(MAT_DIALOG_DATA) public data: Vendor[], private venderService: VendorService,
+              public productService: ProductService, public snackBar: MatSnackBar, private bagVenders: BagVenders,
               private formBuilder: FormBuilder, private currencyPipe: CurrencyPipe) {
     this.onCreateForm();
   }
@@ -107,16 +107,14 @@ export class BillDialogComponent implements OnInit, OnDestroy {
       const formValue = this.currencyPipe.transform(this.localValue, 'BRL', 'symbol-narrow', '1.2-2');
       this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
       this.dialogRef.close();
-      this.dataService.onBackVender().subscribe((v: Vender[]) => {
-        this.bagVenders.venders = v;
-      }),
       this.venderService.onGetBillMehthod().subscribe(
-        (dat: BillMethod []) => {
-            this.bagVenders.billsMethod = dat,
+        (methods: BillMethod []) => {
+           methods.map((method) => {
+             this.venderService.addABMethod(method);
+           }),
           this.dialogRef.disableClose = false;
         }
       );
-      // this.venderService.(this.bagVenders);
       this.snackBar.open('The Purchase was complete successfully!!', '', { duration: 3000 });
     }
   }

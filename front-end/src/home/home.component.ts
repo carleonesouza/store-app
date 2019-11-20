@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { MatPaginator, MatSort, MatDatepicker, MatDatepickerInputEvent } from '@angular/material';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterContentInit } from '@angular/core';
+import { MatPaginator, MatSort, MatDatepickerInputEvent, MatSnackBar } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 
 // Depending on whether rollup is used, moment needs to be imported differently.
@@ -10,22 +10,12 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/
 // syntax. However, rollup creates a synthetic default module and we thus need to import it using
 // the `default as` syntax.
 import * as moment from 'moment';
-
-
-export interface PeriodicElement {
-  name: string;
-  quantity: number;
-  total: number;
-  cash: number;
-  debit: number;
-  credit: number;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {name: 'Caraipa', quantity: 19, total: 10.00,  cash: 12, debit: 12, credit: 45},
-  {name: 'Caraipa', quantity: 19, total: 10.00,  cash: 12, debit: 12, credit: 45},
-  {name: 'Caraipa', quantity: 19, total: 10.00,  cash: 12, debit: 12, credit: 45},
-];
+import { ManagementService } from 'src/services/management.service';
+import { HomeDataSource } from 'src/services/home-data-source';
+import { HttpClient } from '@angular/common/http';
+import { HandleError } from 'src/services/handleError';
+import { fromEvent } from 'rxjs';
+import { ProductService } from 'src/services/product.service';
 
 
 @Component({
@@ -35,7 +25,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   providers: [
     // The locale would typically be provided on the root module of your application. We do it at
     // the component level here, due to limitations of our example generation script.
-    {provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
 
     // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
     // `MatMomentDateModule` in your applications root module. We provide it at the component level
@@ -45,14 +35,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
-    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
   ],
 })
-export class HomeComponent implements OnInit {
-  displayedColumns: string[] = ['product', 'quantity', 'total', 'cash', 'debit', 'credit'];
-  dataSource = ELEMENT_DATA;
+export class HomeComponent implements OnInit, AfterContentInit {
+  displayedColumns: string[] = ['name', 'quantity', 'total'];
+  exampleDatabase: ManagementService | null;
+  dataSource: HomeDataSource | null;
   loading = true;
-  events: string[] = [];
   @Input() reportDayForm: FormGroup;
   @Input() cashierForm: FormGroup;
   @Input() dateValue: string;
@@ -65,59 +55,92 @@ export class HomeComponent implements OnInit {
   public barChartType = 'bar';
   public barChartLegend = true;
   public barChartData = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: '300m/L'},
-    {data: [50, 54, 86, 71, 60, 54, 46], label: '500m/L'},
+    { data: [65, 59, 80, 81, 56, 55, 40], label: '300m/L' },
+    { data: [50, 54, 86, 71, 60, 54, 46], label: '500m/L' },
   ];
 
   public lineChartType = 'line';
   public lineChartData = [
-    {data: [65, 59, 80, 81, 56, 55, 40], label: '300m/L'},
-    {data: [50, 54, 86, 71, 60, 54, 46], label: '500m/L'},
+    { data: [65, 59, 80, 81, 56, 55, 40], label: '300m/L' },
+    { data: [50, 54, 86, 71, 60, 54, 46], label: '500m/L' },
   ];
 
   public lineChartLabels = ['Arraiana', 'Caraipa', 'Coroa Vermelha', 'Mucugê', 'Raiz Negra', 'Pitinga'];
+
+
+  constructor(private formBuilder: FormBuilder, private managementService: ManagementService,
+              private snackBar: MatSnackBar, public httpClient: HttpClient,
+              private myHandleError: HandleError, private productService: ProductService) { }
 
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild('filter', { static: true }) filter: ElementRef;
 
-  constructor(private formBuilder: FormBuilder) {
-    }
-
   ngOnInit() {
 
     this.loading = false;
-    // this.managementService.onDataForHome();
     this.reportDayForm = this.formBuilder.group({
-      dateDay: { value: '', disabled: true}
+      dateDay: { value: '', disabled: true }
     });
     this.cashierForm = this.formBuilder.group({
-      dateNow: { value: '', disabled: true}
+      dateNow: { value: '', disabled: true }
     });
-    }
+    const date = moment('2019.11.07', moment.defaultFormat).toDate();
+    this.managementService.onVenderHome(moment(date).locale('pt-br').format('l'));
+
+  }
+
+  ngAfterContentInit() {
+    this.loadData();
+}
+
+  refresh() {
+    this.loadData();
+  }
 
 
-  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-    this.events.push(`${type}: ${event.value}`);
+
+  addEvent(event: MatDatepickerInputEvent<Date>) {
     this.dateValue = moment(event.value).locale('pt-br').format('l');
-
   }
 
-  getTotalQuantity() {
-    return this.dataSource.map(t => t.quantity).reduce((acc, value) => acc + value, 0);
-  }
-  getTotalTotal() {
-    return this.dataSource.map(t => t.total).reduce((acc, value) => acc + value, 0);
-  }
-  getTotalCash() {
-    return this.dataSource.map(t => t.cash).reduce((acc, value) => acc + value, 0);
-  }
-  getTotalDebit() {
-    return this.dataSource.map(t => t.debit).reduce((acc, value) => acc + value, 0);
-  }
-  getTotalCredit() {
-    return this.dataSource.map(t => t.credit).reduce((acc, value) => acc + value, 0);
+  onGenerate() {
+    if (!this.dateValue) {
+      this.snackBar.open('You have to choose a date', '', { duration: 3000 });
+    } else {
+      this.managementService.onDataForHome(this.dateValue);
+      this.managementService.onVenderHome(this.dateValue);
+    }
   }
 
+/*   // If you don't need a filter or a pagination this can be simplified, you just use code from else block
+  // OLD METHOD:
+  // if there's a paginator active we're using it for refresh
+  if (this.dataSource._paginator.hasNextPage()) {
+    this.dataSource._paginator.nextPage();
+    this.dataSource._paginator.previousPage();
+    // in case we're on last page this if will tick
+  } else if (this.dataSource._paginator.hasPreviousPage()) {
+    this.dataSource._paginator.previousPage();
+    this.dataSource._paginator.nextPage();
+    // in all other cases including active filter we do it like this
+  } else {
+    this.dataSource.filter = '';
+    this.dataSource.filter = this.filter.nativeElement.value;
+  }*/
+
+public loadData() {
+  this.exampleDatabase = new ManagementService(this.httpClient, this.snackBar, this.myHandleError, this.productService);
+  this.dataSource = new HomeDataSource(this.exampleDatabase, this.paginator, this.sort);
+  fromEvent(this.filter.nativeElement, 'keyup')
+    // .debounceTime(150)
+    // .distinctUntilChanged()
+    .subscribe(() => {
+      if (!this.dataSource) {
+        return;
+      }
+      this.dataSource.filter = this.filter.nativeElement.value;
+    });
+}
 }

@@ -23,7 +23,7 @@
     </mat-form-field>
   </div>
   <div class="item-buttons">
-    <button mat-button class="style-button" [type]="submit" [disabled]="!productForm.valid" [mat-dialog-close]="1"
+    <button mat-button class="style-button" [disabled]="!productForm.valid" [mat-dialog-close]="1"
       (click)="onSubmit()">Delete</button>
       <span class="spacer"></span>
     <button mat-button class="style-button" (click)="onNoClick()" tabindex="-1">Cancel</button>

@@ -5,11 +5,11 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { MatSnackBar } from '@angular/material';
 import { catchError } from 'rxjs/operators';
 import { Quantity } from 'src/models/quantity.model';
-import { Vender } from 'src/models/vender.model';
+import { Vendor } from 'src/models/vendor.model';
 import { HandleError } from './handleError';
 
 @Injectable()
-export class DataService {
+export class ProductService {
   private static readonly endpoint: String  = 'http://localhost:3000/api/product';
 
   dataChange: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
@@ -18,8 +18,8 @@ export class DataService {
   tempProduc: Product;
   quantity: Array<Quantity>;
   localQuantity: Quantity;
-  vender: Array<Vender>;
-  localVender: Vender;
+  vender: Array<Vendor>;
+  localVender: Vendor;
   log: any;
 
   constructor(private httpClient: HttpClient, private myHandleError: HandleError,
@@ -44,7 +44,7 @@ export class DataService {
 
   // To get a list of Products
   getProducts(): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(`${DataService.endpoint}`)
+    return this.httpClient.get<Product[]>(`${ProductService.endpoint}`)
       .pipe(
         catchError(this.myHandleError.handleError<Product[]>('getProducts', []))
       );
@@ -52,7 +52,7 @@ export class DataService {
 
   // To get a list of all Products to table on create-product.component
   getAllProducts() {
-    this.httpClient.get<Product[]>(`${DataService.endpoint}`).subscribe(data => {
+    this.httpClient.get<Product[]>(`${ProductService.endpoint}`).subscribe(data => {
       this.dataChange.next(data);
     },
       (error: HttpErrorResponse) => {
@@ -63,7 +63,7 @@ export class DataService {
 
   // Get a specific Product from the Store
   getProductById(id: string): Observable<Product> {
-    return this.httpClient.get<Product>(`${DataService.endpoint}/${id}`)
+    return this.httpClient.get<Product>(`${ProductService.endpoint}/${id}`)
       .pipe(
         catchError(this.myHandleError.handleError<Product>('getProductById'))
       );
@@ -71,7 +71,7 @@ export class DataService {
 
   // To update for getById
   updateById(product: Product): Observable<Product> {
-    return this.httpClient.put<Product>(`${DataService.endpoint}/${product._id}`, product)
+    return this.httpClient.put<Product>(`${ProductService.endpoint}/${product._id}`, product)
       .pipe(
         catchError(this.myHandleError.handleError('updateHero', product))
       );
@@ -79,7 +79,7 @@ export class DataService {
 
   // To add a new Product
   addProduct(product: Product): void {
-    this.httpClient.post(`${DataService.endpoint}/add`, product).subscribe(() => {
+    this.httpClient.post(`${ProductService.endpoint}/add`, product).subscribe(() => {
       this.dialogData = product;
       this.snackBar.open('The Product was Successifuly created ', '', { duration: 4000 });
     },
@@ -90,7 +90,7 @@ export class DataService {
 
   // To upadate a Product by id
   updateProduct(product: Product): void {
-    this.httpClient.put(`${DataService.endpoint}/${product._id}`, product).subscribe(() => {
+    this.httpClient.put(`${ProductService.endpoint}/${product._id}`, product).subscribe(() => {
       this.dialogData = product;
       this.snackBar.open('The Product was Successifuly updated', '', { duration: 4000 });
     },
@@ -101,7 +101,7 @@ export class DataService {
 
   // To delete a Product by id
   deleteProduct(product: Product): void {
-   this.httpClient.request('delete', `${DataService.endpoint}/${product._id}`, { body: product })
+   this.httpClient.request('delete', `${ProductService.endpoint}/${product._id}`, { body: product })
       .subscribe(() => {
         this.snackBar.open('The Product was Successifuly deleted', '', { duration: 4000 });
       },
@@ -157,14 +157,14 @@ export class DataService {
       .subscribe(
         (data: Product) => {
           if (this.vender.length === 0) {
-            this.localVender = new Vender();
+            this.localVender = new Vendor();
             this.localVender.productId = data._id;
             this.localVender.amount = 0;
             this.localVender.total = 0;
             this.vender.push(this.localVender);
 
           } else if (this.vender.length > 0) {
-            this.localVender = new Vender();
+            this.localVender = new Vendor();
             this.localVender.productId = data._id;
             this.localVender.amount = 0;
             this.localVender.total = 0;
@@ -185,7 +185,7 @@ export class DataService {
 
   }
 
-  onBackVender(): Observable<Vender[]> {
+  onBackVender(): Observable<Vendor[]> {
     return new Observable((observer) => {
       if (this.vender != null) {
         observer.next(this.vender),

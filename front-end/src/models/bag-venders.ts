@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Vender } from './vender.model';
+import { Vendor } from './vendor.model';
 import { BillMethod } from './bill-method';
 
 @Injectable()
 export class BagVenders {
 
- venders: Vender [];
- billsMethod: BillMethod [];
+ venders?: Vendor [];
+ billsMethod?: BillMethod [];
  createdAt?: Date;
  updatedAt?: Date;
 }

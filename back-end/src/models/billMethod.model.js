@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 const billMethodSchema = new Schema({
   paymentMethod: { type: String, required: true },
   billValue: { type: Number, required: true },
+  vendorId: { type: Schema.Types.ObjectId, ref: 'Vendor' },
 
 },
 {
@@ -16,4 +17,4 @@ const billMethodSchema = new Schema({
 
 });
 
-module.exports = mongoose.model('BillMethods', billMethodSchema);
+module.exports = mongoose.model('BillMethod', billMethodSchema);

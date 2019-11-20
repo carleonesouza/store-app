@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DataService } from '../services/data.service';
+import { ProductService } from '../services/product.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -21,14 +21,14 @@ import { HandleError } from 'src/services/handleError';
 
 export class CreateProductComponent implements OnInit {
   displayedColumns = ['name', 'description', 'price', 'actions'];
-  exampleDatabase: DataService | null;
+  exampleDatabase: ProductService | null;
   snackBar: MatSnackBar |null;
   dataSource: TableDataSource | null;
   index: number;
   id: string;
 
   constructor(public httpClient: HttpClient, public dialog: MatDialog,
-              public dataService: DataService, private myHandleError: HandleError) { }
+              public productService: ProductService, private myHandleError: HandleError) { }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -42,16 +42,16 @@ export class CreateProductComponent implements OnInit {
     this.loadData();
   }
 
-  addNew(product: Product) {
+  addNew() {
     const dialogRef = this.dialog.open(AddDialogComponent, {
-      data: { product },
+      data: {  },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 1) {
         // After dialog is closed we're doing frontend updates
         // For add we're just pushing a new row inside DataService
-        this.exampleDatabase.dataChange.value.push(this.dataService.getDialogData());
+        this.exampleDatabase.dataChange.value.push(this.productService.getDialogData());
         this.refreshTable();
       }
     });
@@ -70,7 +70,7 @@ export class CreateProductComponent implements OnInit {
         // When using an edit things are little different, firstly we find record inside DataService by id
         const foundIndex = this.exampleDatabase.dataChange.value.findIndex((x) => x._id === this.id);
         // Then you update that record using data from dialogData (values you enetered)
-        this.exampleDatabase.dataChange.value[foundIndex] = this.dataService.getDialogData();
+        this.exampleDatabase.dataChange.value[foundIndex] = this.productService.getDialogData();
         // And lastly refresh table
         this.refreshTable();
       }
@@ -118,7 +118,7 @@ export class CreateProductComponent implements OnInit {
     }*/
 
   public loadData() {
-    this.exampleDatabase = new DataService(this.httpClient, this.myHandleError, this.snackBar);
+    this.exampleDatabase = new ProductService(this.httpClient, this.myHandleError, this.snackBar);
     this.dataSource = new TableDataSource(this.exampleDatabase, this.paginator, this.sort);
     fromEvent(this.filter.nativeElement, 'keyup')
       // .debounceTime(150)

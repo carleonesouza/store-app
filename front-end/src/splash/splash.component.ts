@@ -5,7 +5,7 @@ import {
     ViewContainerRef,
     ViewEncapsulation} from '@angular/core';
 import { take } from 'rxjs/operators';
-import { DataService } from 'src/services/data.service';
+import { ProductService } from 'src/services/product.service';
 import { FrontStoreComponent } from 'src/front-store/front-store.component';
 
 
@@ -18,10 +18,10 @@ import { FrontStoreComponent } from 'src/front-store/front-store.component';
 export class SplashComponent implements OnInit {
 
     constructor(private componentFactoryResolver: ComponentFactoryResolver,
-                private viewContainerRef: ViewContainerRef, private dataService: DataService) { }
+                private viewContainerRef: ViewContainerRef, private productService: ProductService) { }
 
     ngOnInit() {
-        this.dataService.getProducts().
+        this.productService.getProducts().
         pipe(take(1)).
         subscribe(() => {
             this.goToPage();

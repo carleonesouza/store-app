@@ -1,6 +1,6 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, Inject, OnInit, Input } from '@angular/core';
-import { DataService } from '../../services/data.service';
+import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
@@ -17,7 +17,7 @@ export class EditDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<EditDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Product,
-              public dataService: DataService, public snackBar: MatSnackBar, private formBuilder: FormBuilder) { }
+              public productService: ProductService, public snackBar: MatSnackBar, private formBuilder: FormBuilder) { }
 
               ngOnInit() {
                 this.productForm = this.formBuilder.group({
@@ -52,7 +52,7 @@ export class EditDialogComponent implements OnInit {
   }
 
   public confirmAdd(): void {
-    this.dataService.addProduct(this.data);
+    this.productService.addProduct(this.data);
   }
 
   onSubmit() {
@@ -62,7 +62,7 @@ export class EditDialogComponent implements OnInit {
       const price = this.productForm.value.priceProduct;
       const description = this.productForm.value.descriptionProduct;
       const saveProduct = { _id, name, price, description };
-      this.dataService.updateProduct(new Product(saveProduct));
+      this.productService.updateProduct(new Product(saveProduct));
       this.dialogRef.close();
     } else {
       this.dialogRef.close();

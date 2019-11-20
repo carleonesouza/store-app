@@ -39,7 +39,7 @@
 
 <div fxLayout="column" fxLayoutAlign="center stretch" class="row">
   <div class="card-header">Finish Purchase </div>
-  <mat-dialog-content [formGroup]="venderForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content [formGroup]="venderForm">
     <div fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="start center" class="flex-wrap">
       <mat-form-field appearance="outline">
         <mat-label>Amount</mat-label>
@@ -69,10 +69,10 @@
 </div>
 <div fxLayout="row" fxLayoutAlign="end center">
   <button mat-button class="style-button" (click)="onCancel()" tabindex="-1">Cancel</button>
-  <button mat-button class="style-button" aria-label="Cash button" [type]="submit" [disabled]="venderForm.invalid"
+  <button mat-button class="style-button" aria-label="Cash button" [disabled]="venderForm.invalid"
      (click)="onSubmit('Cash')">Cash</button>
-  <button mat-button class="style-button" aria-label="Debit button" [type]="submit" [disabled]="venderForm.invalid"
+  <button mat-button class="style-button" aria-label="Debit button"  [disabled]="venderForm.invalid"
      (click)="onSubmit('Debit')">Debit </button>
-  <button mat-button class="style-button" aria-label="Credit button" [type]="submit" [disabled]="venderForm.invalid"
+  <button mat-button class="style-button" aria-label="Credit button"  [disabled]="venderForm.invalid"
      (click)="onSubmit('Credit')">Credit </button>
 </div>

@@ -1,12 +1,12 @@
 import { DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, fromEvent, merge, Observable } from 'rxjs';
+import { BehaviorSubject, merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Product } from '../models/product.model';
-import { ProductService } from 'src/services/product.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Vendor } from 'src/models/vendor.model';
+import { ManagementService } from './management.service';
 
-export class TableDataSource extends DataSource<Product> {
+export class HomeDataSource extends DataSource<Vendor> {
   _filterChange = new BehaviorSubject('');
 
   get filter(): string {
@@ -17,10 +17,10 @@ export class TableDataSource extends DataSource<Product> {
     this._filterChange.next(filter);
   }
 
-  filteredData: Product[] = [];
-  renderedData: Product[] = [];
+  filteredData: Vendor[] = [];
+  renderedData: Vendor[] = [];
 
-  constructor(public _exampleDatabase: ProductService, public _paginator: MatPaginator,
+  constructor(public _exampleDatabase: ManagementService, public _paginator: MatPaginator,
               public _sort: MatSort) {
     super();
     // Reset to the first page when the user changes the filter.
@@ -28,7 +28,7 @@ export class TableDataSource extends DataSource<Product> {
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<Product[]> {
+  connect(): Observable<Vendor[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
       this._exampleDatabase.dataChange,
@@ -37,12 +37,12 @@ export class TableDataSource extends DataSource<Product> {
       this._paginator.page,
     ];
 
-    this._exampleDatabase.getAllProducts();
+    this._exampleDatabase.getAllBags();
 
     return merge(...displayDataChanges).pipe(map(() => {
       // Filter data
-      this.filteredData = this._exampleDatabase.data.slice().filter((product: Product) => {
-        const searchStr = (product._id + product.description + product.name).toLowerCase();
+      this.filteredData = this._exampleDatabase.data.slice().filter((vender: Vendor) => {
+        const searchStr = (vender.productId + vender.name).toLowerCase();
         return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
       });
 
@@ -60,7 +60,7 @@ export class TableDataSource extends DataSource<Product> {
   disconnect() { }
 
   /** Returns a sorted copy of the database data. */
-  sortData(data: Product[]): Product[] {
+  sortData(data: Vendor[]): Vendor[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
@@ -72,8 +72,9 @@ export class TableDataSource extends DataSource<Product> {
       switch (this._sort.active) {
         case '_id': [propertyA, propertyB] = [a._id, b._id]; break;
         case 'name': [propertyA, propertyB] = [a.name, b.name]; break;
-        case 'description': [propertyA, propertyB] = [a.description, b.description]; break;
-        case 'price': [propertyA, propertyB] = [a.price, b.price]; break;
+        case 'productId': [propertyA, propertyB] = [a.productId, b.productId]; break;
+        case 'amount': [propertyA, propertyB] = [a.amount, b.amount]; break;
+        case 'total': [propertyA, propertyB] = [a.total, b.total]; break;
       }
 
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

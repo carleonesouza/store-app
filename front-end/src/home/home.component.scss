@@ -11,6 +11,15 @@ table {
 tr.mat-footer-row {
     font-weight: bold;
   }
+.no-results{
+    text-align: center;
+  }
+.form{
+    padding: 3%;
+  }
+  mat-form-field{
+    width: 100%;
+  }
 
 mat-toolbar{
     border-radius: 4px 4px 0 0;

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BillMethod } from './bill-method';
 
 @Injectable()
-export class Vender {
+export class Vendor {
     _id?: string;
     name?: string;
     productId: string;
     amount = 0;
     total = 0;
+    createdAt?: Date;
 
     constructor(obj?: any) {
         if (!obj) {
@@ -17,6 +17,8 @@ export class Vender {
         this.productId = obj.productId;
         this.amount = obj.amount;
         this.total = obj.total;
+        this.createdAt = obj.createdAt;
+
       }
 
 }
