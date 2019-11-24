@@ -22,7 +22,7 @@ export class ManagementService {
     private vender: Vendor;
     localDate = new Date();
 
-    constructor(private httpClient: HttpClient, private snackBar: MatSnackBar,
+    constructor(private httpClient: HttpClient, private snackBar: MatSnackBar, private vendrService: VendorService,
                 private myHandleError: HandleError, private productService: ProductService) {
         this.bagVender = [];
         this.bagBill = [];
@@ -47,7 +47,7 @@ export class ManagementService {
     }
 
     onDataForHome(date: string) {
-        this.getAllBags().subscribe(
+ /*        this.getAllBags().subscribe(
             (data: BagVenders[]) => {
                 if (data.some(e => moment(e.createdAt).locale('pt-br').format('l') === date)) {
                     if (data.some(f => f.billsMethod.some(c => c.paymentMethod === 'Cash'))) {
@@ -92,7 +92,7 @@ export class ManagementService {
                 }
                 console.log(this.bagBill);
             }
-        );
+        ); */
     }
 
     get data(): Vendor[] {
@@ -139,7 +139,7 @@ export class ManagementService {
                                             this.bagVender.push(this.vender);
                                         }
                                     );
-                                } 
+                                }
                                 });
                         });
                 }

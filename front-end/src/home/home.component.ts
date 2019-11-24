@@ -3,6 +3,8 @@ import { MatPaginator, MatSort, MatDatepickerInputEvent, MatSnackBar } from '@an
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { HttpClient } from '@angular/common/http';
+import { fromEvent } from 'rxjs';
 
 
 // Depending on whether rollup is used, moment needs to be imported differently.
@@ -12,10 +14,10 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import * as moment from 'moment';
 import { ManagementService } from 'src/services/management.service';
 import { HomeDataSource } from 'src/services/home-data-source';
-import { HttpClient } from '@angular/common/http';
 import { HandleError } from 'src/services/handleError';
-import { fromEvent } from 'rxjs';
 import { ProductService } from 'src/services/product.service';
+import { VendorService } from 'src/services/vendor.service';
+import { BillDataSource } from 'src/services/bill-data-source';
 
 
 @Component({
@@ -40,9 +42,12 @@ import { ProductService } from 'src/services/product.service';
 })
 export class HomeComponent implements OnInit, AfterContentInit {
   displayedColumns: string[] = ['name', 'quantity', 'total'];
-  exampleDatabase: ManagementService | null;
+  displayedColumns2: string[] = ['method', 'value'];
+  exampleDatabase: VendorService | null;
   dataSource: HomeDataSource | null;
+  dataMethod: BillDataSource | null;
   loading = true;
+  today = new Date().toLocaleDateString();
   @Input() reportDayForm: FormGroup;
   @Input() cashierForm: FormGroup;
   @Input() dateValue: string;
@@ -77,26 +82,30 @@ export class HomeComponent implements OnInit, AfterContentInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild('filter', { static: true }) filter: ElementRef;
 
-  ngOnInit() {
 
+  ngOnInit() {
     this.loading = false;
     this.reportDayForm = this.formBuilder.group({
       dateDay: { value: '', disabled: true }
     });
     this.cashierForm = this.formBuilder.group({
-      dateNow: { value: '', disabled: true }
+      dateNow: { value: this.today, disabled: true }
     });
-    const date = moment('2019.11.07', moment.defaultFormat).toDate();
-    this.managementService.onVenderHome(moment(date).locale('pt-br').format('l'));
+    this.managementService.onVenderHome(this.today);
+    this.cashierForm.setValue({
+      dateNow: this.today,
+    });
 
   }
 
   ngAfterContentInit() {
     this.loadData();
+    this.loadDataMethod();
 }
 
   refresh() {
     this.loadData();
+    this.loadDataMethod();
   }
 
 
@@ -114,24 +123,9 @@ export class HomeComponent implements OnInit, AfterContentInit {
     }
   }
 
-/*   // If you don't need a filter or a pagination this can be simplified, you just use code from else block
-  // OLD METHOD:
-  // if there's a paginator active we're using it for refresh
-  if (this.dataSource._paginator.hasNextPage()) {
-    this.dataSource._paginator.nextPage();
-    this.dataSource._paginator.previousPage();
-    // in case we're on last page this if will tick
-  } else if (this.dataSource._paginator.hasPreviousPage()) {
-    this.dataSource._paginator.previousPage();
-    this.dataSource._paginator.nextPage();
-    // in all other cases including active filter we do it like this
-  } else {
-    this.dataSource.filter = '';
-    this.dataSource.filter = this.filter.nativeElement.value;
-  }*/
 
 public loadData() {
-  this.exampleDatabase = new ManagementService(this.httpClient, this.snackBar, this.myHandleError, this.productService);
+  this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.myHandleError, this.productService);
   this.dataSource = new HomeDataSource(this.exampleDatabase, this.paginator, this.sort);
   fromEvent(this.filter.nativeElement, 'keyup')
     // .debounceTime(150)
@@ -143,4 +137,19 @@ public loadData() {
       this.dataSource.filter = this.filter.nativeElement.value;
     });
 }
+
+public loadDataMethod() {
+  this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.myHandleError, this.productService);
+  this.dataMethod = new BillDataSource(this.exampleDatabase, this.paginator, this.sort);
+  fromEvent(this.filter.nativeElement, 'keyup')
+    // .debounceTime(150)
+    // .distinctUntilChanged()
+    .subscribe(() => {
+      if (!this.dataMethod) {
+        return;
+      }
+      this.dataMethod.filter = this.filter.nativeElement.value;
+    });
+}
+
 }

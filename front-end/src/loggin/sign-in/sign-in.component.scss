@@ -1,0 +1,58 @@
+
+  .mat-form-field {
+      width: 100%;
+  }
+  .mat-card {
+      width: 100%;
+  }
+  #logo {
+    padding-top: 10px;
+    padding-left: 25px;
+}
+  .item-forgot{
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+    text-align: center;
+  }
+  .card-header {
+    padding: 5%;
+    text-align: center;
+    max-width: 100%;
+    border-radius: 4px 4px 4px 4px;
+    background-color: darken(#01579B, 3);
+    color: #ffffff;
+  }
+  
+  mat-card-actions {
+      margin-left: 10%;
+  }
+  
+  .example-spacer {
+      margin: 1rem;
+    }
+    .mat-card-title {
+        text-align: center;
+    }
+  
+  .spacer{
+      margin: 0.5rem;
+  }
+  .corner-position {
+      position: fixed;
+      bottom: 5rem;
+      right: 1.6rem;
+    }
+    .price-item{
+        min-width: 20%;
+    }
+  
+    @media only screen and (max-width: 600px) {
+      
+      #logo {
+        padding: 20px;
+    }
+      .style-button{
+        display: table-row;
+      }
+      
+    
+  }

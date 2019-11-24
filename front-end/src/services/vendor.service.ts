@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
 import { BillMethod } from '../models/bill-method';
@@ -7,16 +7,27 @@ import { BagVenders } from 'src/models/bag-venders';
 import { HandleError } from './handleError';
 import { catchError } from 'rxjs/operators';
 import { Vendor } from 'src/models/vendor.model';
+import { ProductService } from './product.service';
+import * as moment from 'moment';
 
 @Injectable()
 export class VendorService {
   private static readonly endpoint: String  = 'http://localhost:3000/api/populate';
+  dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
+  dataMethodChange: BehaviorSubject<BillMethod[]> = new BehaviorSubject<BillMethod[]>([]);
   private billGroup: Array<BillMethod>;
-  private localBill;
+  private localBill: BillMethod;
+  private billMethod: BillMethod;
+    private vender: Vendor;
+  today = new Date().toLocaleDateString();
+  bagBill: Array<BillMethod>;
+  bagVender: Array<Vendor>;
 
   constructor(private httpClient: HttpClient, private snackBar: MatSnackBar,
-              private myHandleError: HandleError) {
+              private myHandleError: HandleError, private productService: ProductService) {
       this.billGroup = [];
+      this.bagVender = [];
+      this.bagBill = [];
   }
   httpOptions = {
     headers: new HttpHeaders({
@@ -24,6 +35,13 @@ export class VendorService {
     })
   };
 
+  get data(): Vendor[] {
+    return this.dataChange.value;
+  }
+
+  get dataMethod(): BillMethod [] {
+    return this.dataMethodChange.value;
+  }
 
 // Create a Vendor at the backend
 addVendor(vendor: Vendor): void {
@@ -49,6 +67,56 @@ addABMethod(bill: BillMethod): void {
     });
 }
 
+// To Get a list of Vendors from backend
+getAllVendors() {
+  this.httpClient.get<Vendor[]>(`${VendorService.endpoint}/vendors`).subscribe(data => {
+    data.map((vendor) => {
+      this.productService.getProductById(vendor.productId
+        ).subscribe((product) => {
+          if (vendor.productId === product._id) {
+            vendor.name = product.name;
+          }
+        }
+      );
+    });
+    this.dataChange.next(data);
+  },
+    (error: HttpErrorResponse) => {
+      this.snackBar.open('Error occurred. Details: ' + error.name + ' ' + error.message, 'RETRY', { duration: 3000 });
+      console.log(error.name + ' ' + error.message);
+    });
+}
+
+// To Get a list of Methods from backend
+getAllMethods() {
+  this.httpClient.get<BillMethod[]>(`${VendorService.endpoint}/methods`).subscribe(data => {
+    const billCredit = data.filter(element => element.paymentMethod === 'Credit');
+    const billCash = data.filter(element => element.paymentMethod === 'Cash');
+    const billDebit = data.filter(element => element.paymentMethod === 'Debit');
+    const myBil = new BillMethod();
+    billCredit.map((item) => {
+      myBil.paymentMethod = item.paymentMethod;
+      myBil.billValue = myBil.billValue + item.billValue;
+    } );
+    const myBll = new BillMethod();
+    billCash.map((item) => {
+      myBll.paymentMethod = item.paymentMethod;
+      myBll.billValue = myBll.billValue + item.billValue;
+    } );
+    const myBill = new BillMethod();
+    billDebit.map((item) => {
+      myBill.paymentMethod = item.paymentMethod;
+      myBill.billValue = myBill.billValue + item.billValue;
+    } );
+    this.bagBill.push(myBill, myBll, myBil);
+    this.dataMethodChange.next(this.bagBill);
+  },
+    (error: HttpErrorResponse) => {
+      this.snackBar.open('Error occurred. Details: ' + error.name + ' ' + error.message, 'RETRY', { duration: 3000 });
+      console.log(error.name + ' ' + error.message);
+    });
+}
+
 
 // Create an local [] of the BillMethod
   onBillMethod(e: number, f: string) {
@@ -65,7 +133,7 @@ addABMethod(bill: BillMethod): void {
     }
   }
 
-  // To return a Observable of BillMethods[]
+  // To return a local Observable of BillMethods[]
   onGetBillMehthod(): Observable<BillMethod[]> {
     return new Observable((observer) => {
       if (this.billGroup != null) {

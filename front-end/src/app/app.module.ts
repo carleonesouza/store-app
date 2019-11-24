@@ -25,6 +25,9 @@ import { BagVenders } from 'src/models/bag-venders';
 import { HandleError } from 'src/services/handleError';
 import { ManagementService } from 'src/services/management.service';
 import { DatepickerComponent } from '../datepicker/datepicker.component';
+import { SignInComponent } from '../loggin/sign-in/sign-in.component';
+import { SignUpComponent } from '../loggin/sign-up/sign-up.component';
+import { from } from 'rxjs';
 
 @NgModule({
   declarations: [
@@ -37,6 +40,8 @@ import { DatepickerComponent } from '../datepicker/datepicker.component';
     DeleteDialogComponent,
     CreateProductComponent,
     SplashComponent,
+    SignInComponent,
+    SignUpComponent,
     BillDialogComponent,
     ConfirmationDialogComponent,
     DatepickerComponent
@@ -63,6 +68,6 @@ import { DatepickerComponent } from '../datepicker/datepicker.component';
     ConfirmationDialogComponent
 ],
   exports: [ SplashComponent ],
-  bootstrap: [AppComponent]
+  bootstrap: [SignInComponent]
 })
 export class AppModule { }

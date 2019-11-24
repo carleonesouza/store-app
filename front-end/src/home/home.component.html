@@ -99,7 +99,7 @@
     <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
         <div class="item item-3" fxFlex>
                 <mat-toolbar color="primary">
-                        <span>List of Products</span>
+                        <span>List Solds of Products</span>
                         <span class="spacer"></span>
                         <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
                           <mat-icon>refresh</mat-icon>
@@ -124,7 +124,7 @@
                       
                           <ng-container matColumnDef="quantity">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</mat-header-cell>
-                            <mat-cell *matCellDef="let row"> {{row.quantity}}</mat-cell>
+                            <mat-cell *matCellDef="let row"> {{row.amount}}</mat-cell>
                           </ng-container>
                       
                           <ng-container matColumnDef="total">
@@ -132,24 +132,6 @@
                             <mat-cell *matCellDef="let row"> {{row.total | currency:"BRL"}}</mat-cell>
                           </ng-container>
                       
-                          <!-- actions -->
-                          <ng-container matColumnDef="actions">
-                            <mat-header-cell *matHeaderCellDef> <span class="example-spacer "></span>Actions </mat-header-cell>
-                      
-                            <mat-cell *matCellDef="let row; let i=index;">
-                              <button mat-icon-button matTooltip="Edit button"
-                                >
-                                <mat-icon color="accent" aria-label="Edit">edit</mat-icon>
-                              </button>
-                      
-                              <span class="example-spacer "></span>
-                      
-                              <button mat-icon-button matTooltip="Delete button"
-                              >
-                                <mat-icon color="warn" aria-label="Delete">delete</mat-icon>
-                              </button>
-                            </mat-cell>
-                          </ng-container>
                           <span class="example-spacer "></span>
                           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
@@ -159,6 +141,54 @@
                         </div>
                       
                         <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="5"
+                          [pageSizeOptions]="[5, 10, 25, 100]">
+                        </mat-paginator>
+                      </div>
+     
+            <span class="spacer"></span>
+        </div>
+    </div>
+    <span class="spacer"></span>
+    <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+        <div class="item item-3" fxFlex>
+                <mat-toolbar color="primary">
+                        <span>Method of payment</span>
+                        <span class="spacer"></span>
+                        <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
+                          <mat-icon>refresh</mat-icon>
+                        </button>
+                      </mat-toolbar>
+                      
+                      <div class="container mat-elevation-z8">
+                        <div class="form">
+                          <mat-form-field floatPlaceholder="never" color="warn">
+                            <input matInput #filter placeholder="Filter Products">
+                          </mat-form-field>
+                        </div>
+                        <mat-table #table [dataSource]="dataMethod" matSort class="mat-cell">
+                          <!--- Note that these columns can be defined in any order.
+                                  The actual rendered columns are set as a property on the row definition" -->
+                      
+                          <!-- ID Column -->
+                          <ng-container matColumnDef="method">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Method</mat-header-cell>
+                            <mat-cell *matCellDef="let row">{{row.paymentMethod}}</mat-cell>
+                          </ng-container>                  
+      
+                           <ng-container matColumnDef="value">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Value</mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.billValue | currency:"BRL"}}</mat-cell>
+                          </ng-container>
+                      
+                          <span class="example-spacer "></span>
+                          <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
+                          <mat-row *matRowDef="let row; columns: displayedColumns2;"></mat-row>
+                        </mat-table>
+                        <div class="no-results" [style.display]="dataMethod.renderedData.length == 0 ? '' : 'none'">
+                          No results
+                        </div>
+                      
+                        <mat-paginator #paginator2 [length]="dataMethod.filtertingData.length" [pageIndex]="0" [pageSize]="5"
                           [pageSizeOptions]="[5, 10, 25, 100]">
                         </mat-paginator>
                       </div>

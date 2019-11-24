@@ -3,10 +3,10 @@ import { BehaviorSubject, merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { Vendor } from 'src/models/vendor.model';
 import { VendorService } from './vendor.service';
+import { BillMethod } from '../models/bill-method';
 
-export class HomeDataSource extends DataSource<Vendor> {
+export class BillDataSource extends DataSource<BillMethod> {
   _filterChange = new BehaviorSubject('');
 
   get filter(): string {
@@ -17,8 +17,8 @@ export class HomeDataSource extends DataSource<Vendor> {
     this._filterChange.next(filter);
   }
 
-  filteredData: Vendor[] = [];
-  renderedData: Vendor[] = [];
+  filtertingData: BillMethod[] = [];
+  renderedData: BillMethod[] = [];
 
   constructor(public _exampleDatabase: VendorService, public _paginator: MatPaginator,
               public _sort: MatSort) {
@@ -28,26 +28,26 @@ export class HomeDataSource extends DataSource<Vendor> {
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<Vendor[]> {
+  connect(): Observable<BillMethod[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this._exampleDatabase.dataChange,
+      this._exampleDatabase.dataMethodChange,
       this._sort.sortChange,
       this._filterChange,
       this._paginator.page,
     ];
 
-    this._exampleDatabase.getAllVendors();
+    this._exampleDatabase.getAllMethods();
 
     return merge(...displayDataChanges).pipe(map(() => {
       // Filter data
-      this.filteredData = this._exampleDatabase.data.slice().filter((vender: Vendor) => {
-        const searchStr = (vender.productId + vender.name).toLowerCase();
+      this.filtertingData = this._exampleDatabase.dataMethod.slice().filter((bill: BillMethod) => {
+        const searchStr = (bill.paymentMethod).toLowerCase();
         return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
       });
 
       // Sort filtered data
-      const sortedData = this.sortData(this.filteredData.slice());
+      const sortedData = this.sortData(this.filtertingData.slice());
 
       // Grab the page's slice of the filtered sorted data.
       const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
@@ -60,7 +60,7 @@ export class HomeDataSource extends DataSource<Vendor> {
   disconnect() { }
 
   /** Returns a sorted copy of the database data. */
-  sortData(data: Vendor[]): Vendor[] {
+  sortData(data: BillMethod[]): BillMethod[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
@@ -70,11 +70,9 @@ export class HomeDataSource extends DataSource<Vendor> {
       let propertyB: number | string = '';
 
       switch (this._sort.active) {
-        case '_id': [propertyA, propertyB] = [a._id, b._id]; break;
-        case 'name': [propertyA, propertyB] = [a.name, b.name]; break;
-        case 'productId': [propertyA, propertyB] = [a.productId, b.productId]; break;
-        case 'amount': [propertyA, propertyB] = [a.amount, b.amount]; break;
-        case 'total': [propertyA, propertyB] = [a.total, b.total]; break;
+        case '_id': [propertyA, propertyB] = [a.id, b.id]; break;
+        case 'paymentMethod': [propertyA, propertyB] = [a.paymentMethod, b.paymentMethod]; break;
+        case 'billValue': [propertyA, propertyB] = [a.billValue, b.billValue]; break;
       }
 
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

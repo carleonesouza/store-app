@@ -1,6 +1,6 @@
 export class BillMethod {
 id?: number;
 paymentMethod?: string;
-billValue?: number;
+billValue = 0;
 vendorId: string;
 }
