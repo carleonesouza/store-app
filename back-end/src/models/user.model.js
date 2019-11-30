@@ -25,18 +25,18 @@ const userSchema = new Schema({
 });
 
 
-UserSchema.pre('save', function(next) {
+userSchema.pre('save',() => {
   var user = this;
 
   // only hash the password if it has been modified (or is new)
   if (!user.isModified('password')) return next();
 
   // generate a salt
-  bcrypt.genSalt(baseUtilite.CONSTANTS.SALT_WORK_FACTOR, function(err, salt) {
+  bcrypt.genSalt(baseUtilite.CONSTANTS.SALT_WORK_FACTOR,(err, salt) => {
       if (err) return next(err);
 
       // hash the password using our new salt
-      bcrypt.hash(user.password, salt, function(err, hash) {
+      bcrypt.hash(user.password, salt, (err, hash) => {
           if (err) return next(err);
 
           // override the cleartext password with the hashed one
@@ -46,19 +46,19 @@ UserSchema.pre('save', function(next) {
   });
 });
 
-UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+userSchema.methods.comparePassword = (candidatePassword, cb) => {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
       if (err) return cb(err);
       cb(null, isMatch);
   });
 };
 
-UserSchema.virtual('isLocked').get(function() {
+userSchema.virtual('isLocked').get( () => {
   // check for a future lockUntil timestamp
   return !!(this.lockUntil && this.lockUntil > Date.now());
 });
 
-UserSchema.methods.incLoginAttempts = function(cb) {
+userSchema.methods.incLoginAttempts = (cb) => {
   // if we have a previous lock that has expired, restart at 1
   if (this.lockUntil && this.lockUntil < Date.now()) {
       return this.update({
@@ -67,7 +67,7 @@ UserSchema.methods.incLoginAttempts = function(cb) {
       }, cb);
   }
   // otherwise we're incrementing
-  var updates = { $inc: { loginAttempts: 1 } };
+  const updates = { $inc: { loginAttempts: 1 } };
   // lock the account if we've reached max attempts and it's not locked already
   if (this.loginAttempts + 1 >= baseUtilite.CONSTANTS.MAX_LOGIN_ATTEMPTS && !this.isLocked) {
       updates.$set = { lockUntil: Date.now() + LOCK_TIME };
@@ -76,13 +76,13 @@ UserSchema.methods.incLoginAttempts = function(cb) {
 };
 
 // expose enum on the model, and provide an internal convenience reference 
-var reasons = UserSchema.statics.failedLogin = {
+const reasons = userSchema.statics.failedLogin = {
   NOT_FOUND: 0,
   PASSWORD_INCORRECT: 1,
   MAX_ATTEMPTS: 2
 };
 
-UserSchema.statics.getAuthenticated = function(username, password, cb) {
+userSchema.statics.getAuthenticated = (username, password, cb) => {
   this.findOne({ username: username }, function(err, user) {
       if (err) return cb(err);
 
@@ -94,14 +94,14 @@ UserSchema.statics.getAuthenticated = function(username, password, cb) {
       // check if the account is currently locked
       if (user.isLocked) {
           // just increment login attempts if account is already locked
-          return user.incLoginAttempts(function(err) {
+          return user.incLoginAttempts((err) => {
               if (err) return cb(err);
               return cb(null, null, reasons.MAX_ATTEMPTS);
           });
       }
 
       // test for a matching password
-      user.comparePassword(password, function(err, isMatch) {
+      user.comparePassword(password, (err, isMatch) =>  {
           if (err) return cb(err);
 
           // check if the password was a match
@@ -113,14 +113,14 @@ UserSchema.statics.getAuthenticated = function(username, password, cb) {
                   $set: { loginAttempts: 0 },
                   $unset: { lockUntil: 1 }
               };
-              return user.update(updates, function(err) {
+              return user.update(updates, (err) => {
                   if (err) return cb(err);
                   return cb(null, user);
               });
           }
 
           // password is incorrect, so increment login attempts before responding
-          user.incLoginAttempts(function(err) {
+          user.incLoginAttempts( (err) => {
               if (err) return cb(err);
               return cb(null, null, reasons.PASSWORD_INCORRECT);
           });

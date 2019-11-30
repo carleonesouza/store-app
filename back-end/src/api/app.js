@@ -1,11 +1,12 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const connection = require('../config/index');
+const jwt = require('jsonwebtoken');
+require('../config/index');
 
 const app = express();
 
-
+app.set('secretKey', 'nodeRestApi');
 const index = require('./routes/apiRoutes');
 const appRoutes = require('./routes/appRoutes');
 
@@ -26,6 +27,19 @@ app.use((req, res, next) => {
   }
 
   next();
+});
+
+app.use((req, res, next) => {
+  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'),
+  (err, decoded) => {
+    if (err) {
+      res.json({status:"error", message: err.message, data:null});
+    }else{
+      // add user id to request
+      req.body.userId = decoded.id;
+      next();
+    }
+  });
 });
 
 

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const productActionApi = require('../../actions/productActionApi');
 const vendorsActionApi = require('../../actions/vendorsActionApi');
 const billMethodAction = require('../../actions/billMethodActionApi');
+const userActionApi = require('../../actions/userActionApi');
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended:true}));
@@ -13,12 +14,14 @@ router.post('/product/add', productActionApi.createProduct);
 router.post('/populate/bag/add', vendorsActionApi.createBag);
 router.post('/populate/vendor/add', vendorsActionApi.createVendor);
 router.post('/populate/method', billMethodAction.createABill);
+router.post('/register', userActionApi.createUser);
 
 router.get('/product', productActionApi.findAllProducts);
 router.get('/populate/bags', vendorsActionApi.findAllBags);
 router.get('/populate/vendors', vendorsActionApi.findAVendors);
 router.get('/populate/methods', billMethodAction.findABill);
 router.get('/product/:id', productActionApi.findByIdProduct);
+router.get('/login', userActionApi.authenticateUser)
 
 router.put('/product/:id', productActionApi.updateProduct);
 
