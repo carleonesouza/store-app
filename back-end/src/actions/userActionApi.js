@@ -1,5 +1,6 @@
 const User = require('../models/user.model');
 const bcrypt = require('bcryptjs'); 
+const baseUtilite = require('../utilities/baseUtilite');
 const jwt = require('jsonwebtoken');
 
 exports.createUser = async (req, res) => {
@@ -16,17 +17,37 @@ exports.createUser = async (req, res) => {
 
 };
 
-exports.authenticateUser= async (req, res) => {
-      User.findOne({email:req.body.email}, (err, userInfo) => {
-         if (err) {
-                  next(err);
-         } else {
-               if(bcrypt.compareSync(req.body.password, userInfo.password)) {
-                  const token = jwt.sign({id: userInfo._id}, req.app.get('secretKey'), { expiresIn: '1h' });
-                  res.json({status:"success", message: "user found!!!", data:{user: userInfo, token:token}});
-               } else {
-                  res.json({status:"error", message: "Invalid email/password!!!", data:null});
-                  }
-               }
+exports.authenticateUser= async (req, res) => { 
+     User.findOne({email: req.body.email})
+     .exec()
+     .then( user => {
+        if (user.length < 1 ) {
+           return res.status(401).json({
+              message: 'Auth failed'
+           });
+        }
+        bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+          if (err) {
+             return res.status(401).json({
+                message: 'Auth failed'
+             });
+          }
+          if (result) {
+             const token = jwt.sign({
+                email: user[0].email,
+                userId: user[0]._id
+             }, baseUtilite.CONTANTS.JWT_KEY, {
+                expiresIn: '1h'
+             });
+            res.status(200).json({
+               message: 'Auth Successful',
+               token: token
             });
-         }
+          }
+          res.status(401).json({
+             message: 'Auth failed'
+          });
+        });
+     })
+     .catch();
+   }
