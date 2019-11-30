@@ -6,7 +6,7 @@ import {
     ViewEncapsulation} from '@angular/core';
 import { take } from 'rxjs/operators';
 import { ProductService } from 'src/services/product.service';
-import { FrontStoreComponent } from 'src/front-store/front-store.component';
+import { FrontStoreComponent } from 'src/product-app/front-store/front-store.component';
 
 
 @Component({

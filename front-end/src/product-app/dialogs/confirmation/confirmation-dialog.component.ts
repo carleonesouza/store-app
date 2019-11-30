@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { ProductService } from '../../services/product.service';
+import { ProductService } from '../../../services/product.service';
 import { MatSnackBar } from '@angular/material';
 import { Vendor } from 'src/models/vendor.model';
 import { BillDialogComponent } from '../bill-dialog/bill-dialog.component';

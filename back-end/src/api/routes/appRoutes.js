@@ -5,7 +5,7 @@ const vendorsActionApi = require('../../actions/vendorsActionApi');
 const billMethodAction = require('../../actions/billMethodActionApi');
 
 router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.urlencoded({extended:true}));
 router.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 

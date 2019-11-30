@@ -1,9 +1,9 @@
 import {Component, OnInit, Input} from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
-import { ProductService } from '../services/product.service';
+import { ProductService } from '../../services/product.service';
 import { Product } from 'src/models/product.model';
 import { Quantity } from 'src/models/quantity.model';
-import { ConfirmationDialogComponent } from 'src/dialogs/confirmation/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from 'src/product-app/dialogs/confirmation/confirmation-dialog.component';
 
 @Component({
   selector: 'app-front-store',
