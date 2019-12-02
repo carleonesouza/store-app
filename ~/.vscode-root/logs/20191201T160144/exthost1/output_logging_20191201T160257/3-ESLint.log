@@ -1,0 +1,6 @@
+[Info  - 16:02:57] ESLint server stopped.
+[Info  - 16:02:58] ESLint server running in node v12.4.0
+[Info  - 16:02:58] ESLint server is running.
+[Info  - 16:03:14] ESLint library loaded from: /home/carleone/Documentos/StoreApp/back-end/node_modules/eslint/lib/api.js
+[Error - 16:09:24] .eslintrc.js: 	Configuration for rule "treatUndefinedAsUnspecified" is invalid: 	Severity should be one of the following: 0 = off, 1 = warn, 2 = error (you passed 'true'). 
+[Info  - 16:46:25] ESLint server stopped.

@@ -6,6 +6,7 @@ mongoose.Promise = global.Promise;
 
 mongoose.connect(baseUtilite.CONSTANTS.DATABASE, {
   useUnifiedTopology: true,
+  useCreateIndex: true,
   useNewUrlParser: true,
 })
   .then(() => (

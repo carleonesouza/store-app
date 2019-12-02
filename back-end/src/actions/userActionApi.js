@@ -1,53 +1,85 @@
-const User = require('../models/user.model');
-const bcrypt = require('bcryptjs'); 
-const baseUtilite = require('../utilities/baseUtilite');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user.model');
+const baseUtilite = require('../utilities/baseUtilite');
 
 exports.createUser = async (req, res) => {
-   const userlocal = new User(req.body);
-   const user = await userlocal
-    .save()
-    .then(() => { console.log('Product Save Successfully!'); })
-    .catch((err) => {
-      res.status(500).json({
-        error: err,
+  User.findOne({ email: req.body.email })
+    .exec()
+    .then((user) => {
+      if (user) {
+        return res.status(409).json({
+          message: 'Mail exists',
+        });
+      }
+      bcrypt.genSalt(baseUtilite.CONSTANTS.SALT_WORK_FACTOR, (err, salt) => {
+        if (err) {
+          return err;
+        }
+        // hash the password using our new salt
+        // eslint-disable-next-line no-shadow
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+          if (err) {
+            return res.status(409).json({
+              message: err
+            });
+          } else {
+            const userlocal = new User(req.body);
+            userlocal.password = hash;
+            userlocal
+              .save()
+              .then(() => { console.log('User Save Successfully!'); })
+              .catch((err) => {
+                res.status(500).json({
+                  message: err,
+                });
+              });
+            res.status(201).send({ message: 'The User has been created successfully !' });
+
+          }
+          return null;
+        });
+        return null;
       });
     });
-  res.status(201).send({ message: 'The product has been created successfully !', user });
+}
 
-};
-
-exports.authenticateUser= async (req, res) => { 
-     User.findOne({email: req.body.email})
-     .exec()
-     .then( user => {
-        if (user.length < 1 ) {
-           return res.status(401).json({
-              message: 'Auth failed'
-           });
-        }
-        bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-          if (err) {
-             return res.status(401).json({
-                message: 'Auth failed'
-             });
-          }
-          if (result) {
-             const token = jwt.sign({
-                email: user[0].email,
-                userId: user[0]._id
-             }, baseUtilite.CONTANTS.JWT_KEY, {
-                expiresIn: '1h'
-             });
-            res.status(200).json({
-               message: 'Auth Successful',
-               token: token
-            });
-          }
-          res.status(401).json({
-             message: 'Auth failed'
-          });
+exports.authenticateUser = async (req, res) => {
+  return User.findOne({ email: req.body.email })
+    .exec()
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({
+          message: 'Auth failed',
         });
-     })
-     .catch();
-   }
+      }
+      bcrypt.compare(req.body.password, user.password, (err, result) => {
+        if (err) {
+          return res.status(401).json({
+            message: 'Auth failed',
+          });
+        }
+        if (result) {
+          const token = jwt.sign({
+            email: user.email,
+            userId: user._id,
+          }, baseUtilite.CONSTANTS.JWT_KEY, {
+            expiresIn: '1h',
+          });
+          res.status(200).json({
+            message: 'Auth Successful',
+            token,
+          });
+        } else {
+        res.status(401).json({
+          message: 'Auth failed',
+        });
+      }
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err,
+      });
+    });
+}

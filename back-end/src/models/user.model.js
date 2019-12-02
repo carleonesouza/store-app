@@ -8,12 +8,13 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
   // _id: mongoose.Types.ObjectId,
   fullName: { type: String, required: true },
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true, 
+           match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ },
   password: { type: String, required: true },
   role: {type: String, required: true },
-  status: { type: Boolean, required: true },
+  /* status: { type: Boolean, required: true },
   loginAttempts: { type: Number, required: true, default: 0 },
-  lockUntil: { type: Number }
+  lockUntil: { type: Number } */
 },
 {
   locale: { String },
@@ -45,7 +46,7 @@ userSchema.pre('save',() => {
       });
   });
 });
-
+/*
 userSchema.methods.comparePassword = (candidatePassword, cb) => {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
       if (err) return cb(err);
@@ -126,6 +127,6 @@ userSchema.statics.getAuthenticated = (username, password, cb) => {
           });
       });
   });
-};
+}; */
 
 module.exports = mongoose.model('User', userSchema);

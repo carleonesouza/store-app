@@ -14,14 +14,15 @@ router.post('/product/add', productActionApi.createProduct);
 router.post('/populate/bag/add', vendorsActionApi.createBag);
 router.post('/populate/vendor/add', vendorsActionApi.createVendor);
 router.post('/populate/method', billMethodAction.createABill);
-router.post('/register', userActionApi.createUser);
+router.post('/singup', userActionApi.createUser);
+router.post('/login', userActionApi.authenticateUser)
 
 router.get('/product', productActionApi.findAllProducts);
 router.get('/populate/bags', vendorsActionApi.findAllBags);
 router.get('/populate/vendors', vendorsActionApi.findAVendors);
 router.get('/populate/methods', billMethodAction.findABill);
 router.get('/product/:id', productActionApi.findByIdProduct);
-router.get('/login', userActionApi.authenticateUser)
+
 
 router.put('/product/:id', productActionApi.updateProduct);
 

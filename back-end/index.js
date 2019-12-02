@@ -1,4 +1,3 @@
-'use strict'
 const app = require('./src/api/app');
 const baseUtilite = require('./src/utilities/baseUtilite');
 

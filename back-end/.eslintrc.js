@@ -16,7 +16,9 @@ module.exports = {
   },
   rules: {
     "no-console": "off",
+    "enforceInMethodNames": true ,
+    "no-shadow": "off",
     "no-unused-vars": "off",
-    "no-underscore-dangle": [2, { "allow": [] }]
+    "no-underscore-dangle": [2, { "allow": ["_"], "allowAfterThis": false }]
   },
 };
