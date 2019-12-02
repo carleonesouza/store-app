@@ -1,6 +1,0 @@
-{
-    "workbench.iconTheme": "vscode-icons",
-    "[javascript]": {
-        "editor.defaultFormatter": "vscode.typescript-language-features"
-    }
-}
