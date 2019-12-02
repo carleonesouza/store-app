@@ -11,16 +11,16 @@ router.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 
 router.post('/product/add', productActionApi.createProduct);
-router.post('/populate/bag/add', vendorsActionApi.createBag);
-router.post('/populate/vendor/add', vendorsActionApi.createVendor);
-router.post('/populate/method', billMethodAction.createABill);
+// router.post('/populate/bag/add', vendorsActionApi.createBag);
+router.post('/vendor/add', vendorsActionApi.createVendor);
+router.post('/method', billMethodAction.createABill);
 router.post('/singup', userActionApi.createUser);
 router.post('/login', userActionApi.authenticateUser)
 
-router.get('/product', productActionApi.findAllProducts);
-router.get('/populate/bags', vendorsActionApi.findAllBags);
-router.get('/populate/vendors', vendorsActionApi.findAVendors);
-router.get('/populate/methods', billMethodAction.findABill);
+router.get('/products', productActionApi.findAllProducts);
+router.get('/bags', vendorsActionApi.findAllBags);
+router.get('/vendors', vendorsActionApi.findAVendors);
+router.get('/methods', billMethodAction.findABill);
 router.get('/product/:id', productActionApi.findByIdProduct);
 
 

@@ -1,14 +1,10 @@
 const express = require('express');
+const config = require('../config/index');
 const morgan = require('morgan');
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
-require('../config/index');
-
+const httpUtility = require('../utilities/httpUtility');
 const app = express();
 
-
-const index = require('./routes/apiRoutes');
-const appRoutes = require('./routes/appRoutes');
 
 app.use(morgan('dev'));
 app.use(cors());
@@ -29,8 +25,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api', index);
-app.use('/api/', appRoutes);
+app.use('/api/management', httpUtility.checkAuth, require('./routes/apiRoutes'));
+app.use('/api/management', httpUtility.checkAuth, require('./routes/appRoutes'));
 
 // Basic 404 handler
 app.use((req, res) => {

@@ -67,14 +67,13 @@ exports.authenticateUser = async (req, res) => {
             expiresIn: '1h',
           });
           res.status(200).json({
-            message: 'Auth Successful',
-            token,
+            message: 'Auth Successful'
           });
         } else {
-        res.status(401).json({
-          message: 'Auth failed',
-        });
-      }
+          res.status(401).json({
+            message: 'Auth failed',
+          });
+        }
       });
     })
     .catch((err) => {
