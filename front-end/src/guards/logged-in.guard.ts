@@ -12,9 +12,16 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class LoggedInGuard implements CanActivate {
-    constructor(private afAuth: AngularFireAuth, private router: Router) { }
 
-    canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+
+    constructor(private router: Router) { }
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean |
+    Observable<boolean> | Promise<boolean> {
+      throw new Error('Method not implemented.');
+  }
+
+   /*  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         return this.afAuth.authState.map(user => {
             if (user == null || localStorage.getItem('mSessionId') === null) {
                 this.router.navigate(['/']);
@@ -23,5 +30,5 @@ export class LoggedInGuard implements CanActivate {
                 return true;
             }
         });
-    }
+    } */
 }

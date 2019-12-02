@@ -15,7 +15,7 @@ export class AuthService {
     constructor(private router: Router) { }
 
     get authenticated(): boolean {
-        return this.user !== null && localStorage.getItem('mSessionId') !== null;
+        return localStorage.getItem('mSessionId') !== null;
     }
 
     signOut(): void {

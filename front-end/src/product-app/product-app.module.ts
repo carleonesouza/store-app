@@ -7,7 +7,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ChartsModule } from 'ng2-charts';
 import { StoreAppMaterialModule } from '../store-app-material-module';
-import { DashboardAppModule } from '../dashboard/dashboard.module';
 
 
 import { FrontStoreComponent } from './front-store/front-store.component';
@@ -43,7 +42,6 @@ import { ConfirmationDialogComponent } from './dialogs/confirmation/confirmation
     FlexLayoutModule,
     ChartsModule,
     StoreAppMaterialModule,
-    DashboardAppModule,
 
   ],
   providers: [],

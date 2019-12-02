@@ -4,13 +4,20 @@
             <img id="nav-logo" src="../assets/favicon.ico" alt="Angular Logo">
             <h4>Dashboard</h4>
             <mat-nav-list>
-                <a *ngFor="let navItem of navItems" mat-list-item class="class-list-item" (click)="start.close()"
-                    routerLinkActive="active" #routerLinkActiveInstance="routerLinkActive"
-                    [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
-                    [routerLinkActiveOptions]="{exact: navItem.route == '/'}" [routerLink]="[navItem.route]">
-                    {{navItem.name}}<mat-icon *ngIf="navItem.icon">{{navItem.icon}}</mat-icon>
-                </a>
-            </mat-nav-list>
+                          
+                    <a *ngFor="let navItem of navItems" mat-list-item class="class-list-item"
+                     (click)="start.close()"
+                            mat-list-item
+                            (click)="toggleIfMobile()"
+                            routerLinkActive="active"
+                            #routerLinkActiveInstance="routerLinkActive"
+                            [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
+                            [routerLinkActiveOptions]="{exact: navItem.route == '/'}"
+                            [routerLink]="[navItem.route]">
+                            {{navItem.name}}<mat-icon *ngIf="navItem.icon">{{navItem.icon}}</mat-icon>
+                    </a>
+                </mat-nav-list>
+        
         </mat-sidenav>
         <mat-toolbar color="primary" class="toolbar dark">
             <mat-toolbar-row>
@@ -23,12 +30,16 @@
                 <span class="example-spacer"></span>
                 <div>
                     <button mat-button [matMenuTriggerFor]="userMenu" aria-label="menu-usuário">
-                        <img id="user-avatar" alt=""
-                            [src]="'https://material.angular.io/assets/img/examples/shiba1.jpg'" /> Joao Ninguem
+                            <mat-icon id="user-avatar" aria-hidden="true" >person</mat-icon>
+                             Joao Ninguem
                         <i class="caret"></i>
                     </button>
                     <mat-menu #userMenu="matMenu">
                         <ng-template matMenuContent let-name="name">
+                            <button mat-menu-item >
+                                <mat-icon aria-hidden="true">account_circle</mat-icon>
+                                Profile
+                            </button>
                             <button mat-menu-item >
                                 <mat-icon aria-hidden="true">subdirectory_arrow_right</mat-icon>
                                 Sair

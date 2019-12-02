@@ -19,7 +19,6 @@ import { HandleError } from 'src/services/handleError';
 import { ManagementService } from 'src/services/management.service';
 import { SignInComponent } from '../loggin/sign-in/sign-in.component';
 import { SignUpComponent } from '../loggin/sign-up/sign-up.component';
-import { DatepickerComponent } from '../datepicker/datepicker.component';
 import { BaseComponent } from './base.component';
 
 
@@ -31,7 +30,6 @@ import { BaseComponent } from './base.component';
     NotFoundComponent,
     SignInComponent,
     SignUpComponent,
-    DatepickerComponent,
     BaseComponent
   ],
   imports: [
