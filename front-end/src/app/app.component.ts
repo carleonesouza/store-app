@@ -4,6 +4,7 @@ import {
   OnInit,
   ViewChild} from '@angular/core';
 import { MatSidenav } from '@angular/material';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -16,22 +17,15 @@ export class AppComponent implements OnInit {
 
   @ViewChild('start', { static: true }) start: MatSidenav;
 
+  constructor(private router: Router) { }
+
 
   navItems = [
         { name: 'Home', route: '/dashboard/home', icon: 'home' },
         { name: 'Store', route: '/dashboard/products/front-store', icon: 'store' },
         { name: 'Products', route: '/dashboard/products/create-product', icon: 'shopping_basket' },
-        { name: 'Management Panel Users', route: '/dashboard/users', icon: 'account-settings-variant' },
+        { name: 'Users Panel', route: '/dashboard/users', icon: 'supervised_user_circle' },
     ];
-
-/*
-    vendor: [
-        { name: 'Students', route: '/vendor/students', icon: 'account' },
-        { name: 'Tutors', route: '/vendor/tutors', icon: 'teach' },
-        { name: 'Class History', route: '/vendor/classes', icon: 'history' },
-        { name: 'Pricing and Earnings', route: '/vendor/earnings', icon: 'currency-usd' },
-        { name: 'Subjects', route: '/vendor/subjects', icon: 'school' },
-    ] */
 
 
   ngOnInit() { }

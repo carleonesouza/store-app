@@ -1,0 +1,70 @@
+<div class="container-fluid">
+        <div id="profile-card">
+            <div class="content">
+                <div fxLayout="row" fxLayout.xs="column" fxLayout.sm="row" fxFlex>
+                    <div fxFlex="100" fxFlex.gt-xs="35" fxFlex.gt-sm="247px" id="avatar-column">
+                            <img id="user-avatar" src="../../assets/user.png" alt="Profile Picture">
+                    </div>        
+                    <div fxFlex="100" fxFlex.gt-xs="65" fxFlex.gt-sm="80" id="profile-column">
+                        <div fxLayout="column">
+                            <mat-card-title>Carleone Souza</mat-card-title>
+        
+                            <div fxLayout="row" fxLayout.xs="column" fxLayout.lt-xs="column" fxLayout.sm="row" fxFlex id="profile-container">
+                                <div fxFlex="50" fxFlex.xs="100" fxFlex.lt-xs="100" style="max-height: 100%">
+                                    <mat-list>
+                                        <mat-list-item>
+                                            <mat-icon matListIcon color="accent">supervisor_account</mat-icon>
+                                            <h3 matLine>Role</h3>
+                                            <span matLine>Admin</span>
+                                        </mat-list-item>
+        
+                                        <mat-list-item >
+                                            <mat-icon matListIcon color="accent">lock_open</mat-icon>
+                                            <h3 matLine >Status</h3>
+                                            <span matLine>Active</span>
+                                        </mat-list-item>
+                                    </mat-list>
+                                </div>
+        
+                                <div fxFlex="50" fxFlex.xs="100" fxFlex.lt-xs="100" style="max-height: 100%">
+                                    <mat-list>
+                                        <mat-list-item>
+                                            <mat-icon matListIcon color="accent">email</mat-icon>
+                                            <h3 matLine>Email</h3>
+                                            <span matLine>carleone@gmail.com</span>
+                                        </mat-list-item>
+        
+                                        <mat-list-item>
+                                            <mat-icon matListIcon color="accent">phone</mat-icon>
+                                            <h3 matLine>Phone Number</h3>
+                                            <span matLine>9989-54920</span>
+                                        </mat-list-item>
+                                    </mat-list>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="actions">
+                <span class="spacer"></span>
+        
+                <div [ngSwitch]="inEditMode">
+                    <div *ngSwitchCase="true">
+                        <button mat-button (click)="inEditMode=false">
+                            <mat-icon class="mat-24">close</mat-icon>&nbsp;CANCEL
+                        </button>
+        
+                        <button mat-button (click)="saveProfile()">
+                            <mat-icon class="mat-24">check</mat-icon>&nbsp;SAVE CHANGES
+                        </button>
+                    </div>
+        
+                    <button mat-icon-button>
+                        <mat-icon class="mat-24" color="warn">edit</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+</div>        

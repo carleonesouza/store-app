@@ -30,13 +30,13 @@
                 <span class="example-spacer"></span>
                 <div>
                     <button mat-button [matMenuTriggerFor]="userMenu" aria-label="menu-usuário">
-                            <mat-icon id="user-avatar" aria-hidden="true" >person</mat-icon>
-                             Joao Ninguem
+                            <img id="user-avatar" src="../../assets/user.png" alt="Profile Picture">
+                             User name
                         <i class="caret"></i>
                     </button>
                     <mat-menu #userMenu="matMenu">
                         <ng-template matMenuContent let-name="name">
-                            <button mat-menu-item >
+                            <button mat-menu-item  [routerLink]="['/dashboard/profile']">
                                 <mat-icon aria-hidden="true">account_circle</mat-icon>
                                 Profile
                             </button>
