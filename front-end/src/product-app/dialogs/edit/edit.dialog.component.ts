@@ -6,7 +6,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
-  selector: 'app-edit.dialog',
+  selector: 'edit.dialog',
   templateUrl: './edit.dialog.component.html',
   styleUrls: ['./edit.dialog.component.scss']
 })

@@ -13,7 +13,7 @@ import { MatSnackBar } from '@angular/material';
 import { HandleError } from 'src/services/handleError';
 
 @Component({
-  selector: 'app-create-product',
+  selector: 'create-product',
   templateUrl: './create-product.component.html',
   styleUrls: ['./create-product.component.scss'],
 })

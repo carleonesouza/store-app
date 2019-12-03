@@ -6,7 +6,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
-  selector: 'app-add.dialog',
+  selector: 'add.dialog',
   templateUrl: './add.dialog.component.html',
   styleUrls: ['./add.dialog.component.scss']
 })

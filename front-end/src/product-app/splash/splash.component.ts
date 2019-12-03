@@ -10,7 +10,7 @@ import { FrontStoreComponent } from 'src/product-app/front-store/front-store.com
 
 
 @Component({
-    selector: 'app-splash',
+    selector: 'splash',
     templateUrl: './splash.component.html',
     styleUrls: ['splash.component.scss'],
     encapsulation: ViewEncapsulation.None

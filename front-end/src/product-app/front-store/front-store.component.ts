@@ -6,7 +6,7 @@ import { Quantity } from 'src/models/quantity.model';
 import { ConfirmationDialogComponent } from 'src/product-app/dialogs/confirmation/confirmation-dialog.component';
 
 @Component({
-  selector: 'app-front-store',
+  selector: 'front-store',
   templateUrl: './front-store.component.html',
   styleUrls: ['./front-store.component.scss'],
 })

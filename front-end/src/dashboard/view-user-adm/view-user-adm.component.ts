@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatPaginator, MatSort, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { ProductService } from 'src/services/product.service';
 import { HandleError } from 'src/services/handleError';
+import { EditUserDialogComponent } from '../dialogs-users/edit/edit-user.dialog.component';
 
 export interface User {
   name: string;
@@ -18,7 +19,7 @@ const ELEMENT_DATA: User[] = [
 ];
 
 @Component({
-  selector: 'app-view-user-adm',
+  selector: 'view-user-adm',
   templateUrl: './view-user-adm.component.html',
   styleUrls: ['./view-user-adm.component.scss']
 })
@@ -42,27 +43,20 @@ export class ViewUserAdmComponent implements OnInit {
 
 ngOnInit() {
   this.dataSource.paginator = this.paginator;
-  const filteredData = this.dataSource.filteredData;
-  filteredData.map((e) => {
-    if (e.status) {
-      this.checked = e.status;
-      this.disabled = e.status;
-      this.activeText = 'Active';
-    }
-   /*  if (e.status) {
-      this.disabled = e.status;
-      this.checked = e.status;
-      this.activeText = 'No-Active';
-    }
-    this.checked = e.status;
-    this.disabled = e.status;
-    this.activeText = 'Active'; */
-  });
 }
 
 
   refresh() {
   }
 
+  openEditDialog(user: User) {
+    const dialogRef = this.dialog.open(EditUserDialogComponent, {
+      data: { user},
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      console.log(user);
+    });
+
+  }
 
 }

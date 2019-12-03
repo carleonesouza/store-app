@@ -6,7 +6,7 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
-  selector: 'app-delete.dialog',
+  selector: 'delete.dialog',
   templateUrl: './delete.dialog.component.html',
   styleUrls: ['./delete.dialog.component.scss']
 })

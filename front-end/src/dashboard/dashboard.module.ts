@@ -12,13 +12,17 @@ import { ProductAppModule } from 'src/product-app/product-app.module';
 import { ViewUserAdmComponent } from './view-user-adm/view-user-adm.component';
 import { HomeComponent } from './home/home.component';
 import { DatepickerComponent } from './datepicker/datepicker.component';
+import { EditUserDialogComponent } from './dialogs-users/edit/edit-user.dialog.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 
 @NgModule({
   declarations: [
     ViewUserAdmComponent,
     HomeComponent,
-    DatepickerComponent
+    DatepickerComponent,
+    EditUserDialogComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -33,12 +37,13 @@ import { DatepickerComponent } from './datepicker/datepicker.component';
     ProductAppModule
   ],
   providers: [],
-  entryComponents: [ViewUserAdmComponent]
+  entryComponents: [ViewUserAdmComponent, EditUserDialogComponent]
 })
 export class DashboardAppModule {
   static UserRoutes: Routes = [
       { path: 'home', component: HomeComponent},
       { path: 'users', component: ViewUserAdmComponent},
+      { path: 'profile', component: UserProfileComponent},
       { path: 'products', children: ProductAppModule.ProductRoutes},
   ];
 }

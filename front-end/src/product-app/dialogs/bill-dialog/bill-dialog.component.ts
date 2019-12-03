@@ -11,7 +11,7 @@ import { VendorService } from 'src/services/vendor.service';
 import { BagVenders } from 'src/models/bag-venders';
 
 @Component({
-  selector: 'app-bill-dialog',
+  selector: 'bill-dialog',
   templateUrl: './bill-dialog.component.html',
   styleUrls: ['./bill-dialog.component.scss'],
   providers: [CurrencyPipe]

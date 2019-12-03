@@ -7,7 +7,7 @@ import { BillDialogComponent } from '../bill-dialog/bill-dialog.component';
 import { VendorService } from 'src/services/vendor.service';
 
 @Component({
-    selector: 'app-confirmation.dialog',
+    selector: 'confirmation.dialog',
     templateUrl: './confirmation-dialog.component.html',
     styleUrls: ['./confirmation-dialog.component.scss']
 })
