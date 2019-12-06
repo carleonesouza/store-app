@@ -18,10 +18,7 @@ import { BagVenders } from 'src/models/bag-venders';
 import { HandleError } from 'src/services/handleError';
 import { ManagementService } from 'src/services/management.service';
 import { SignInComponent } from '../loggin/sign-in/sign-in.component';
-import { SignUpComponent } from '../loggin/sign-up/sign-up.component';
 import { BaseComponent } from './base.component';
-
-
 
 
 @NgModule({
@@ -29,7 +26,6 @@ import { BaseComponent } from './base.component';
     AppComponent,
     NotFoundComponent,
     SignInComponent,
-    SignUpComponent,
     BaseComponent
   ],
   imports: [
@@ -50,6 +46,6 @@ import { BaseComponent } from './base.component';
   entryComponents: [
     AppComponent
 ],
-  bootstrap: [AppComponent]
+  bootstrap: [SignInComponent]
 })
 export class AppModule { }

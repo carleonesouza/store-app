@@ -25,8 +25,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/management', httpUtility.checkAuth, require('./routes/apiRoutes'));
-app.use('/api/management', httpUtility.checkAuth, require('./routes/appRoutes'));
+app.use('/api/management', require('./routes/apiRoutes'));
+app.use('/api/management', require('./routes/appRoutes'));
 
 // Basic 404 handler
 app.use((req, res) => {

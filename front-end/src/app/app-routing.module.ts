@@ -2,14 +2,12 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NotFoundComponent } from '../not-found/not-found.component';
 import { SignInComponent } from '../loggin/sign-in/sign-in.component';
-import { SignUpComponent } from '../loggin/sign-up/sign-up.component';
 import { DashboardAppModule } from 'src/dashboard/dashboard.module';
 import { BaseComponent } from './base.component';
 
 export const AppRoutes: Routes = [
   { path: '', component: BaseComponent },
   { path: 'login', component: SignInComponent},
-  { path: 'logup', component: SignUpComponent},
   { path: 'dashboard', children: DashboardAppModule.UserRoutes},
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '/404' }

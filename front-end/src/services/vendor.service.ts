@@ -12,7 +12,7 @@ import * as moment from 'moment';
 
 @Injectable()
 export class VendorService {
-  private static readonly endpoint: String  = 'http://localhost:3000/api/populate';
+  private static readonly endpoint: String  = 'http://localhost:3000/api/managment/';
   dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
   dataMethodChange: BehaviorSubject<BillMethod[]> = new BehaviorSubject<BillMethod[]>([]);
   private billGroup: Array<BillMethod>;

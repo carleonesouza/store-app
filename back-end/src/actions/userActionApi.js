@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 const baseUtilite = require('../utilities/baseUtilite');
+const userUtilite = require('../utilities/userUtility');
 
 exports.createUser = async (req, res) => {
   User.findOne({ email: req.body.email })
@@ -25,6 +26,7 @@ exports.createUser = async (req, res) => {
             });
           } else {
             const userlocal = new User(req.body);
+            userlocal.accessToken = userUtilite.generateCode();
             userlocal.password = hash;
             userlocal
               .save()
@@ -59,15 +61,17 @@ exports.authenticateUser = async (req, res) => {
             message: 'Auth failed',
           });
         }
-        if (result) {
-          const token = jwt.sign({
-            email: user.email,
-            userId: user._id,
-          }, baseUtilite.CONSTANTS.JWT_KEY, {
-            expiresIn: '1h',
-          });
-          res.status(200).json({
-            message: 'Auth Successful'
+        
+        if (result && req.body.accessToken === user.accessToken) {
+          
+            jwt.sign({
+              email: user.email,
+              userId: user._id,
+            }, baseUtilite.CONSTANTS.JWT_KEY, {
+              expiresIn: '1h',
+            });
+            res.status(200).json({
+              message: 'Auth Successful'
           });
         } else {
           res.status(401).json({

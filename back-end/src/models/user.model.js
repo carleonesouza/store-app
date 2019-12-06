@@ -12,6 +12,7 @@ const userSchema = new Schema({
            match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ },
   password: { type: String, required: true },
   role: {type: String, required: true },
+  accessToken: { type: String }
   /* status: { type: Boolean, required: true },
   loginAttempts: { type: Number, required: true, default: 0 },
   lockUntil: { type: Number } */

@@ -18,7 +18,7 @@ router.post('/singup', userActionApi.createUser);
 router.post('/login', userActionApi.authenticateUser)
 
 router.get('/products', productActionApi.findAllProducts);
-router.get('/bags', vendorsActionApi.findAllBags);
+// router.get('/bags', vendorsActionApi.findAllBags);
 router.get('/vendors', vendorsActionApi.findAVendors);
 router.get('/methods', billMethodAction.findABill);
 router.get('/product/:id', productActionApi.findByIdProduct);

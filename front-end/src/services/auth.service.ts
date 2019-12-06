@@ -1,36 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '../environments/environment';
+import { User } from '../models/user.model';
 
 
-@Injectable()
-export class AuthService {
-    public user: any;
-    public idToken: string = null;
-    public uid: string = null;
-    public name: string = null;
-    public email: string = null;
-    public role: string = null;
+@Injectable({ providedIn: 'root' })
+export class AuthenticationService {
+    private currentUserSubject: BehaviorSubject<User>;
+    public currentUser: Observable<User>;
 
-    constructor(private router: Router) { }
-
-    get authenticated(): boolean {
-        return localStorage.getItem('mSessionId') !== null;
+    constructor(private http: HttpClient, private router: Router) {
+        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+        this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    signOut(): void {
-       // this.afAuth.auth.signOut();
+    public get currentUserValue(): User {
+        return this.currentUserSubject.value;
+    }
 
-        if (window && window.localStorage) {
-            window.localStorage.clear();
-        }
+    login(username: string, password: string, accessToken: string) {
+        return this.http.post<any>(`${environment.server}/login`, { username, password, accessToken })
+            .pipe(map(user => {
+                // store user details and jwt token in local storage to keep user logged in between page refreshes
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                this.currentUserSubject.next(user);
+                return user;
+            }));
+    }
 
-        this.idToken = null;
-        this.uid = null;
-        this.name = null;
-        this.email = null;
-        this.role = null;
-
+    logout() {
+        // remove user from local storage to log user out
+        localStorage.removeItem('currentUser');
+        this.currentUserSubject.next(null);
         this.router.navigate(['/']);
     }
 }

@@ -9,7 +9,10 @@
     padding-top: 10px;
     padding-left: 25px;
 }
-  .item-forgot{
+.item-buttons{
+ margin: 5%;
+} 
+.item-forgot{
     font-family: Roboto, 'Helvetica Neue', sans-serif;
     text-align: center;
   }
@@ -21,9 +24,11 @@
     background-color: darken(#01579B, 3);
     color: #ffffff;
   }
-  
-  mat-card-actions {
-      margin-left: 10%;
+
+  #singin {
+    color: #ffffff;
+    width: 100%;
+    background-color: darken(#01579B, 3);
   }
   
   .example-spacer {
@@ -53,6 +58,9 @@
       .style-button{
         display: table-row;
       }
+      .mat-card {
+       margin-top: 50px;
+    }
       
     
   }
