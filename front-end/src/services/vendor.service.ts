@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
 import { BillMethod } from '../models/bill-method';
-import { BagVenders } from 'src/models/bag-venders';
 import { HandleError } from './handleError';
-import { catchError } from 'rxjs/operators';
 import { Vendor } from 'src/models/vendor.model';
 import { ProductService } from './product.service';
-import * as moment from 'moment';
 
 @Injectable()
 export class VendorService {
@@ -17,23 +14,16 @@ export class VendorService {
   dataMethodChange: BehaviorSubject<BillMethod[]> = new BehaviorSubject<BillMethod[]>([]);
   private billGroup: Array<BillMethod>;
   private localBill: BillMethod;
-  private billMethod: BillMethod;
-    private vender: Vendor;
   today = new Date().toLocaleDateString();
   bagBill: Array<BillMethod>;
   bagVender: Array<Vendor>;
 
   constructor(private httpClient: HttpClient, private snackBar: MatSnackBar,
-              private myHandleError: HandleError, private productService: ProductService) {
+              private productService: ProductService) {
       this.billGroup = [];
       this.bagVender = [];
       this.bagBill = [];
   }
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-    })
-  };
 
   get data(): Vendor[] {
     return this.dataChange.value;

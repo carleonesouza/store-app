@@ -1,41 +1,23 @@
 import { Injectable } from '@angular/core';
-import {
-    CanActivate,
-    Router,
-    ActivatedRouteSnapshot,
-    RouterStateSnapshot
-} from '@angular/router';
-import { Observable } from 'rxjs';
+import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
-import 'rxjs/add/operator/map';
+import { AuthService } from '../services/auth.service';
 
-@Injectable()
-export class RoleGuard implements CanActivate {
-    constructor(private router: Router,) { }
+@Injectable({ providedIn: 'root' })
+export class AuthGuard implements CanActivate {
 
-    canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-        return  /* this.auth.afAuth.authState.map(user => {
-            if (this.auth.role === null) {
-                setTimeout(() => this.check(next), 100);
-            }
+    constructor(private router: Router, private authService: AuthService
+    ) { }
 
-            if (user === null ||
-                localStorage.getItem('mSessionId') === null ||
-                (this.auth.role !== null && this.auth.role !== next.data['role'])) {
-                    this.router.navigate(['/']);
-                    return false;
-            } else {
-                return true;
-            }
-        }); */
-    }
+    canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const currentUser = this.authService.currentUserValue;
+        if (currentUser) {
+            // logged in so return true
+            return true;
+        }
 
-    check(next) {
-       /*  if (this.auth.role === null) {
-            setTimeout(() => this.check(next), 100);
-        } else if (this.auth.role !== next.data['role']) {
-            console.log(`Permission denied (got '${this.auth.role}', need '${next.data['role']}')`);
-            this.router.navigate(['/dashboard']);
-        } */
+        // not logged in so redirect to login page with the return url
+        this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+        return false;
     }
 }

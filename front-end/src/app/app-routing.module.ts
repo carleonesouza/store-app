@@ -4,11 +4,12 @@ import { NotFoundComponent } from '../not-found/not-found.component';
 import { SignInComponent } from '../loggin/sign-in/sign-in.component';
 import { DashboardAppModule } from 'src/dashboard/dashboard.module';
 import { BaseComponent } from './base.component';
+import { AuthGuard } from 'src/guards/role.guard';
 
 export const AppRoutes: Routes = [
   { path: '', component: BaseComponent },
   { path: 'login', component: SignInComponent},
-  { path: 'dashboard', children: DashboardAppModule.UserRoutes},
+  { path: 'dashboard', children: DashboardAppModule.UserRoutes,  canActivate: [AuthGuard] },
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '/404' }
 ];

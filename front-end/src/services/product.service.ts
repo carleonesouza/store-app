@@ -10,7 +10,7 @@ import { HandleError } from './handleError';
 
 @Injectable()
 export class ProductService {
-  private static readonly endpoint: String  = 'http://localhost:3000/api/product';
+  private static readonly endpoint: String  = 'http://localhost:3000/api/managment/product';
 
   dataChange: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
   // Temporarily stores data from dialogs
@@ -27,12 +27,6 @@ export class ProductService {
     this.quantity = [];
     this.vender = [];
   }
-
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-    })
-  };
 
   get data(): Product[] {
     return this.dataChange.value;

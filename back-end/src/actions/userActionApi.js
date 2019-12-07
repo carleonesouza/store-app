@@ -64,19 +64,12 @@ exports.authenticateUser = async (req, res) => {
         
         if (result && req.body.accessToken === user.accessToken) {
           
-            jwt.sign({
+            const token = jwt.sign({
               email: user.email,
               userId: user._id,
-            }, baseUtilite.CONSTANTS.JWT_KEY, {
-              expiresIn: '1h',
-            });
-            res.status(200).json({
-              message: 'Auth Successful'
-          });
-        } else {
-          res.status(401).json({
-            message: 'Auth failed',
-          });
+            }, baseUtilite.CONSTANTS.JWT_KEY, {expiresIn: '1h',});
+            res.status(200).json({message: 'Auth Successful'}, token);
+        } else { res.status(401).json({ message: 'Auth failed',});
         }
       });
     })

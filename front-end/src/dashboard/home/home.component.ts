@@ -125,7 +125,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
 
 public loadData() {
-  this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.myHandleError, this.productService);
+  this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.productService);
   this.dataSource = new HomeDataSource(this.exampleDatabase, this.paginator, this.sort);
   fromEvent(this.filter.nativeElement, 'keyup')
     // .debounceTime(150)
@@ -139,7 +139,7 @@ public loadData() {
 }
 
 public loadDataMethod() {
-  this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.myHandleError, this.productService);
+  this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.productService);
   this.dataMethod = new BillDataSource(this.exampleDatabase, this.paginator, this.sort);
   fromEvent(this.filter.nativeElement, 'keyup')
     // .debounceTime(150)

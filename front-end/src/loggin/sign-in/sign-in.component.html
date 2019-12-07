@@ -1,45 +1,45 @@
 <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 <span class="spacer"></span>
 <span class="spacer"></span>
-<div fxLayout="column" fxLayoutAlign="space-around center" >
-    <div class="card-area" fxFlex>
-        <!-- <img alt="Company logo" id="logo" src="https://cervejariaarraialdajuda.com.br/wp-content/themes/cervejaria/imgs/cervejaria_arraial_y.png"> -->
-        <mat-card class="mat-elevation-z8" >
-          <div class="card-header">Login</div>
-          <span class="spacer"></span>
-            <mat-card-content class="card-inside" >
-                <div class="item item-4">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Username</mat-label>
-                      <input  matInput placeholder="Username" type="email" class="form-control"/>
-                      <mat-error >Please, type a valid email</mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div class="item item-4">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Password</mat-label>
-                      <input matInput placeholder="Password" type="password" >
-                      <mat-error>Please, type a valid password</mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div class="item item-4">
-                    <mat-form-field appearance="outline">
-                      <mat-label>Access Code</mat-label>
-                      <input matInput placeholder="Access Code" type="text" >
-                      <mat-error>Please, type a valid description</mat-error>
-                    </mat-form-field>
-                  </div>
-                  <div class="item-forgot">
-                   <p><a href="#">Forgot Password</a></p>
-                  </div>
-            </mat-card-content>
-            <mat-card-actions>
-                <div class="item-buttons">
-                    <button mat-raised-button id="singin" >Sign in</button>
-                  </div>
-                  <span class="spacer"></span>
-            </mat-card-actions>
-        </mat-card>
-    </div>
+<div fxLayout="column" fxLayoutAlign="space-around center">
+  <div class="card-area" fxFlex>
+    <!-- <img alt="Company logo" id="logo" src="https://cervejariaarraialdajuda.com.br/wp-content/themes/cervejaria/imgs/cervejaria_arraial_y.png"> -->
+    <mat-card class="mat-elevation-z8" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="card-header">Login</div>
+      <span class="spacer"></span>
+      <mat-card-content class="card-inside">
+        <div class="item item-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput placeholder="Username" type="email" formControlName="username" class="form-control" />
+            <mat-error *ngIf="f.username.errors">Please, type a valid email</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="item item-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput placeholder="Password" formControlName="password" type="password">
+            <mat-error *ngIf="f.password.errors">Please, type a valid password</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="item item-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Access Code</mat-label>
+            <input matInput placeholder="Access Code" formControlName="accessToken" type="text">
+            <mat-error *ngIf="f.accessToken.errors">Please, type a valid Token</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="item-forgot">
+          <p><a href="#">Forgot Password</a></p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="item-buttons">
+          <button mat-raised-button [disabled]="!loginForm.valid" id="singin" (click)="onSubmit()">Sign in</button>
+        </div>
+        <span class="spacer"></span>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>
 <span class="spacer"></span>

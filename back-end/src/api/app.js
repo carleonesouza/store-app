@@ -12,7 +12,7 @@ app.options('*', cors());
 
 app.use((req, res, next) => {
   req.trackId = req.id;
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
 
   if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -26,7 +26,23 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/management', require('./routes/apiRoutes'));
-app.use('/api/management', require('./routes/appRoutes'));
+app.use('/potato/management', (req, res, next) => {
+  if (req.url === '/login') {
+      next()
+      return
+  }
+
+  const sessionId = req.header('Session')
+  const errObj = { id: req.trackId, status: 403, message: 'You must be logged in to view this page' }
+
+  if (miscUtility.isNullOrWhiteSpace(sessionId)) {
+      res.status(403).json(errObj).end()
+      return
+  }
+
+});
+
+app.use('/api/management', httpUtility.checkAuth,require('./routes/appRoutes'));
 
 // Basic 404 handler
 app.use((req, res) => {

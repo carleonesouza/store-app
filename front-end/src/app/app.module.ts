@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ChartsModule } from 'ng2-charts';
@@ -19,6 +19,7 @@ import { HandleError } from 'src/services/handleError';
 import { ManagementService } from 'src/services/management.service';
 import { SignInComponent } from '../loggin/sign-in/sign-in.component';
 import { BaseComponent } from './base.component';
+import { JWTInterceptor } from 'src/guards/jwt-interceptors';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { BaseComponent } from './base.component';
     ChartsModule,
   ],
   providers: [ProductService, VendorService,
+    { provide: HTTP_INTERCEPTORS, useClass: JWTInterceptor, multi: true },
      BagVenders, HandleError, ManagementService],
   entryComponents: [
     AppComponent
