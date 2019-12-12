@@ -31,7 +31,7 @@
                 <div>
                     <button mat-button [matMenuTriggerFor]="userMenu" aria-label="menu-usuário">
                             <img id="user-avatar" src="../../assets/user.png" alt="Profile Picture">
-                             User name
+                            {{user}}
                         <i class="caret"></i>
                     </button>
                     <mat-menu #userMenu="matMenu">
@@ -40,9 +40,9 @@
                                 <mat-icon aria-hidden="true">account_circle</mat-icon>
                                 Profile
                             </button>
-                            <button mat-menu-item >
+                            <button mat-menu-item (click)="doLogOut()">
                                 <mat-icon aria-hidden="true">subdirectory_arrow_right</mat-icon>
-                                Sair
+                                Logout
                             </button>
                         </ng-template>
                     </mat-menu>

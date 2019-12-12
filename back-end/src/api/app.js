@@ -1,8 +1,9 @@
 const express = require('express');
 const config = require('../config/index');
+const expressJwt = require('express-jwt');
+const baseUtilite = require('../utilities/baseUtilite');
 const morgan = require('morgan');
 const cors = require('cors');
-const httpUtility = require('../utilities/httpUtility');
 const app = express();
 
 
@@ -10,39 +11,21 @@ app.use(morgan('dev'));
 app.use(cors());
 app.options('*', cors());
 
-app.use((req, res, next) => {
-  req.trackId = req.id;
-  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
-
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Session');
-    res.statusCode = 200;
-    res.end();
-    return;
-  }
-
+const allowCrossDomain = function(req, res, next) {
+  res.header('Content-Type', 'application/vnd.api+json');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:4200'); 
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
-});
+};
+
+app.use(allowCrossDomain);
 
 app.use('/api/management', require('./routes/apiRoutes'));
-app.use('/potato/management', (req, res, next) => {
-  if (req.url === '/login') {
-      next()
-      return
-  }
+app.use('/api/management', require('./routes/appRoutes'));
 
-  const sessionId = req.header('Session')
-  const errObj = { id: req.trackId, status: 403, message: 'You must be logged in to view this page' }
+app.use(expressJwt({secret: baseUtilite.CONSTANTS.JWT_KEY}).unless({path: ['/api/management/login']}));
 
-  if (miscUtility.isNullOrWhiteSpace(sessionId)) {
-      res.status(403).json(errObj).end()
-      return
-  }
-
-});
-
-app.use('/api/management', httpUtility.checkAuth,require('./routes/appRoutes'));
 
 // Basic 404 handler
 app.use((req, res) => {

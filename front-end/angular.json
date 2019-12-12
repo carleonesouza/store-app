@@ -72,7 +72,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "StoreApp:build:production"
+              "browserTarget": "StoreApp:build:production",
+              "proxyConfig": "prefix.config.js"
             }
           }
         },

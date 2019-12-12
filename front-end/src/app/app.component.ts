@@ -2,9 +2,11 @@ import {
   Component,
   ViewEncapsulation,
   OnInit,
-  ViewChild} from '@angular/core';
+  ViewChild
+} from '@angular/core';
 import { MatSidenav } from '@angular/material';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/services/auth.service';
 
 
 @Component({
@@ -17,25 +19,34 @@ export class AppComponent implements OnInit {
 
   @ViewChild('start', { static: true }) start: MatSidenav;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private auth: AuthService) {
+
+  }
 
 
   navItems = [
-        { name: 'Home', route: '/dashboard/home', icon: 'home' },
-        { name: 'Store', route: '/dashboard/products/front-store', icon: 'store' },
-        { name: 'Products', route: '/dashboard/products/create-product', icon: 'shopping_basket' },
-        { name: 'Users Panel', route: '/dashboard/users', icon: 'supervised_user_circle' },
-    ];
+    { name: 'Home', route: '/home', icon: 'home' },
+    { name: 'Store', route: '/products/front-store', icon: 'store' },
+    { name: 'Products', route: '/products/create-product', icon: 'shopping_basket' },
+    { name: 'Users Panel', route: '/users', icon: 'supervised_user_circle' },
+  ];
 
 
-  ngOnInit() { }
+  ngOnInit() {
+
+  }
 
 
   toggleIfMobile() {
     if (window.innerWidth < 640) {
-        this.start.close();
+      this.start.close();
     }
-}
+  }
+
+  doLogOut() {
+    this.auth.logout();
+    this.router.navigate(['/']);
+  }
 
 
 }

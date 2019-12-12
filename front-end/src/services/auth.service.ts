@@ -1,40 +1,61 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from '../environments/environment';
 import { User } from '../models/user.model';
+import { MatSnackBar } from '@angular/material';
+import { HandleError } from './handleError';
 
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private currentUserSubject: BehaviorSubject<User>;
-    public currentUser: Observable<User>;
+    public user: User = null;
+    public idToken: string = null;
+    public uid: string = null;
+    public avatar: string = null;
+    public name: string = null;
+    public email: string = null;
+    public role: string = null;
 
-    constructor(private http: HttpClient, private router: Router) {
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-        this.currentUser = this.currentUserSubject.asObservable();
+
+
+    constructor(private httpClient: HttpClient, private router: Router,
+                private hanldeError: HandleError, private snackBar: MatSnackBar) {
     }
 
-    public get currentUserValue(): User {
-        return this.currentUserSubject.value;
+    login(username: string, password: string, accessToken: string): Observable<User> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/vnd.api+json');
+    return this.httpClient.post<User>(`${environment.server}/login`, { username, password, accessToken },
+     {headers}).pipe(
+         catchError(this.hanldeError.handleError<any>('PostUser'))
+     );
     }
 
-    login(username: string, password: string, accessToken: string) {
-        return this.http.post<any>(`${environment.server}/login`, { username, password, accessToken })
-            .pipe(map(user => {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                this.currentUserSubject.next(user);
-                return user;
-            }));
+    get authenticated(): boolean {
+        if (localStorage.getItem('mSessionId') !== null) {
+            return true;
+        }
+        return false;
     }
+
+    userAuth(): Observable<User> {
+        return this.httpClient.get<User>(`${environment.server}/user`)
+        .pipe(
+            catchError(this.hanldeError.handleError<User>('getUser'))
+          );
+    }
+
+
+
+   tokenGetter() {
+        return localStorage.getItem('mSessionId');
+      }
 
     logout() {
         // remove user from local storage to log user out
-        localStorage.removeItem('currentUser');
-        this.currentUserSubject.next(null);
+        localStorage.removeItem('mSessionId');
         this.router.navigate(['/']);
     }
 }

@@ -1,8 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/services/auth.service';
 import { first } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
+import { User } from 'src/models/user.model';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'sign-in',
@@ -18,12 +21,11 @@ export class SignInComponent implements OnInit {
   @Input() loginForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router,
-              private authService: AuthService) {
-    // redirect to home if already logged in
-    if (this.authService.currentUserValue) {
-      this.router.navigate(['/']);
-    }
-  }
+              private auth: AuthService, private snackBar: MatSnackBar,
+              private componentFactoryResolver: ComponentFactoryResolver,
+              private viewContainerRef: ViewContainerRef) { }
+
+
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -45,20 +47,30 @@ export class SignInComponent implements OnInit {
     // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
-    }
+    } else {
+      this.loading = true;
+      this.auth.login(this.f.username.value, this.f.password.value, this.f.accessToken.value)
+      .subscribe((user: User) => {
+        console.log(user);
+        localStorage.setItem('mSessionId', user.token.toString());
+        this.goToApp();
+      });
+     }
+    this.snackBar.open('Login Invalid, Please Check your Credentials !', '', { duration: 3000 } )
+    .afterDismissed()
+    .subscribe(
+      () => {
+        this.loading = false;
+      }
+    );
 
-    this.loading = true;
-    this.authService.login(this.f.username.value, this.f.password.value, this.f.accessToken.value)
-      .pipe(first())
-      .subscribe(
-        () => {
-          this.router.navigate([this.returnUrl]);
-        },
-        error => {
-          this.error = error;
-          this.loading = false;
-        });
   }
+
+  goToApp() {
+    const factory = this.componentFactoryResolver.resolveComponentFactory(AppComponent);
+    const ref = this.viewContainerRef.createComponent(factory);
+    ref.changeDetectorRef.detectChanges();
+}
 
 
 }

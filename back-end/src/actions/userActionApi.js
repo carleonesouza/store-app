@@ -47,7 +47,7 @@ exports.createUser = async (req, res) => {
 }
 
 exports.authenticateUser = async (req, res) => {
-  return User.findOne({ email: req.body.email })
+  return User.findOne({ email: req.body.username })
     .exec()
     .then((user) => {
       if (!user) {
@@ -63,12 +63,13 @@ exports.authenticateUser = async (req, res) => {
         }
         
         if (result && req.body.accessToken === user.accessToken) {
-          
             const token = jwt.sign({
               email: user.email,
               userId: user._id,
-            }, baseUtilite.CONSTANTS.JWT_KEY, {expiresIn: '1h',});
-            res.status(200).json({message: 'Auth Successful'}, token);
+            }, baseUtilite.CONSTANTS.JWT_KEY, {
+              expiresIn: '1h'});
+              user.token = token;
+            res.status(200).json(user);
         } else { res.status(401).json({ message: 'Auth failed',});
         }
       });
@@ -79,3 +80,9 @@ exports.authenticateUser = async (req, res) => {
       });
     });
 }
+
+exports.allUsers = async (req, res) => {
+  const users = await User.find({});
+  res.status(200).send(users);
+}
+

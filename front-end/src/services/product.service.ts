@@ -10,7 +10,7 @@ import { HandleError } from './handleError';
 
 @Injectable()
 export class ProductService {
-  private static readonly endpoint: String  = 'http://localhost:3000/api/managment/product';
+  private static readonly endpoint: String  = 'http://localhost:3000/api/managment';
 
   dataChange: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
   // Temporarily stores data from dialogs
@@ -38,7 +38,7 @@ export class ProductService {
 
   // To get a list of Products
   getProducts(): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(`${ProductService.endpoint}`)
+    return this.httpClient.get<Product[]>(`${ProductService.endpoint}/products`)
       .pipe(
         catchError(this.myHandleError.handleError<Product[]>('getProducts', []))
       );

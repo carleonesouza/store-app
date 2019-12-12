@@ -14,7 +14,7 @@ import { ProductService } from './product.service';
 
 @Injectable()
 export class ManagementService {
-    private static readonly endpoint: String = 'http://localhost:3000/api';
+    private static readonly endpoint: String = 'http://localhost:3000/api/management';
     dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
     bagBill: Array<ManagementModel>;
     bagVender: Array<Vendor>;

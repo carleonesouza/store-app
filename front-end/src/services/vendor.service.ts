@@ -9,7 +9,7 @@ import { ProductService } from './product.service';
 
 @Injectable()
 export class VendorService {
-  private static readonly endpoint: String  = 'http://localhost:3000/api/managment/';
+  private static readonly endpoint: String  = 'http://localhost:3000/api/managment';
   dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
   dataMethodChange: BehaviorSubject<BillMethod[]> = new BehaviorSubject<BillMethod[]>([]);
   private billGroup: Array<BillMethod>;
@@ -47,7 +47,8 @@ addVendor(vendor: Vendor): void {
 
 // Create a Vendor at the backend
 addABMethod(bill: BillMethod): void {
-  this.httpClient.post(`${VendorService.endpoint}/method`, bill).subscribe(() => {
+  this.httpClient.post(`${VendorService.endpoint}/method`, bill)
+  .subscribe(() => {
     this.snackBar.open('The Vendor was Successifuly created ', '', { duration: 4000 });
     return;
   },
