@@ -1,0 +1,54 @@
+<div class="container">
+    <div class="page-header">
+        <h1>Dashboard</h1>
+
+        <div class="spinner-container" *ngIf="loading">
+            <mat-spinner [diameter]="45"></mat-spinner>
+        </div>
+    </div>
+
+    <div *ngIf="error">
+        <h3>Failed to fetch dashboard data.</h3>
+        <button mat-raised-button color="primary" (click)="ngOnInit()">RETRY</button>
+    </div>
+
+    <div *ngIf="!loading && !error" [ngSwitch]="auth.role">
+        <div *ngSwitchCase="'admin'" fxLayout="row" fxLayout.lt-md="column">
+            <mat-card class="cup" fxFlex="25" fxFlex.lt-md="100" mat-ripple [routerLink]="['/tutor-applications']">
+                <mat-card-header class="full-width">
+                    <mat-icon mat-card-avatar svgIcon="transit-transfer"></mat-icon>
+                    <mat-card-title>Applications <span class="data">{{data?.apply_state?.count || 0}}</span></mat-card-title>
+                </mat-card-header>
+            </mat-card>
+
+            <mat-card fxFlex="25" fxFlex.lt-md="100">
+                <mat-card-header class="full-width">
+                    <mat-icon mat-card-avatar svgIcon="school"></mat-icon>
+                    <mat-card-title>Classes <span class="data">{{data?.class?.count || 0}}</span></mat-card-title>
+                </mat-card-header>
+            </mat-card>
+
+            <mat-card fxFlex="25" fxFlex.lt-md="100">
+                <mat-card-header class="full-width">
+                    <mat-icon mat-card-avatar svgIcon="credit-card"></mat-icon>
+                    <mat-card-title>Helcim Users <span class="data">{{data?.customer_code?.count || 0}}</span></mat-card-title>
+                </mat-card-header>
+            </mat-card>
+
+            <mat-card class="cup" fxFlex="25" fxFlex.lt-md="100" mat-ripple [routerLink]="['/promo-codes']">
+                <mat-card-header class="full-width">
+                    <mat-icon mat-card-avatar svgIcon="wallet-membership"></mat-icon>
+                    <mat-card-title>Promo Codes <span class="data">{{data?.promo_code?.count || 0}}</span></mat-card-title>
+                </mat-card-header>
+            </mat-card>
+        </div>
+
+        <div *ngSwitchCase="'vendor'">
+            <h3>Sorry, there's no data to be displayed.</h3>
+        </div>
+    </div>
+
+    <div *ngIf="fallback">
+        <h3>Sorry, <strong>Mtor</strong>'s <u>Management Panel</u> is unavailable for your account.</h3>
+    </div>
+</div>

@@ -2,6 +2,7 @@ const express = require('express');
 const config = require('../config/index');
 const expressJwt = require('express-jwt');
 const baseUtilite = require('../utilities/baseUtilite');
+const httpUtilite = require('../utilities/httpUtility');
 const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
@@ -11,20 +12,42 @@ app.use(morgan('dev'));
 app.use(cors());
 app.options('*', cors());
 
-const allowCrossDomain = function(req, res, next) {
+app.use((req, res, next) => {
+  req.trackId = req.id;
   res.header('Content-Type', 'application/vnd.api+json');
   res.header('Access-Control-Allow-Origin', 'http://localhost:4200'); 
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-};
 
-app.use(allowCrossDomain);
+
+  if (req.method == 'OPTIONS') {
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Session');
+      res.statusCode = 200;
+      res.end();
+      return;
+  }
+  next();
+})
+
 
 app.use('/api/management', require('./routes/apiRoutes'));
-app.use('/api/management', require('./routes/appRoutes'));
+app.use('/api/management', httpUtilite.checkAuth, require('./routes/appRoutes'));
+app.use('/api/management', (req, res, next) => {
+  if (req.url === '/account/login') {
+      next()
+      return
+  }
 
-app.use(expressJwt({secret: baseUtilite.CONSTANTS.JWT_KEY}).unless({path: ['/api/management/login']}));
+  const sessionId = req.header('Session')
+  const errObj = { id: req.trackId, status: 403, message: 'You must be logged in to view this page' }
+
+  if (httpUtilite.isNullOrWhiteSpace(sessionId)) {
+      res.status(403).json(errObj).end()
+      return
+  }
+  next();
+
+});
+
 
 
 // Basic 404 handler

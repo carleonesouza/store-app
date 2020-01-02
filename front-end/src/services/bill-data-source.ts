@@ -42,7 +42,7 @@ export class BillDataSource extends DataSource<BillMethod> {
     return merge(...displayDataChanges).pipe(map(() => {
       // Filter data
       this.filtertingData = this._exampleDatabase.dataMethod.slice().filter((bill: BillMethod) => {
-        const searchStr = (bill.paymentMethod).toLowerCase();
+        const searchStr = (bill.paymentMethod);
         return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
       });
 

@@ -5,7 +5,7 @@ const baseUtilite = require('../utilities/baseUtilite');
 const userUtilite = require('../utilities/userUtility');
 
 exports.createUser = async (req, res) => {
-  User.findOne({ email: req.body.email })
+  User.findOne({ email: req.body.username })
     .exec()
     .then((user) => {
       if (user) {
@@ -69,7 +69,7 @@ exports.authenticateUser = async (req, res) => {
             }, baseUtilite.CONSTANTS.JWT_KEY, {
               expiresIn: '1h'});
               user.token = token;
-            res.status(200).json(user);
+            res.status(200).json(token);
         } else { res.status(401).json({ message: 'Auth failed',});
         }
       });

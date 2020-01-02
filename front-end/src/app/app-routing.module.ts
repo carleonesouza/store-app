@@ -1,18 +1,30 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { NotFoundComponent } from '../not-found/not-found.component';
-import { SignInComponent } from '../loggin/sign-in/sign-in.component';
-import { DashboardAppModule } from 'src/dashboard/dashboard.module';
+
+import { AccountModule } from '../account/account.module';
+import { AdminModule } from '../pages/admin/admin.module';
+import { VendorModule } from '../pages/vendor/vendor.module';
+
 import { BaseComponent } from './base.component';
 import { AuthGuard } from '../guards/auth.guard';
+import { DashboardComponent } from '../pages/dashboard/dashboard.component';
+import { LoggedInGuard } from '../guards/logged-in.guard';
+import { HomeComponent } from 'src/pages/home/home.component';
+import { FrontStoreComponent } from 'src/pages/front-store/front-store.component';
+import { NotFoundComponent } from 'src/pages/not-found/not-found.component';
+
 
 export const AppRoutes: Routes = [
-  { path: 'login', component: SignInComponent},
-  { path: 'dashboard', children: DashboardAppModule.UserRoutes, canActivate: [AuthGuard]},
-  { path: '404', component: NotFoundComponent },
+    { path: '', component: BaseComponent },
+    { path: 'account', children: AccountModule.ROUTES },
+    { path: 'home', component: HomeComponent, canActivate: [LoggedInGuard] },
+    { path: 'front-store', component: FrontStoreComponent, canActivate: [LoggedInGuard] },
+    { path: 'admin', children: AdminModule.ROUTES, canActivate: [AuthGuard], data: { role: 'admin' } },
+    { path: 'vendor', children: VendorModule.ROUTES, canActivate: [AuthGuard], data: { role: 'vendor' } },
+    { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '/404' }
-];
 
+];
 @NgModule({
   imports: [RouterModule.forRoot(AppRoutes)],
   exports: [RouterModule]

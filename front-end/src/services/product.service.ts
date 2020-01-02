@@ -3,14 +3,15 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Product } from '../models/product.model';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Quantity } from 'src/models/quantity.model';
 import { Vendor } from 'src/models/vendor.model';
 import { HandleError } from './handleError';
+import { environment } from 'src/environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class ProductService {
-  private static readonly endpoint: String  = 'http://localhost:3000/api/managment';
 
   dataChange: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
   // Temporarily stores data from dialogs
@@ -23,10 +24,17 @@ export class ProductService {
   log: any;
 
   constructor(private httpClient: HttpClient, private myHandleError: HandleError,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar, private auth: AuthService) {
     this.quantity = [];
     this.vender = [];
   }
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('mSessionId'),
+    })
+  };
 
   get data(): Product[] {
     return this.dataChange.value;
@@ -37,17 +45,15 @@ export class ProductService {
   }
 
   // To get a list of Products
-  getProducts(): Observable<Product[]> {
-    return this.httpClient.get<Product[]>(`${ProductService.endpoint}/products`)
-      .pipe(
-        catchError(this.myHandleError.handleError<Product[]>('getProducts', []))
-      );
+  getProducts(): Observable<any> {
+    return this.httpClient.get<Product[]>(
+      environment.server + '/products', this.httpOptions);
   }
 
   // To get a list of all Products to table on create-product.component
   getAllProducts() {
-    this.httpClient.get<Product[]>(`${ProductService.endpoint}`).subscribe(data => {
-      this.dataChange.next(data);
+    this.httpClient.get<Product[]>(environment.server + '/products', this.httpOptions).subscribe((data) => {
+       this.dataChange.next(data);
     },
       (error: HttpErrorResponse) => {
         this.snackBar.open('Error occurred. Details: ' + error.name + ' ' + error.message, 'RETRY', { duration: 3000 });
@@ -55,52 +61,49 @@ export class ProductService {
       });
   }
 
+
   // Get a specific Product from the Store
   getProductById(id: string): Observable<Product> {
-    return this.httpClient.get<Product>(`${ProductService.endpoint}/${id}`)
-      .pipe(
-        catchError(this.myHandleError.handleError<Product>('getProductById'))
-      );
+    return this.httpClient.get<Product>(`${environment.server}/product/${id}`, this.httpOptions)
+      .pipe();
   }
 
   // To update for getById
   updateById(product: Product): Observable<Product> {
-    return this.httpClient.put<Product>(`${ProductService.endpoint}/${product._id}`, product)
-      .pipe(
-        catchError(this.myHandleError.handleError('updateHero', product))
-      );
+    return this.httpClient.put<Product>(`${environment.server}/product/${product._id}`, product, this.httpOptions)
+      .pipe();
   }
 
   // To add a new Product
   addProduct(product: Product): void {
-    this.httpClient.post(`${ProductService.endpoint}/add`, product).subscribe(() => {
+    this.httpClient.post(environment.server + '/product/add', product, this.httpOptions).subscribe(() => {
       this.dialogData = product;
       this.snackBar.open('The Product was Successifuly created ', '', { duration: 4000 });
     },
       (err: HttpErrorResponse) => {
-        this.snackBar.open('Error occurred. Details: ' + err.message, 'RETRY', { duration: 4000 });
+        this.snackBar.open('Error occurred. Details: ' + err, 'RETRY', { duration: 4000 });
       });
   }
 
   // To upadate a Product by id
   updateProduct(product: Product): void {
-    this.httpClient.put(`${ProductService.endpoint}/${product._id}`, product).subscribe(() => {
+    this.httpClient.put(environment.server + '/' + product._id , product, this.httpOptions).subscribe(() => {
       this.dialogData = product;
       this.snackBar.open('The Product was Successifuly updated', '', { duration: 4000 });
     },
       (err: HttpErrorResponse) => {
-        this.snackBar.open('Error occurred. Details:  ' + err.message, 'RETRY', { duration: 4000 });
+        this.snackBar.open('Error occurred. Details:  ' + err, 'RETRY', { duration: 4000 });
       });
   }
 
   // To delete a Product by id
   deleteProduct(product: Product): void {
-   this.httpClient.request('delete', `${ProductService.endpoint}/${product._id}`, { body: product })
+    this.httpClient.request('delete', environment.server + '/' + product._id, this.httpOptions )
       .subscribe(() => {
         this.snackBar.open('The Product was Successifuly deleted', '', { duration: 4000 });
       },
         (err: HttpErrorResponse) => {
-          this.snackBar.open('Error occurred. Details:  ' + err.message, 'RETRY', { duration: 4000 });
+          this.snackBar.open('Error occurred. Details:  ' + err, 'RETRY', { duration: 4000 });
         }
       );
   }
@@ -124,7 +127,7 @@ export class ProductService {
             if (this.quantity.some(e => e.productId === data._id)) {
               this.quantity.filter((item) => {
                 if (item.productId === data._id) {
-                 item.quantity = item.quantity + 1;
+                  item.quantity = item.quantity + 1;
                 }
 
               });
@@ -145,7 +148,7 @@ export class ProductService {
         observer.complete();
     });
   }
-// To set Vender
+  // To set Vender
   onSelectedProducts(quant: Quantity) {
     this.getProductById(quant.productId)
       .subscribe(
@@ -166,8 +169,8 @@ export class ProductService {
             if (this.vender.some(e => e.productId === data._id)) {
               this.vender.filter((item) => {
                 if (item.productId === data._id) {
-                 item.amount = quant.quantity;
-                 item.total = item.amount * data.price;
+                  item.amount = quant.quantity;
+                  item.total = item.amount * data.price;
                 }
 
               });
@@ -183,7 +186,7 @@ export class ProductService {
     return new Observable((observer) => {
       if (this.vender != null) {
         observer.next(this.vender),
-        observer.complete();
+          observer.complete();
       } else {
         console.log('Vender is empty!');
       }

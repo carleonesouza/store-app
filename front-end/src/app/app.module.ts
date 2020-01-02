@@ -1,69 +1,99 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ChartsModule } from 'ng2-charts';
-import { JwtModule } from '@auth0/angular-jwt';
-import { StoreAppMaterialModule } from '../store-app-material-module';
-import { DashboardAppModule } from '../dashboard/dashboard.module';
-import { ProductAppModule } from 'src/product-app/product-app.module';
-import { AppRoutingModule } from './app-routing.module';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StoreAppMaterialModule} from '../store-app-material-module';
+import { MAT_DIALOG_DEFAULT_OPTIONS, MatNativeDateModule, MatIconRegistry, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AppComponent } from './app.component';
-import { NotFoundComponent } from '../not-found/not-found.component';
-import { ProductService } from '../services/product.service';
-import { VendorService } from '../services/vendor.service';
-import { HandleError } from 'src/services/handleError';
-import { SignInComponent } from '../loggin/sign-in/sign-in.component';
+import { SplashComponent } from './splash.component';
 import { BaseComponent } from './base.component';
-import { httpInterceptorProviders } from '../http-interceptors/index';
+import { AppRoutingModule } from './app-routing.module';
+import { ChartsModule } from 'ng2-charts';
+
+import { StoreAppService} from '../services/store-app.service';
 import { AuthService } from '../services/auth.service';
-import { HomeSplashComponent } from './home-splash.component';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { LoggedInGuard } from '../guards/logged-in.guard';
+
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { environment } from '../environments/environment';
+
+import { AccountModule } from '../account/account.module';
+import { AdminModule } from '../pages/admin/admin.module';
 import { ManagementService } from 'src/services/management.service';
+import { VendorModule } from '../pages/vendor/vendor.module';
+import { DashboardComponent } from '../pages/dashboard/dashboard.component';
+import { AuthGuard } from '../guards/auth.guard';
+import { HomeComponent } from 'src/pages/home/home.component';
+import { DatepickerComponent } from 'src/pages/datepicker/datepicker.component';
+import { VendorService } from 'src/services/vendor.service';
+import { ProductService } from 'src/services/product.service';
+import { HandleError } from 'src/services/handleError';
+import { FrontStoreComponent } from 'src/pages/front-store/front-store.component';
+import { NotFoundComponent } from 'src/pages/not-found/not-found.component';
+import { httpInterceptorProviders } from 'src/helpers';
+import { ConfirmationDialogComponent } from 'src/pages/dialogs/confirmation/confirmation-dialog.component';
+import { BillDialogComponent } from 'src/pages/dialogs/bill-dialog/bill-dialog.component';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NotFoundComponent,
-    SignInComponent,
-    BaseComponent,
-    HomeSplashComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    FormsModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: () => {
-          return localStorage.getItem('mSessionId');
-        },
-        whitelistedDomains: ['localhost:3000'],
-        blacklistedRoutes: ['localhost:3000/api/management/login']
-      }
-    }),
-    ReactiveFormsModule,
-    StoreAppMaterialModule,
-    FlexLayoutModule,
-    HttpClientModule,
-    DashboardAppModule,
-    ProductAppModule,
-    ChartsModule,
-  ],
-  providers: [
-    ProductService,
-    VendorService,
-    httpInterceptorProviders,
-    ManagementService,
-    HandleError,
-    AuthService,
-    AuthGuard],
-  entryComponents: [AppComponent],
-  bootstrap: [SignInComponent]
+    declarations: [
+        SplashComponent,
+        AppComponent,
+        BaseComponent,
+        HomeComponent,
+        FrontStoreComponent,
+        ConfirmationDialogComponent,
+        BillDialogComponent,
+        NotFoundComponent,
+        DatepickerComponent,
+        DashboardComponent
+    ],
+
+    imports: [
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireAuthModule,
+        BrowserModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        StoreAppMaterialModule,
+        AppRoutingModule,
+        FlexLayoutModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatNativeDateModule,
+        ChartsModule,
+        AccountModule,
+        AdminModule,
+        VendorModule,
+    ],
+
+    providers: [
+        { provide: MAT_DIALOG_DATA, useValue: { minWidth: 325, hasBackdrop: true } },
+        { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { minWidth: 325, hasBackdrop: true } },
+        ManagementService,
+        VendorService,
+        ProductService,
+        HandleError,
+        StoreAppService,
+        AuthService,
+        LoggedInGuard,
+        AuthGuard
+    ],
+
+    entryComponents: [
+        AppComponent, ConfirmationDialogComponent, BillDialogComponent
+    ],
+
+    exports: [ SplashComponent ],
+    bootstrap: [ SplashComponent ]
 })
-export class AppModule { }
+export class AppModule {
+    constructor(matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
+        matIconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('/assets/mdi.svg'));
+    }
+}

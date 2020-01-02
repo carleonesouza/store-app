@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
 import { BillMethod } from '../models/bill-method';
 import { HandleError } from './handleError';
 import { Vendor } from 'src/models/vendor.model';
 import { ProductService } from './product.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class VendorService {
-  private static readonly endpoint: String  = 'http://localhost:3000/api/managment';
   dataChange: BehaviorSubject<Vendor[]> = new BehaviorSubject<Vendor[]>([]);
   dataMethodChange: BehaviorSubject<BillMethod[]> = new BehaviorSubject<BillMethod[]>([]);
   private billGroup: Array<BillMethod>;
@@ -25,6 +25,14 @@ export class VendorService {
       this.bagBill = [];
   }
 
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('mSessionId'),
+    })
+  };
+
+
   get data(): Vendor[] {
     return this.dataChange.value;
   }
@@ -35,7 +43,7 @@ export class VendorService {
 
 // Create a Vendor at the backend
 addVendor(vendor: Vendor): void {
-  this.httpClient.post(`${VendorService.endpoint}/vendor/add`, vendor).subscribe(() => {
+  this.httpClient.post(environment.server + '/vendor/add', vendor, this.httpOptions ).subscribe(() => {
     this.snackBar.open('The Vendor was Successifuly created ', '', { duration: 4000 });
     return;
   },
@@ -47,7 +55,7 @@ addVendor(vendor: Vendor): void {
 
 // Create a Vendor at the backend
 addABMethod(bill: BillMethod): void {
-  this.httpClient.post(`${VendorService.endpoint}/method`, bill)
+  this.httpClient.post(environment.server + '/method', bill, this.httpOptions)
   .subscribe(() => {
     this.snackBar.open('The Vendor was Successifuly created ', '', { duration: 4000 });
     return;
@@ -60,7 +68,7 @@ addABMethod(bill: BillMethod): void {
 
 // To Get a list of Vendors from backend
 getAllVendors() {
-  this.httpClient.get<Vendor[]>(`${VendorService.endpoint}/vendors`).subscribe(data => {
+  this.httpClient.get<Vendor[]>(`${environment.server}/vendors`, this.httpOptions).subscribe(data => {
     data.map((vendor) => {
       this.productService.getProductById(vendor.productId
         ).subscribe((product) => {
@@ -80,7 +88,7 @@ getAllVendors() {
 
 // To Get a list of Methods from backend
 getAllMethods() {
-  this.httpClient.get<BillMethod[]>(`${VendorService.endpoint}/methods`).subscribe(data => {
+  this.httpClient.get<BillMethod[]>(`${environment.server}/methods`, this.httpOptions).subscribe(data => {
     const billCredit = data.filter(element => element.paymentMethod === 'Credit');
     const billCash = data.filter(element => element.paymentMethod === 'Cash');
     const billDebit = data.filter(element => element.paymentMethod === 'Debit');

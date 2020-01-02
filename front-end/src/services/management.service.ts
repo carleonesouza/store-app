@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
 import { HandleError } from './handleError';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -11,6 +11,7 @@ import { BillMethod } from 'src/models/bill-method';
 import { Vendor } from 'src/models/vendor.model';
 import * as moment from 'moment';
 import { ProductService } from './product.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ManagementService {
@@ -28,9 +29,16 @@ export class ManagementService {
         this.bagBill = [];
     }
 
+    httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('mSessionId'),
+        })
+      };
+
     // To get a list of all Venders
     getAllBags(): Observable<BagVenders[]> {
-        return this.httpClient.get<BagVenders[]>(`${ManagementService.endpoint}`)
+        return this.httpClient.get<BagVenders[]>(`${environment.server}`, this.httpOptions)
             .pipe(
                 catchError(this.myHandleError.handleError<BagVenders[]>('getAllBags', []))
             );
@@ -38,7 +46,7 @@ export class ManagementService {
 
     // To add a new Vender
     addBags(bags: BagVenders): void {
-        this.httpClient.post(`${ManagementService.endpoint}/add`, bags).subscribe(() => {
+        this.httpClient.post(`${environment.server}/add`, bags, this.httpOptions).subscribe(() => {
             this.snackBar.open('The product was Successifuly sold ', '', { duration: 4000 });
         },
             (err: HttpErrorResponse) => {

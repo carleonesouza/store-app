@@ -1,17 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { environment } from '../environments/environment';
-import { User } from '../models/user.model';
-import { MatSnackBar } from '@angular/material';
-import { HandleError } from './handleError';
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase';
 
-
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class AuthService {
-    public user: User = null;
+    public user: firebase.User = null;
     public idToken: string = null;
     public uid: string = null;
     public avatar: string = null;
@@ -19,43 +14,28 @@ export class AuthService {
     public email: string = null;
     public role: string = null;
 
-
-
-    constructor(private httpClient: HttpClient, private router: Router,
-                private hanldeError: HandleError, private snackBar: MatSnackBar) {
-    }
-
-    login(username: string, password: string, accessToken: string): Observable<User> {
-    const headers = new HttpHeaders().set('Content-Type', 'application/vnd.api+json');
-    return this.httpClient.post<User>(`${environment.server}/login`, { username, password, accessToken },
-     {headers}).pipe(
-         catchError(this.hanldeError.handleError<any>('PostUser'))
-     );
-    }
+    constructor(public afAuth: AngularFireAuth,
+                private router: Router) { }
 
     get authenticated(): boolean {
-        if (localStorage.getItem('mSessionId') !== null) {
-            return true;
+        return this.user !== null && localStorage.getItem('mSessionId') !== null;
+    }
+
+    signOut(): void {
+        this.afAuth.auth.signOut();
+
+        if (window && window.localStorage) {
+            window.localStorage.clear();
         }
-        return false;
-    }
 
-    userAuth(): Observable<User> {
-        return this.httpClient.get<User>(`${environment.server}/user`)
-        .pipe(
-            catchError(this.hanldeError.handleError<User>('getUser'))
-          );
-    }
+        this.user = null;
+        this.idToken = null;
+        this.uid = null;
+        this.avatar = null;
+        this.name = null;
+        this.email = null;
+        this.role = null;
 
-
-
-   tokenGetter() {
-        return localStorage.getItem('mSessionId');
-      }
-
-    logout() {
-        // remove user from local storage to log user out
-        localStorage.removeItem('mSessionId');
         this.router.navigate(['/']);
     }
 }

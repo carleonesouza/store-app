@@ -1,57 +1,55 @@
-<header>
-    <mat-sidenav-container class="app-root" fullscreen>
-        <mat-sidenav mode="side" class="dark" #start>
-            <img id="nav-logo" src="../assets/favicon.ico" alt="Angular Logo">
-            <h4>Dashboard</h4>
-            <mat-nav-list>
-                          
-                    <a *ngFor="let navItem of navItems" mat-list-item class="class-list-item"
-                     (click)="start.close()"
-                            mat-list-item
-                            (click)="toggleIfMobile()"
-                            routerLinkActive="active"
-                            #routerLinkActiveInstance="routerLinkActive"
-                            [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
-                            [routerLinkActiveOptions]="{exact: navItem.route == '/'}"
-                            [routerLink]="[navItem.route]">
-                            {{navItem.name}}<mat-icon *ngIf="navItem.icon">{{navItem.icon}}</mat-icon>
-                    </a>
-                </mat-nav-list>
+<mat-sidenav-container class="app-root" fullscreen>
+    <mat-sidenav class="dark"  #start mode="side">
+        <img src="https://cervejariaarraialdajuda.com.br/wp-content/themes/cervejaria/imgs/cervejaria_arraial_y.png" id="nav-logo"  alt="Company logo">
         
-        </mat-sidenav>
-        <mat-toolbar color="primary" class="toolbar dark">
+        <mat-nav-list>
+                          
+            <a *ngFor="let navItem of navItems[auth.role]" mat-list-item class="class-list-item"
+             (click)="start.close()"
+                    mat-list-item
+                    (click)="toggleIfMobile()"
+                    routerLinkActive="active"
+                    #routerLinkActiveInstance="routerLinkActive"
+                    [attr.tabindex]="routerLinkActiveInstance.isActive ? 0 : -1"
+                    [routerLinkActiveOptions]="{exact: navItem.route == '/'}"
+                    [routerLink]="[navItem.route]">
+                    {{navItem.name}}<mat-icon *ngIf="navItem.icon">{{navItem.icon}}</mat-icon>
+            </a>
+        </mat-nav-list>
+
+    </mat-sidenav>
+
+    <div id="mtor">
+        <mat-toolbar class="dark" id="main-toolbar">
             <mat-toolbar-row>
-                <button mat-icon-button (click)="start.open()">
-                    <mat-icon class="mat-24">menu</mat-icon>
+                <button mat-icon-button (click)="start.toggle()">
+                    <mat-icon class="mat-24" svgIcon="menu"></mat-icon>
                 </button>
 
                 <span id="logo">Store App</span>
                 <span class="spacer"></span>
-                <span class="example-spacer"></span>
+
                 <div>
-                    <button mat-button [matMenuTriggerFor]="userMenu" aria-label="menu-usuário">
-                            <img id="user-avatar" src="../../assets/user.png" alt="Profile Picture">
-                            {{user}}
-                        <i class="caret"></i>
+                    <button mat-button [matMenuTriggerFor]="authMenu">
+                        <img id="user-avatar" [src]="auth.avatar" onError="this.src='/assets/img/user.png'"> {{auth.name}} <i class="caret"></i>
                     </button>
-                    <mat-menu #userMenu="matMenu">
-                        <ng-template matMenuContent let-name="name">
-                            <button mat-menu-item  [routerLink]="['/dashboard/profile']">
-                                <mat-icon aria-hidden="true">account_circle</mat-icon>
-                                Profile
-                            </button>
-                            <button mat-menu-item (click)="doLogOut()">
-                                <mat-icon aria-hidden="true">subdirectory_arrow_right</mat-icon>
-                                Logout
-                            </button>
-                        </ng-template>
+
+                    <mat-menu #authMenu="matMenu">
+                        <button mat-menu-item (click)="signOut()">
+                            <mat-icon svgIcon="exit-to-app"></mat-icon>
+                            <span>Sign out</span>
+                        </button>
                     </mat-menu>
                 </div>
-
             </mat-toolbar-row>
         </mat-toolbar>
+
         <div #root="dir" dir="ltr" class="app-content">
             <router-outlet id="main"></router-outlet>
         </div>
-    </mat-sidenav-container>
-</header>
+
+        <div id="progress-main" class="white" *ngIf="showProgress" fxLayoutAlign="center center">
+            <mat-spinner></mat-spinner>
+        </div>
+    </div>
+</mat-sidenav-container>

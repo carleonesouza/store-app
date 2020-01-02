@@ -1,0 +1,27 @@
+.container {
+    padding: 0;
+}
+
+@media (min-width: 960px) {
+    .mat-card {
+        margin-right: 20px;
+    }
+}
+
+.mat-card-title {
+    font-size: 14pt;
+    font-weight: 300;
+    margin: 0 5px;
+    line-height: 40px;
+    position: relative;
+    width: 100%;
+    display: flex;
+
+    .data {
+        font-size: 18pt;
+        line-height: 40px;
+        display: inline-block;
+        flex: 1 1 auto;
+        text-align: right;
+    }
+}

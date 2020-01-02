@@ -1,0 +1,88 @@
+<div id="form-wrapper" fxLayout="column" fxLayoutAlign="space-between center" >
+    <img alt="Company logo" id="logo"
+        src="https://cervejariaarraialdajuda.com.br/wp-content/themes/cervejaria/imgs/cervejaria_arraial_y.png">
+
+    <div id="form-error" *ngIf="error" fxLayoutAlign="center center">
+        <div id="form-error-content">
+            {{error}}
+        </div>
+    </div>
+
+    <mat-card  class="mat-elevation-z8" >
+        <form  *ngIf="!loggingIn"  [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+       <!--  <div class="card-header">Login</div>-->
+        <span class="spacer"></span> 
+        <mat-card-content class="card-inside">
+         <!--    <div class="item item-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Username</mat-label>
+                    <input matInput placeholder="Username" type="email" formControlName="username"
+                        class="form-control" />
+                    <mat-error *ngIf="f.username.errors">Please, type a valid email</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="item item-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Password</mat-label>
+                    <input matInput placeholder="Password" formControlName="password" type="password">
+                    <mat-error *ngIf="f.password.errors">Please, type a valid password</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="item item-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Access Code</mat-label>
+                    <input matInput placeholder="Access Code" formControlName="accessToken" type="text">
+                    <mat-error *ngIf="f.accessToken.errors">Please, type a valid Token</mat-error>
+                </mat-form-field>
+            </div> -->
+            <div style="height:50px;width:240px;margin:0 auto; border-radius: 4px 4px 4px 4px;" class="abcRioButton abcRioButtonBlue"
+            (click)="signInWithGoogle()">
+            <div class="abcRioButtonContentWrapper">
+                <div class="abcRioButtonIcon" style="padding:15px;border-radius: 4px 4px 4px 4px;">
+                    <div style="width:18px;height:18px"
+                        class="abcRioButtonSvgImageWithFallback abcRioButtonIconImage abcRioButtonIconImage18">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="18px" height="18px"
+                            viewBox="0 0 48 48" class="abcRioButtonSvg">
+                            <g>
+                                <path fill="#EA4335"
+                                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z">
+                                </path>
+                                <path fill="#4285F4"
+                                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z">
+                                </path>
+                                <path fill="#FBBC05"
+                                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z">
+                                </path>
+                                <path fill="#34A853"
+                                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z">
+                                </path>
+                                <path fill="none" d="M0 0h48v48H0z"></path>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <span style="font-size:16px;line-height:48px" class="abcRioButtonContents">
+                    <span id="not_signed_in">Sign in with Google</span>
+                </span>
+            </div>
+        </div>       
+        </mat-card-content>
+       <!--  <mat-card-actions>
+            <div class="item-buttons" fxLayoutAlign="center center">
+                <button mat-raised-button [disabled]="!loginForm.valid" id="singin" (click)="onSubmit()">Sign
+                    in</button>
+            </div>
+            <span class="spacer"></span>
+        </mat-card-actions> -->
+    </form>
+    <span class="spacer"></span>
+    <div id="loading-state" *ngIf="loggingIn" fxLayoutAlign="center center">
+        <mat-spinner color="accent"></mat-spinner>
+    </div>
+    <span class="spacer"></span>
+    </mat-card>
+    <span class="spacer"></span>
+
+    <span id="copyright">&copy; 2019 All Rights Reserved</span>
+</div>

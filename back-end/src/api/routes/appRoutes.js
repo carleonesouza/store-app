@@ -4,6 +4,7 @@ const productActionApi = require('../../actions/productActionApi');
 const vendorsActionApi = require('../../actions/vendorsActionApi');
 const billMethodAction = require('../../actions/billMethodActionApi');
 const userActionApi = require('../../actions/userActionApi');
+const actions = require('../../actions/managementAction')
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended:false}));
@@ -15,7 +16,7 @@ router.post('/product/add', productActionApi.createProduct);
 router.post('/vendor/add', vendorsActionApi.createVendor);
 router.post('/method', billMethodAction.createABill);
 router.post('/create-user', userActionApi.createUser);
-router.post('/login', userActionApi.authenticateUser)
+// router.post('/login', userActionApi.authenticateUser)
 
 
 
