@@ -12,37 +12,16 @@ exports.createUser = async (req, res) => {
         return res.status(409).json({
           message: 'Mail exists',
         });
-      }
-      bcrypt.genSalt(baseUtilite.CONSTANTS.SALT_WORK_FACTOR, (err, salt) => {
-        if (err) {
-          return err;
-        }
-        // hash the password using our new salt
-        // eslint-disable-next-line no-shadow
-        bcrypt.hash(req.body.password, salt, (err, hash) => {
-          if (err) {
-            return res.status(409).json({
-              message: err
-            });
-          } else {
-            const userlocal = new User(req.body);
-            userlocal.accessToken = userUtilite.generateCode();
-            userlocal.password = hash;
-            userlocal
-              .save()
-              .then(() => { console.log('User Save Successfully!'); })
+      } else {
+        const userlocal = new User(req.body);
+            userlocal.save()
+              .then((user) => { res.status(201).send(user);})
               .catch((err) => {
                 res.status(500).json({
                   message: err,
                 });
               });
-            res.status(201).send({ message: 'The User has been created successfully !' });
-
-          }
-          return null;
-        });
-        return null;
-      });
+          }     
     });
 }
 
@@ -81,8 +60,14 @@ exports.authenticateUser = async (req, res) => {
     });
 }
 
-exports.allUsers = async (req, res) => {
+exports.findAllUsers = async (req, res) => {
   const users = await User.find({});
-  res.status(200).send(users);
+ return res.status(200).send(users);
 }
+
+exports.findUserById = async (req, res) => {
+  const user = await User.findOne({_d: req.body._id});
+  return res.status(200).send(user);
+}
+
 

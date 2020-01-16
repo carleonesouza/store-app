@@ -21,6 +21,7 @@ exports.findAllBags = async (req, res) => {
   res.status(200).send(venders);
 };
 
+// To create a Vendor
 exports.createVendor = async (req, res) => {
   const newVendor = new Vendor(req.body);
   const vendor = await newVendor
@@ -38,4 +39,10 @@ exports.createVendor = async (req, res) => {
 exports.findAVendors = async (req, res) => {
   const venders = await Vendor.find({})
   res.status(200).send(venders);
+}
+
+exports.findVendorsByProduct = async (req, res) => {
+  const vendors  = await Vendor.find({})
+  .populate('productId')
+  res.status(200).send(vendors);
 }

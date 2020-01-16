@@ -13,12 +13,4 @@ router.post('/account/login', actions.login)
 router.post('/account/check', actions.check)
 router.post('/account/logout', actions.logout)
 
-// Reuse database object in request handlers
-router.get('/', (req, res) => {
-  res.status(200).send({
-    success: true,
-    message: 'API Connected successfully!',
-  });
-}); 
-
 module.exports = router;

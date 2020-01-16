@@ -1,5 +1,11 @@
 <div fxLayout="column" fxLayoutAlign="center">
     <span class="spacer"></span>
+    <div id="form-error" *ngIf="walletOpen" fxLayoutAlign="center center">
+      <div id="form-error-content">
+        <p>You should open a wallet before sell anything!</p>
+        <button mat-raised-button color="accent" (click)="openDialog()">Open</button>
+      </div>
+  </div>
     <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
         <div class="item item-3" fxFlex>
             <mat-card>
@@ -106,16 +112,11 @@
                       </mat-toolbar>
                       
                       <div class="container mat-elevation-z8">
-                        <div class="form">
-                          <mat-form-field floatPlaceholder="never" color="warn">
-                            <input matInput #filter placeholder="Filter Products">
-                          </mat-form-field>
-                        </div>
                         <mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
                           <!--- Note that these columns can be defined in any order.
                                   The actual rendered columns are set as a property on the row definition" -->
                       
-                          <!-- ID Column -->
+                          <!-- Name Column -->
                           <ng-container matColumnDef="name">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
                             <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
@@ -159,11 +160,6 @@
                       </mat-toolbar>
                       
                       <div class="container mat-elevation-z8">
-                        <div class="form">
-                          <mat-form-field floatPlaceholder="never" color="warn">
-                            <input matInput #filter placeholder="Filter Products">
-                          </mat-form-field>
-                        </div>
                         <mat-table #table [dataSource]="dataMethod" matSort class="mat-cell">
                           <!--- Note that these columns can be defined in any order.
                                   The actual rendered columns are set as a property on the row definition" -->
@@ -213,5 +209,5 @@
             </mat-card>
         </div>
     </div>
-    <span class="spacer"></span>
+    <span class="spacer"></span>  
 </div>

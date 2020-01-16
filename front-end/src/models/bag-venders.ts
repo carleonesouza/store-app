@@ -5,8 +5,8 @@ import { BillMethod } from './bill-method';
 @Injectable()
 export class BagVenders {
 
- venders?: Vendor [];
- billsMethod?: BillMethod [];
+ venders?: Vendor;
+ billsMethod?: BillMethod;
  createdAt?: Date;
  updatedAt?: Date;
 }

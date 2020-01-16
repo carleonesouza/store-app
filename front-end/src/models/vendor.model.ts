@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Product } from './product.model';
 
 @Injectable()
 export class Vendor {
@@ -14,7 +15,7 @@ export class Vendor {
           return;
         }
         this._id = obj._id;
-        this.productId = obj.productId;
+        this.productId = obj.product;
         this.amount = obj.amount;
         this.total = obj.total;
         this.createdAt = obj.createdAt;

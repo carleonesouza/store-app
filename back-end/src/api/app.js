@@ -31,22 +31,6 @@ app.use((req, res, next) => {
 
 app.use('/api/management', require('./routes/apiRoutes'));
 app.use('/api/management', httpUtilite.checkAuth, require('./routes/appRoutes'));
-app.use('/api/management', (req, res, next) => {
-  if (req.url === '/account/login') {
-      next()
-      return
-  }
-
-  const sessionId = req.header('Session')
-  const errObj = { id: req.trackId, status: 403, message: 'You must be logged in to view this page' }
-
-  if (httpUtilite.isNullOrWhiteSpace(sessionId)) {
-      res.status(403).json(errObj).end()
-      return
-  }
-  next();
-
-});
 
 
 

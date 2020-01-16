@@ -7,7 +7,6 @@ import { VendorModule } from '../pages/vendor/vendor.module';
 
 import { BaseComponent } from './base.component';
 import { AuthGuard } from '../guards/auth.guard';
-import { DashboardComponent } from '../pages/dashboard/dashboard.component';
 import { LoggedInGuard } from '../guards/logged-in.guard';
 import { HomeComponent } from 'src/pages/home/home.component';
 import { FrontStoreComponent } from 'src/pages/front-store/front-store.component';

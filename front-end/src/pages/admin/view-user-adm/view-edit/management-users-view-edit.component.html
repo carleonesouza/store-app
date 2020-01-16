@@ -1,0 +1,69 @@
+<div [ngSwitch]="create">
+    <h3 *ngSwitchCase="false">Edit User: <strong>{{data?.id}}</strong></h3>
+    <h3 *ngSwitchCase="true">Create User</h3>
+</div>
+
+<div [ngSwitch]="working">
+    <div *ngSwitchCase="true" id="loader">
+        <mat-spinner color="primary"></mat-spinner>
+    </div>
+
+    <form *ngSwitchCase="false">
+        <div *ngIf="error" class="text-center">
+            <div class="error-alert">
+                <div class="error-alert-content">Failed to load user data</div>
+            </div>
+
+            <div class="flex">
+                <span class="spacer"></span>
+                <button mat-raised-button color="primary" (click)="loadData()">RETRY</button>
+            </div>
+        </div>
+
+        <div *ngIf="notFound" class="text-center">
+            <div class="error-alert">
+                <div class="error-alert-content">Couldn't find this user</div>
+            </div>
+
+            <div class="flex">
+                <span class="spacer"></span>
+                <button mat-button (click)="dialogRef.close()">CLOSE</button>
+            </div>
+        </div>
+
+        <div *ngIf="user && !error && !notFound" id="form">
+            <mat-form-field class="half-width mr5">
+                <input matInput placeholder="Email" [value]="user?.id" [readonly]="!create" [(ngModel)]="email" name="email">
+            </mat-form-field>
+
+            <mat-form-field class="half-width ml5">
+                <mat-select placeholder="Panel Access" [value]="user?.allowed" [(ngModel)]="allowed" name="allowed">
+                    <mat-option value="true">Allowed</mat-option>
+                    <mat-option value="false">Disallowed</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field [ngClass]="{'full-width': create, 'half-width': !create, mr5: !create}">
+                <mat-select placeholder="Role" [value]="user?.role" [(ngModel)]="role" name="role">
+                    <mat-option value="admin">Admin</mat-option>
+                    <mat-option value="vendor">Vendor</mat-option>
+                    <mat-option value="disabled">Disabled</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="half-width ml5" *ngIf="!create">
+                <input matInput placeholder="Session Identifier" [value]="user?.sessionId" [(ngModel)]="sessionId" name="sessionId">
+                <button mat-button mat-icon-button matSuffix color="primary" title="Help" (click)="sessionIdHelp()">
+                    <mat-icon svgIcon="help-circle"></mat-icon>
+                </button>
+            </mat-form-field>
+
+            <div class="flex mt10 dialog-actions">
+                <button mat-raised-button type="button" (click)="delete()" color="warn" *ngIf="!create">DELETE</button>
+                <span class="spacer"></span>
+                <button class="mr5" mat-button type="button" (click)="dialogRef.close()">CLOSE</button>
+                <button class="ml5" mat-raised-button type="button" (click)="save()" color="primary">SAVE CHANGES</button>
+            </div>
+        </div>
+    </form>
+</div>

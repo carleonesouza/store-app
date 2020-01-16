@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
-import { catchError, map } from 'rxjs/operators';
 import { Quantity } from 'src/models/quantity.model';
 import { Vendor } from 'src/models/vendor.model';
 import { HandleError } from './handleError';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ProductService {
@@ -23,8 +23,7 @@ export class ProductService {
   localVender: Vendor;
   log: any;
 
-  constructor(private httpClient: HttpClient, private myHandleError: HandleError,
-              private snackBar: MatSnackBar, private auth: AuthService) {
+  constructor(private httpClient: HttpClient, private snackBar: MatSnackBar) {
     this.quantity = [];
     this.vender = [];
   }
@@ -56,7 +55,7 @@ export class ProductService {
        this.dataChange.next(data);
     },
       (error: HttpErrorResponse) => {
-        this.snackBar.open('Error occurred. Details: ' + error.name + ' ' + error.message, 'RETRY', { duration: 3000 });
+        this.snackBar.open('Error occurred during this process', 'RETRY', { duration: 3000 });
         console.log(error.name + ' ' + error.message);
       });
   }
@@ -81,7 +80,8 @@ export class ProductService {
       this.snackBar.open('The Product was Successifuly created ', '', { duration: 4000 });
     },
       (err: HttpErrorResponse) => {
-        this.snackBar.open('Error occurred. Details: ' + err, 'RETRY', { duration: 4000 });
+        this.snackBar.open('Error occurred during this process', 'RETRY', { duration: 4000 });
+        console.log(err);
       });
   }
 
@@ -92,7 +92,8 @@ export class ProductService {
       this.snackBar.open('The Product was Successifuly updated', '', { duration: 4000 });
     },
       (err: HttpErrorResponse) => {
-        this.snackBar.open('Error occurred. Details:  ' + err, 'RETRY', { duration: 4000 });
+        this.snackBar.open('Error occurred during this process ', 'RETRY', { duration: 4000 });
+        console.log(err);
       });
   }
 
@@ -103,7 +104,8 @@ export class ProductService {
         this.snackBar.open('The Product was Successifuly deleted', '', { duration: 4000 });
       },
         (err: HttpErrorResponse) => {
-          this.snackBar.open('Error occurred. Details:  ' + err, 'RETRY', { duration: 4000 });
+          this.snackBar.open('Error occurred this process', 'RETRY', { duration: 4000 });
+          console.log(err);
         }
       );
   }
@@ -129,7 +131,6 @@ export class ProductService {
                 if (item.productId === data._id) {
                   item.quantity = item.quantity + 1;
                 }
-
               });
             } else {
               this.quantity.push(this.localQuantity);

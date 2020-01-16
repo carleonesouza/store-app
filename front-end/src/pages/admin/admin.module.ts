@@ -9,19 +9,21 @@ import { StoreAppMaterialModule } from '../../store-app-material-module';
 import { AddDialogComponent } from './add/add-dialog.component';
 import { EditDialogComponent } from './edit/edit-dialog.component';
 import { DeleteDialogComponent } from './delete/delete-dialog.component';
-import { ViewUserAdmComponent } from './view-user-adm/view/view-user-adm.component';
-import { EditUserDialogComponent } from './view-user-adm/edit/edit-user-dialog.component';
+
 import { CreateProductComponent } from './create-product/create-product.component';
-import { ConfirmationDialogComponent } from '../dialogs/confirmation/confirmation-dialog.component';
+import { ManagementUsersComponent } from './view-user-adm/management-users.component';
+import { ManagementUsersViewEditComponent } from './view-user-adm/view-edit/management-users-view-edit.component';
+
+
 
 @NgModule({
     declarations: [
         AddDialogComponent,
         EditDialogComponent,
         DeleteDialogComponent,
-        ViewUserAdmComponent,
         CreateProductComponent,
-        EditUserDialogComponent,
+        ManagementUsersComponent,
+        ManagementUsersViewEditComponent
     ],
 
     imports: [
@@ -41,14 +43,14 @@ import { ConfirmationDialogComponent } from '../dialogs/confirmation/confirmatio
     entryComponents: [
         AddDialogComponent,
         EditDialogComponent,
+        ManagementUsersViewEditComponent,
         DeleteDialogComponent,
-        EditUserDialogComponent,
         CreateProductComponent,
     ]
 })
 export class AdminModule {
     static ROUTES: Routes = [
         { path: 'product', component: CreateProductComponent},
-        { path: 'management-users', component: ViewUserAdmComponent}
+        { path: 'management-users', component: ManagementUsersComponent}
     ];
 }

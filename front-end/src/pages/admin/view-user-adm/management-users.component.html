@@ -1,0 +1,64 @@
+<div class="container">
+    <div class="page-header">
+        <h1>Users</h1>
+
+        <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+            <mat-spinner [diameter]="45"></mat-spinner>
+        </div>
+    </div>
+
+    <div class="mat-elevation-z8 table table-400">
+        <div class="table-header">
+            <input class="search-input" placeholder="Search by User ID..." #input>
+            <button mat-button class="action-button" [disabled]="dataSource.loading$ " (click)="loadUsersPage()"><mat-icon svgIcon="refresh"></mat-icon></button>
+        </div>
+
+        <mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="avatar">
+                <mat-header-cell *matHeaderCellDef [ngClass]="'avatarCell'"></mat-header-cell>
+                <mat-cell *matCellDef="let user" [ngClass]="'avatarCell'">
+                    <img class="smallAvatar" [src]="user?.profile?.avatar" onError="this.src='/assets/img/user.png'">
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                <mat-cell *matCellDef="let user">{{user?.profile?.name || '- invalid user -'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+                <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+                <mat-cell *matCellDef="let user">{{user?.profile?.email || '- invalid user -'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="promoCode">
+                <mat-header-cell *matHeaderCellDef class="ham">Promo Code</mat-header-cell>
+                <mat-cell *matCellDef="let user" class="ham">{{user?.profile?.promoCode || '- invalid user -'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="role">
+                <mat-header-cell *matHeaderCellDef class="ham">Role</mat-header-cell>
+                <mat-cell *matCellDef="let user" class="ham">{{formatRole(user?.info?.role)}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef class="ham">Identifier</mat-header-cell>
+                <mat-cell *matCellDef="let user" class="ham"><small>{{user?.id || '- invalid user -'}}</small></mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row class="row-clickable" *matRowDef="let row; columns: displayedColumns" (click)="viewUser(row.id)"></mat-row>
+        </mat-table>
+
+        <div class="imitate-row" *ngIf="dataSource?.empty">There are no results.</div>
+        <div class="imitate-row" *ngIf="dataSource.loading$">Please wait...</div>
+        <div class="imitate-row" *ngIf="errored">Failed to load data. <a (click)="loadUsersPage()">Retry?</a></div>
+
+        <mat-paginator
+            [length]="dataSource?.count"
+            [pageSize]="9999"
+            [pageSizeOptions]="[9999]"
+            [hidePageSize]="dataSource.loading$"
+            [showFirstLastButtons]="!dataSource.loading$"></mat-paginator>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, AfterContentInit } from '@angular/core';
-import { MatPaginator, MatSort, MatDatepickerInputEvent, MatSnackBar } from '@angular/material';
+import { MatPaginator, MatSort, MatDatepickerInputEvent, MatSnackBar, MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS } from '@angular/material-moment-adapter';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { HttpClient } from '@angular/common/http';
 import { fromEvent } from 'rxjs';
@@ -14,39 +14,53 @@ import { fromEvent } from 'rxjs';
 import * as moment from 'moment';
 import { ManagementService } from 'src/services/management.service';
 import { HomeDataSource } from 'src/services/home-data-source';
-import { HandleError } from 'src/services/handleError';
 import { ProductService } from 'src/services/product.service';
 import { VendorService } from 'src/services/vendor.service';
 import { BillDataSource } from 'src/services/bill-data-source';
+import { WalletDialogComponent } from '../dialogs/wallet-dialog/wallet-dialog.component';
 
+
+
+// See the Moment.js docs for the meaning of these formats:
+// https://momentjs.com/docs/#/displaying/format/
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   providers: [
-    // The locale would typically be provided on the root module of your application. We do it at
-    // the component level here, due to limitations of our example generation script.
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
-
-    // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
-    // `MatMomentDateModule` in your applications root module. We provide it at the component level
-    // here, due to limitations of our example generation script.
+     // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
+    // application's root module. We provide it at the component level here, due to limitations of
+    // our example generation script.
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
   ],
 })
 export class HomeComponent implements OnInit, AfterContentInit {
   displayedColumns: string[] = ['name', 'quantity', 'total'];
   displayedColumns2: string[] = ['method', 'value'];
+  displayedColumns3: string[] = ['name', 'description', 'value'];
   exampleDatabase: VendorService | null;
   dataSource: HomeDataSource | null;
   dataMethod: BillDataSource | null;
   loading = true;
+  walletOpen = true;
   today = new Date().toLocaleDateString();
   @Input() reportDayForm: FormGroup;
   @Input() cashierForm: FormGroup;
@@ -74,14 +88,13 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
 
   constructor(private formBuilder: FormBuilder, private managementService: ManagementService,
-              private snackBar: MatSnackBar, public httpClient: HttpClient,
-              private myHandleError: HandleError, private productService: ProductService) { }
+              private snackBar: MatSnackBar, public httpClient: HttpClient, private dialog: MatDialog,
+              private productService: ProductService, private vendorService: VendorService) { }
 
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild('filter', { static: true }) filter: ElementRef;
-
 
   ngOnInit() {
     this.loading = false;
@@ -95,6 +108,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
     this.cashierForm.setValue({
       dateNow: this.today,
     });
+    this.vendorService.getVendors();
 
   }
 
@@ -121,6 +135,14 @@ export class HomeComponent implements OnInit, AfterContentInit {
       this.managementService.onDataForHome(this.dateValue);
       this.managementService.onVenderHome(this.dateValue);
     }
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(WalletDialogComponent);
+
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('The dialog was closed');
+    });
   }
 
 

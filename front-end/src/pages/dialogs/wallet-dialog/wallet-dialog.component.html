@@ -1,0 +1,35 @@
+<div fxLayout="column" fxLayoutAlign="center stretch" class="row">
+    <div class="card-header">Finish Purchase </div>
+    <mat-dialog-content [formGroup]="venderForm">
+      <div fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="start center" class="flex-wrap">
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input matInput placeholder="Amount" type="number" formControlName="formAmount">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Purchase Total</mat-label>
+          <input matInput placeholder="Value" type="text" formControlName="formTotal">
+        </mat-form-field>
+      </div>
+      <div class="item-4">
+        <mat-form-field appearance="legacy">
+          <mat-label>Type a value of payment</mat-label>
+          <input matInput placeholder="Value" type="number" formControlName="formSold">
+          <mat-error *ngIf="venderControlsForm.formSold.errors">Please, type a valid value or number</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="item-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Payable Total</mat-label>
+          <input matInput placeholder="Total" type="text" formControlName="formPayable">
+            <mat-icon *ngIf="!approval" class="not-approval" matSuffix>close</mat-icon>  
+            <mat-icon *ngIf="approval" class="approval" matSuffix>done</mat-icon>
+        </mat-form-field>
+      </div>
+      <div class="item-buttons">
+        <button mat-button class="style-button" (click)="onConfirmation()">Confirm</button>
+        <span class="spacer"></span>
+        <button mat-button class="style-button" (click)="onNoClick()">Cancel</button>
+    </div>
+    </mat-dialog-content>
+  </div>

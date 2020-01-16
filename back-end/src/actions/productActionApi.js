@@ -16,7 +16,8 @@ exports.createProduct = async (req, res) => {
 
 // To list all products
 exports.findAllProducts = async (req, res) => {
-  const products = await Product.find({});
+  const products = await Product.find({})
+  .populate();
   res.status(200).send(products);
 };
 
@@ -37,7 +38,7 @@ exports.updateProduct = async (req, res) => {
   if (!req.body.name || !req.body.price || !req.body.description) {
     res.status(400).send({ message: 'The fields is empty, please, fill it!' });
   }
-  // eslint-disable-next-line no-underscore-dangle
+
   const changeProduct = await Product.updateOne({ _id: req.body._id },
     {
       $set: {

@@ -10,12 +10,12 @@ import { BillMethod } from 'src/models/bill-method';
 import { VendorService } from 'src/services/vendor.service';
 
 @Component({
-  selector: 'bill-dialog',
-  templateUrl: './bill-dialog.component.html',
-  styleUrls: ['./bill-dialog.component.scss'],
+  selector: 'wallet-dialog',
+  templateUrl: './wallet-dialog.component.html',
+  styleUrls: ['./wallet-dialog.component.scss'],
   providers: [CurrencyPipe]
 })
-export class BillDialogComponent implements OnInit, OnDestroy {
+export class WalletDialogComponent implements OnInit, OnDestroy {
   product: Product;
   localData: Vendor[];
   amount = 0;
@@ -27,7 +27,7 @@ export class BillDialogComponent implements OnInit, OnDestroy {
   localValue = 0;
   @Input() venderForm: FormGroup;
 
-  constructor(public dialogRef: MatDialogRef<BillDialogComponent>,
+  constructor(public dialogRef: MatDialogRef<WalletDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Vendor[],
               private venderService: VendorService,
               public productService: ProductService,
