@@ -70,22 +70,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
     scaleShowVerticalLines: false,
     responsive: true
   };
-  public barChartLabels = ['Arraiana', 'Caraipa', 'Coroa Vermelha', 'Mucugê', 'Raiz Negra', 'Pitinga'];
-  public barChartType = 'bar';
-  public barChartLegend = true;
-  public barChartData = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: '300m/L' },
-    { data: [50, 54, 86, 71, 60, 54, 46], label: '500m/L' },
-  ];
-
-  public lineChartType = 'line';
-  public lineChartData = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: '300m/L' },
-    { data: [50, 54, 86, 71, 60, 54, 46], label: '500m/L' },
-  ];
-
-  public lineChartLabels = ['Arraiana', 'Caraipa', 'Coroa Vermelha', 'Mucugê', 'Raiz Negra', 'Pitinga'];
-
 
   constructor(private formBuilder: FormBuilder, private managementService: ManagementService,
               private snackBar: MatSnackBar, public httpClient: HttpClient, private dialog: MatDialog,
@@ -108,7 +92,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
     this.cashierForm.setValue({
       dateNow: this.today,
     });
-    this.vendorService.getVendors();
 
   }
 
@@ -137,6 +120,10 @@ export class HomeComponent implements OnInit, AfterContentInit {
     }
   }
 
+  openCashier() {
+    this.dialog.open(WalletDialogComponent, { data: { create: true } });
+}
+
   openDialog(): void {
     const dialogRef = this.dialog.open(WalletDialogComponent);
 
@@ -149,29 +136,11 @@ export class HomeComponent implements OnInit, AfterContentInit {
 public loadData() {
   this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.productService);
   this.dataSource = new HomeDataSource(this.exampleDatabase, this.paginator, this.sort);
-  fromEvent(this.filter.nativeElement, 'keyup')
-    // .debounceTime(150)
-    // .distinctUntilChanged()
-    .subscribe(() => {
-      if (!this.dataSource) {
-        return;
-      }
-      this.dataSource.filter = this.filter.nativeElement.value;
-    });
 }
 
 public loadDataMethod() {
   this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.productService);
   this.dataMethod = new BillDataSource(this.exampleDatabase, this.paginator, this.sort);
-  fromEvent(this.filter.nativeElement, 'keyup')
-    // .debounceTime(150)
-    // .distinctUntilChanged()
-    .subscribe(() => {
-      if (!this.dataMethod) {
-        return;
-      }
-      this.dataMethod.filter = this.filter.nativeElement.value;
-    });
 }
 
 }

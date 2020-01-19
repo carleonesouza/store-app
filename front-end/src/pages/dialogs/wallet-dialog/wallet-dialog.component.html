@@ -1,35 +1,36 @@
-<div fxLayout="column" fxLayoutAlign="center stretch" class="row">
-    <div class="card-header">Finish Purchase </div>
-    <mat-dialog-content [formGroup]="venderForm">
-      <div fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="start center" class="flex-wrap">
-        <mat-form-field appearance="outline">
-          <mat-label>Amount</mat-label>
-          <input matInput placeholder="Amount" type="number" formControlName="formAmount">
+<div >
+  <h3>Day Cashier</h3>
+</div>
+  <form [formGroup]="walletForm">
+      <div id="form">
+          <mat-form-field class="half-width mr5">
+            <mat-label>E-mail</mat-label>
+            <input matInput  placeholder="email" type="email" formControlName="userEmail">          
+          </mat-form-field>
+
+          <mat-form-field class="half-width ml5">
+            <mat-label>Username</mat-label>
+            <input matInput  placeholder="username" type="text" formControlName="userName">          
+          </mat-form-field>
+
+          <mat-form-field class="half-width mr5">
+            <input matInput [matDatepicker]="picker1" placeholder="Date Chooser"
+             formControlName="walletDay">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker  touchUi  #picker1 disabled="false"></mat-datepicker>
         </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Purchase Total</mat-label>
-          <input matInput placeholder="Value" type="text" formControlName="formTotal">
-        </mat-form-field>
+
+            <mat-form-field class="half-width ml5">
+              <mat-label>Entrance Value</mat-label>
+              <input matInput placeholder="Entrance value" type="number" formControlName="entranceValue">
+              <mat-error *ngIf="entranceValue.errors">Please, type a valid value</mat-error>
+            </mat-form-field>
+
+
+          <div class="flex mt10 dialog-actions item-buttons">
+              <span class="spacer"></span>
+              <button class="mr5" mat-button type="button" (click)="dialogRef.close()">CLOSE</button>
+              <button class="ml5" mat-raised-button type="button" (click)="save()" color="primary">SAVE CHANGES</button>
+          </div>
       </div>
-      <div class="item-4">
-        <mat-form-field appearance="legacy">
-          <mat-label>Type a value of payment</mat-label>
-          <input matInput placeholder="Value" type="number" formControlName="formSold">
-          <mat-error *ngIf="venderControlsForm.formSold.errors">Please, type a valid value or number</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="item-4">
-        <mat-form-field appearance="outline">
-          <mat-label>Payable Total</mat-label>
-          <input matInput placeholder="Total" type="text" formControlName="formPayable">
-            <mat-icon *ngIf="!approval" class="not-approval" matSuffix>close</mat-icon>  
-            <mat-icon *ngIf="approval" class="approval" matSuffix>done</mat-icon>
-        </mat-form-field>
-      </div>
-      <div class="item-buttons">
-        <button mat-button class="style-button" (click)="onConfirmation()">Confirm</button>
-        <span class="spacer"></span>
-        <button mat-button class="style-button" (click)="onNoClick()">Cancel</button>
-    </div>
-    </mat-dialog-content>
-  </div>
+  </form>

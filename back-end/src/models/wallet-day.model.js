@@ -6,6 +6,7 @@ const walletSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User'},
   billId: { type: Schema.Types.ObjectId, ref: 'BillMethod'},
   vendorId: { type: Schema.Types.ObjectId, ref: 'Vendor'},
+  openValue: { type: Number },
   createdAt: { type: Date, default: Date.now},
   closedAt: { type: Date}
 

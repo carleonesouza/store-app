@@ -32,7 +32,7 @@ export class ConfirmationDialogComponent implements OnInit {
                     );
                 });
             },
-            (err) => this.snackBar.open('You Have to set the Quantity of Product ' + err, '', { duration: 3000 })
+            (err) => this.snackBar.open('You Have to set the Quantity of Product ', '', { duration: 3000 })
         );
 
     }

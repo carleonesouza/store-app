@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
-import { MatPaginator, MatSnackBar, MatDialog } from '@angular/material';
+import { MatPaginator, MatSnackBar, MatDialog, MatSort } from '@angular/material';
 import { fromEvent } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
@@ -16,27 +16,30 @@ import { StoreAppService } from 'src/services/store-app.service';
 export class ManagementUsersComponent implements OnInit, AfterViewInit {
     public errored = false;
     public dataSource: GenericDataSource;
-    displayedColumns = ['avatar', 'name', 'email', 'promoCode', 'role', 'id'];
+    displayedColumns = ['avatar', 'name', 'email', 'role'];
 
     @ViewChild(MatPaginator, { static: true}) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild('input', { static: true}) input: ElementRef;
 
-    constructor(public Mtor: StoreAppService,
+    constructor(public StoreApp: StoreAppService,
                 private dialog: MatDialog,
                 private activatedRoute: ActivatedRoute,
                 private snackBar: MatSnackBar) { }
 
     ngOnInit() {
-        this.dataSource = new GenericDataSource();
+        this.dataSource = new GenericDataSource(this.paginator, this.sort);
         this.dataSource.setCallback((filter, pageIndex, pageSize) => {
-            return this.Mtor.fetchGenericDataList('/users', filter, pageIndex, pageSize);
+            return this.StoreApp.fetchGenericDataList('/users', filter, pageIndex, pageSize);
         });
+
+
 
         this.dataSource.setErrorHandler((err) => {
             this.errored = true;
-            this.snackBar.open('Failed to load users!', 'RETRY', { duration: 5000 })
+            this.snackBar.open('Failed to load management panel users!', 'RETRY', { duration: 5000 })
                 .onAction().subscribe(() => {
-                    this.loadUsersPage();
+                    this.loadManagementPanelUsersPage();
                 });
         });
 
@@ -56,17 +59,17 @@ export class ManagementUsersComponent implements OnInit, AfterViewInit {
                 distinctUntilChanged(),
                 tap(() => {
                     this.paginator.pageIndex = 0;
-                    this.loadUsersPage();
+                    this.loadManagementPanelUsersPage();
                 })
             )
             .subscribe();
 
         this.paginator.page.subscribe(() => {
-            this.loadUsersPage();
+            this.loadManagementPanelUsersPage();
         });
     }
 
-    loadUsersPage() {
+    loadManagementPanelUsersPage() {
         this.errored = false;
         this.dataSource.loadData(
             this.input.nativeElement.value,
@@ -74,31 +77,17 @@ export class ManagementUsersComponent implements OnInit, AfterViewInit {
             this.paginator.pageSize);
     }
 
-    viewUser(id: String) {
-        history.pushState(null, `View User: #${id}`, `/user/${id}`);
+    viewManagementPanelUser(id: string) {
+        history.pushState(null, `View Management User: #${id}`, `/admin/management-users/${id}`);
         this.dialog.open(ManagementUsersViewEditComponent, { data: { id } });
     }
 
-    formatRole(role: any) {
-        if (typeof role !== 'string' && typeof role !== 'number') {
-            return '- invalid user -';
-        }
-
-        switch (role) {
-            case 0:
-            case '0':
-                return 'Student (0)';
-
-            case 50:
-            case '50':
-                return 'Tutor (MB) (50)';
-
-            case 51:
-            case '51':
-                return 'Tutor (MA) (51)';
-
-            default:
-                return `Unknown (${role})`;
-        }
+    createUser() {
+        this.dialog.open(ManagementUsersViewEditComponent, { data: { create: true } });
     }
+
+    capitalize(s) {
+        return s && s[0].toUpperCase() + s.slice(1);
+    }
+
 }

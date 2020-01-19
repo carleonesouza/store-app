@@ -81,3 +81,53 @@
       
     
   }
+  h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+#loader {
+    margin: 0 auto;
+    padding: 30px;
+    display: table;
+}
+
+.half-width {
+    width: calc(50% - 10px);
+}
+
+.mb0 {
+    margin-bottom: 0;
+}
+
+.mr5 {
+    margin-right: 5px;
+}
+
+.ml5 {
+    margin-left: 5px;
+}
+
+.ml10 {
+    margin-left: 10px;
+}
+
+.mt10 {
+    margin-top: 10px;
+}
+
+.mt20 {
+    margin-top: 20px;
+}
+
+#form {
+    max-width: 400px;
+}
+
+#form.extended {
+    max-width: 500px;
+}
+
+#form.ultra-extended {
+    max-width: 600px;
+}

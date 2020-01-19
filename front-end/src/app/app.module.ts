@@ -37,6 +37,7 @@ import { NotFoundComponent } from 'src/pages/not-found/not-found.component';
 import { ConfirmationDialogComponent } from 'src/pages/dialogs/confirmation/confirmation-dialog.component';
 import { BillDialogComponent } from 'src/pages/dialogs/bill-dialog/bill-dialog.component';
 import { WalletDialogComponent } from 'src/pages/dialogs/wallet-dialog/wallet-dialog.component';
+import { UserService } from 'src/services/user.service';
 
 
 @NgModule({
@@ -78,6 +79,7 @@ import { WalletDialogComponent } from 'src/pages/dialogs/wallet-dialog/wallet-di
         { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { minWidth: 325, hasBackdrop: true } },
         ManagementService,
         VendorService,
+        UserService,
         ProductService,
         HandleError,
         StoreAppService,

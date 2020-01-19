@@ -48,15 +48,16 @@ export class StoreAppService {
 
     fetchGenericDataList(method, filter = null, pageNumber = null, pageSize = null): Observable<any> {
         return this.http.post(
-           environment.server + method,
+            environment.server + method,
             {
                 filter,
                 pageNumber,
                 pageSize
             },
-           this.httpOptions
+            this.httpOptions
         );
     }
+
 
     getGenericAction(method): Observable<any> {
         return this.http.get(

@@ -17,7 +17,9 @@ export class AddDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<AddDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Product,
-              public productService: ProductService, public snackBar: MatSnackBar, private formBuilder: FormBuilder) { }
+              public productService: ProductService,
+              public snackBar: MatSnackBar,
+              private formBuilder: FormBuilder) { }
 
               ngOnInit() {
                 this.productForm = this.formBuilder.group({

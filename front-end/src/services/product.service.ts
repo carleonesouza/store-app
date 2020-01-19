@@ -5,10 +5,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { MatSnackBar } from '@angular/material';
 import { Quantity } from 'src/models/quantity.model';
 import { Vendor } from 'src/models/vendor.model';
-import { HandleError } from './handleError';
 import { environment } from 'src/environments/environment';
-import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
 
 @Injectable()
 export class ProductService {

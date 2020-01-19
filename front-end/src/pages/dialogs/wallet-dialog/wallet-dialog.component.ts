@@ -1,123 +1,76 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component, Inject, OnInit, Input, OnDestroy } from '@angular/core';
-import { ProductService } from '../../../services/product.service';
-import { Vendor } from '../../../models/vendor.model';
-import { Product } from '../../../models/product.model';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
-import { CurrencyPipe } from '@angular/common';
-import { BillMethod } from 'src/models/bill-method';
-import { VendorService } from 'src/services/vendor.service';
+import { Component, Inject, OnInit, Input } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+
+// Depending on whether rollup is used, moment needs to be imported differently.
+// Since Moment.js doesn't have a default export, we normally need to import using the `* as`
+// syntax. However, rollup creates a synthetic default module and we thus need to import it using
+// the `default as` syntax.
+import * as _moment from 'moment';
+// tslint:disable-next-line:no-duplicate-imports
+
+const moment =  _moment;
+
+// See the Moment.js docs for the meaning of these formats:
+// https://momentjs.com/docs/#/displaying/format/
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'L/MM/YYYY',
+  },
+  display: {
+    dateInput: 'L/MM/YYYY',
+  },
+};
 
 @Component({
   selector: 'wallet-dialog',
   templateUrl: './wallet-dialog.component.html',
   styleUrls: ['./wallet-dialog.component.scss'],
-  providers: [CurrencyPipe]
+  providers: [
+    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
+    // application's root module. We provide it at the component level here, due to limitations of
+    // our example generation script.
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
-export class WalletDialogComponent implements OnInit, OnDestroy {
-  product: Product;
-  localData: Vendor[];
-  amount = 0;
-  NUMBERPATTERN = '^[0-9.,]+$';
-  approval = false;
-  payableValue = 0;
-  updateTotal: string;
-  total = 0;
-  localValue = 0;
-  @Input() venderForm: FormGroup;
+export class WalletDialogComponent implements OnInit {
+@Input() walletForm: FormGroup;
 
-  constructor(public dialogRef: MatDialogRef<WalletDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Vendor[],
-              private venderService: VendorService,
-              public productService: ProductService,
-              public snackBar: MatSnackBar,
-              private formBuilder: FormBuilder,
-              private currencyPipe: CurrencyPipe) {
-    this.onCreateForm();
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
+              public dialogRef: MatDialogRef<WalletDialogComponent>,
+              private formBuilder: FormBuilder) { }
+
+
+              ngOnInit() {
+                this.walletForm = this.formBuilder.group({
+                  userName: [''],
+                  userEmail: [''],
+                  walletDay: [{value: moment()}],
+                  entranceValue: ['', [Validators.required, Validators.minLength(2)]],
+                });
+                console.log(moment());
+              }
+
+
+  get userEmail() {
+    return this.walletForm.get('userEmail');
   }
 
-  ngOnInit() {
-    this.data.map((e) => {
-      this.amount = e.amount + this.amount;
-      this.total = e.total + this.total;
-      this.updateTotal = this.currencyPipe.transform(this.total, 'BRL', 'symbol-narrow', '1.2-2');
-    });
-
-    this.venderForm.setValue({
-      formAmount: this.amount,
-      formSold: '',
-      formTotal: this.updateTotal,
-      formPayable: ''
-    });
-
+  get userName() {
+    return this.walletForm.get('userName');
   }
 
-  ngOnDestroy(): void {
-
+  get entranceValue() {
+    return this.walletForm.get('entranceValue');
   }
 
-  onCreateForm() {
-    this.venderForm = this.formBuilder.group({
-
-      formAmount: [{ value: '', disabled: true }, [
-        Validators.pattern(this.NUMBERPATTERN)]],
-
-      formSold: ['', [Validators.compose([
-        Validators.required, Validators.minLength(2),
-        Validators.pattern(this.NUMBERPATTERN)])]],
-
-      formTotal: [{ value: '', disabled: true }, [
-        Validators.pattern(this.NUMBERPATTERN)]],
-      formPayable: [{ value: '', disabled: true }, [
-        Validators.pattern(this.NUMBERPATTERN)]],
-    });
-  }
-
-
-  get venderControlsForm() {
-    return this.venderForm.controls;
-  }
-
-  onCancel(): void {
-    this.dialogRef.close();
-  }
-
-  onSubmit(typePayble: string) {
-
-    if (this.venderForm.get('formSold').value > this.total) {
-      this.approval = false;
-      this.dialogRef.disableClose = true;
-      this.snackBar.open('The value typed does not be major the total', '', { duration: 3000 });
-    }
-
-    this.localValue = this.localValue + this.venderForm.get('formSold').value;
-
-    if (this.localValue < this.total ) {
-      this.dialogRef.disableClose = true;
-      this.approval = false;
-      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble);
-      const formValue = this.currencyPipe.transform(this.localValue, 'BRL', 'symbol-narrow', '1.2-2');
-      this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
-      this.venderForm.get('formSold').reset();
-
-    }
-
-    if (this.localValue === this.total) {
-      this.approval = true;
-      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble);
-      const formValue = this.currencyPipe.transform(this.localValue, 'BRL', 'symbol-narrow', '1.2-2');
-      this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
-      this.dialogRef.close();
-      this.venderService.onGetBillMehthod().subscribe(
-        (methods: BillMethod []) => {
-           methods.map((method) => {
-             this.venderService.addABMethod(method);
-           }),
-          this.dialogRef.disableClose = false;
-        }
-      );
-      this.snackBar.open('The Purchase was complete successfully!!', '', { duration: 3000 });
-    }
-  }
 }

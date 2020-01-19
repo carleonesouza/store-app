@@ -54,7 +54,7 @@ export class ManagementUsersViewEditComponent implements OnInit {
         this.working = true;
         this.notFound = false;
 
-        this.StoreApp.fetchGenericDataList('/users', this.data.id, 0, 1)
+        this.StoreApp.fetchGenericDataList('/users')
             .subscribe(result => {
                 this.working = false;
 
