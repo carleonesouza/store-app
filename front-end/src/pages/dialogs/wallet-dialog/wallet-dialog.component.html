@@ -1,36 +1,39 @@
-<div >
+<div>
   <h3>Day Cashier</h3>
 </div>
-  <form [formGroup]="walletForm">
-      <div id="form">
-          <mat-form-field class="half-width mr5">
-            <mat-label>E-mail</mat-label>
-            <input matInput  placeholder="email" type="email" formControlName="userEmail">          
-          </mat-form-field>
+<form [formGroup]="walletForm">
+  <div *ngIf="loader" id="loader">
+    <mat-spinner color="primary"></mat-spinner>
+  </div>
 
-          <mat-form-field class="half-width ml5">
-            <mat-label>Username</mat-label>
-            <input matInput  placeholder="username" type="text" formControlName="userName">          
-          </mat-form-field>
+  <div id="form">
+    <mat-form-field class="half-width mr5">
+      <mat-label>E-mail</mat-label>
+      <input matInput placeholder="email" type="email" formControlName="userEmail">
+    </mat-form-field>
 
-          <mat-form-field class="half-width mr5">
-            <input matInput [matDatepicker]="picker1" placeholder="Date Chooser"
-             formControlName="walletDay">
-            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker  touchUi  #picker1 disabled="false"></mat-datepicker>
-        </mat-form-field>
+    <mat-form-field class="half-width ml5">
+      <mat-label>Username</mat-label>
+      <input matInput placeholder="username" type="text" formControlName="userName">
+    </mat-form-field>
 
-            <mat-form-field class="half-width ml5">
-              <mat-label>Entrance Value</mat-label>
-              <input matInput placeholder="Entrance value" type="number" formControlName="entranceValue">
-              <mat-error *ngIf="entranceValue.errors">Please, type a valid value</mat-error>
-            </mat-form-field>
+    <mat-form-field class="half-width mr5">
+      <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="walletDay">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="half-width ml5">
+      <mat-label>Entrance Value</mat-label>
+      <input matInput placeholder="Entrance value" type="number" formControlName="entranceValue">
+      <mat-error *ngIf="entranceValue.errors">Please, type a valid value</mat-error>
+    </mat-form-field>
 
 
-          <div class="flex mt10 dialog-actions item-buttons">
-              <span class="spacer"></span>
-              <button class="mr5" mat-button type="button" (click)="dialogRef.close()">CLOSE</button>
-              <button class="ml5" mat-raised-button type="button" (click)="save()" color="primary">SAVE CHANGES</button>
-          </div>
-      </div>
-  </form>
+    <div class="flex mt10 dialog-actions item-buttons">
+      <span class="spacer"></span>
+      <button class="mr5" mat-button type="button" (click)="dialogRef.close()">CANCEL</button>
+      <button class="ml5" mat-raised-button type="button" (click)="openwallet()" color="primary">OPEN</button>
+    </div>
+  </div>
+</form>

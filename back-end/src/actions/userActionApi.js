@@ -66,8 +66,8 @@ exports.findAllUsers = async (req, res) => {
 }
 
 exports.findUserById = async (req, res) => {
-  const user = await User.findOne({_d: req.body._id});
-  return res.status(200).send(user);
+  const user = await User.findOne({username: req.body.email});
+  res.status(200).send(user);
 }
 
 

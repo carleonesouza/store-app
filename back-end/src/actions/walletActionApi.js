@@ -15,3 +15,8 @@ exports.findAllWallets = async (req, res) => {
     const localWallet = await Wallet.find({})
     return res.status().send(localWallet);
 }
+
+exports.findAWallet = async (req, res) => {
+    const localWallet = await Wallet.findOne({createdAt: req.body.createdAt})
+    return res.status().send(localWallet);
+}

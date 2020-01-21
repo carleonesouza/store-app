@@ -9,6 +9,11 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/
 // syntax. However, rollup creates a synthetic default module and we thus need to import it using
 // the `default as` syntax.
 import * as _moment from 'moment';
+import { User } from 'src/models/user.model';
+import { MatSnackBar } from '@angular/material';
+import { UserService } from 'src/services/user.service';
+import { Wallet } from 'src/models/wallet.model';
+import { VendorService } from 'src/services/vendor.service';
 // tslint:disable-next-line:no-duplicate-imports
 
 const moment =  _moment;
@@ -17,19 +22,23 @@ const moment =  _moment;
 // https://momentjs.com/docs/#/displaying/format/
 export const MY_FORMATS = {
   parse: {
-    dateInput: 'L/MM/YYYY',
+    dateInput: 'DD/MM/YYYY',
   },
   display: {
-    dateInput: 'L/MM/YYYY',
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
   },
 };
+
 
 @Component({
   selector: 'wallet-dialog',
   templateUrl: './wallet-dialog.component.html',
   styleUrls: ['./wallet-dialog.component.scss'],
   providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
+     // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
     // application's root module. We provide it at the component level here, due to limitations of
     // our example generation script.
     {
@@ -43,21 +52,37 @@ export const MY_FORMATS = {
 })
 export class WalletDialogComponent implements OnInit {
 @Input() walletForm: FormGroup;
+loader = true;
+NUMBERPATTERN = '^[0-9.,]+$';
 
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: User,
               public dialogRef: MatDialogRef<WalletDialogComponent>,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder, private vendorService: VendorService,
+              public snackBar: MatSnackBar, private userService: UserService) { }
 
 
               ngOnInit() {
-                this.walletForm = this.formBuilder.group({
-                  userName: [''],
-                  userEmail: [''],
-                  walletDay: [{value: moment()}],
-                  entranceValue: ['', [Validators.required, Validators.minLength(2)]],
-                });
-                console.log(moment());
+                if (!this.data) {
+                  this.snackBar.open('We can not get a User informations!', '', {duration: 3000});
+                } else {
+                  this.loader = false;
+                  this.walletForm = this.formBuilder.group({
+                    userName: [{value: this.data.fullName, disabled: true}],
+                    userEmail: [{value: this.data.username, disabled: true}],
+                    walletDay: [{value: moment(), disabled: true}],
+                    entranceValue: ['', [Validators.compose([
+                      Validators.required, Validators.minLength(2),
+                      Validators.pattern(this.NUMBERPATTERN)])]],
+                  });
+                  this.walletForm.setValue({
+                    userName: this.data.fullName,
+                    userEmail: this.data.username,
+                    walletDay: moment(),
+                    entranceValue: '',
+                  });
+
+                }
               }
 
 
@@ -71,6 +96,29 @@ export class WalletDialogComponent implements OnInit {
 
   get entranceValue() {
     return this.walletForm.get('entranceValue');
+  }
+
+  openwallet() {
+    if (this.walletForm.valid.valueOf()) {
+      const email = this.walletForm.get('userEmail').value;
+      const day = this.walletForm.get('walletDay').value;
+      const entrance = this.walletForm.value.entranceValue;
+      this.userService.getUserByEmail(email).subscribe( (user) => {
+        if (email) {
+          const wallet = new Wallet();
+          wallet.userId = user._id;
+          wallet.createdAt = day.toDate();
+          wallet.openValue = entrance;
+          this.vendorService.onCreateWallet(wallet);
+        }
+        this.dialogRef.afterClosed().subscribe(() => {
+        });
+        this.dialogRef.close();
+      });
+    } else {
+      this.snackBar.open('The form is empty, please fill it!!', '', { duration: 3000 });
+    }
+
   }
 
 }

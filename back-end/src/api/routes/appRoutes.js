@@ -19,6 +19,7 @@ router.post('/wallet/add', walletActionApi.createWallet);
 
 router.get('/products', productActionApi.findAllProducts);
 router.get('/wallets', walletActionApi.findAllWallets);
+router.get('/wallet', walletActionApi.findAWallet);
 router.get('/users', userActionApi.findAllUsers);
 router.get('/user/:id', userActionApi.findUserById);
 router.get('/vendors', vendorsActionApi.findAVendors);

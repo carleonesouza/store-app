@@ -18,6 +18,9 @@ import { ProductService } from 'src/services/product.service';
 import { VendorService } from 'src/services/vendor.service';
 import { BillDataSource } from 'src/services/bill-data-source';
 import { WalletDialogComponent } from '../dialogs/wallet-dialog/wallet-dialog.component';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthService } from 'src/services/auth.service';
+import { User } from 'src/models/user.model';
 
 
 
@@ -58,9 +61,10 @@ export class HomeComponent implements OnInit, AfterContentInit {
   displayedColumns3: string[] = ['name', 'description', 'value'];
   exampleDatabase: VendorService | null;
   dataSource: HomeDataSource | null;
+  user = new User();
   dataMethod: BillDataSource | null;
   loading = true;
-  walletOpen = true;
+  walletOpen = false;
   today = new Date().toLocaleDateString();
   @Input() reportDayForm: FormGroup;
   @Input() cashierForm: FormGroup;
@@ -73,7 +77,8 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
   constructor(private formBuilder: FormBuilder, private managementService: ManagementService,
               private snackBar: MatSnackBar, public httpClient: HttpClient, private dialog: MatDialog,
-              private productService: ProductService, private vendorService: VendorService) { }
+              private productService: ProductService, private auth: AuthService,
+              private vendorService: VendorService) { }
 
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -81,7 +86,14 @@ export class HomeComponent implements OnInit, AfterContentInit {
   @ViewChild('filter', { static: true }) filter: ElementRef;
 
   ngOnInit() {
-    this.loading = false;
+    this.onCheckWallet();
+    if (this.auth.authenticated) {
+      this.loading = false;
+      this.user.fullName = this.auth.name;
+      this.user.username = this.auth.email;
+    } else {
+      this.loading = true;
+    }
     this.reportDayForm = this.formBuilder.group({
       dateDay: { value: '', disabled: true }
     });
@@ -111,6 +123,12 @@ export class HomeComponent implements OnInit, AfterContentInit {
     this.dateValue = moment(event.value).locale('pt-br').format('l');
   }
 
+  onCheckWallet() {
+    this.vendorService.onCheckWallet(this.today).subscribe((wallet) => {
+      console.log(wallet.status);
+    });
+  }
+
   onGenerate() {
     if (!this.dateValue) {
       this.snackBar.open('You have to choose a date', '', { duration: 3000 });
@@ -121,7 +139,13 @@ export class HomeComponent implements OnInit, AfterContentInit {
   }
 
   openCashier() {
-    this.dialog.open(WalletDialogComponent, { data: { create: true } });
+    if (this.user) {
+      this.dialog.open(WalletDialogComponent, {data:  this.user })
+      .afterClosed()
+      .subscribe(() => {
+        this.walletOpen = true;
+      });
+    }
 }
 
   openDialog(): void {

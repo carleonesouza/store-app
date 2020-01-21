@@ -1,11 +1,11 @@
 <div fxLayout="column" fxLayoutAlign="center">
-    <span class="spacer"></span>
-    <div id="form-error" *ngIf="walletOpen" fxLayoutAlign="center center">
+    <div id="form-error" *ngIf="!walletOpen" fxLayoutAlign="center center">
       <div id="form-error-content">
         <p>You should open a wallet before sell anything!</p>
         <button mat-raised-button color="primary" class="action-button" (click)="openCashier()">OPEN CASHIER</button>
       </div>
   </div>
+  <span class="spacer"></span>
     <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
         <div class="item item-3" fxFlex>
             <mat-card>

@@ -32,15 +32,15 @@ export class UserService {
       }
 
       // To get a list of Users
-      getUsers(): Observable<any> {
+  getUsers(): Observable<any> {
         return this.httpClient.get<User[]>(
           environment.server + '/users', this.httpOptions);
       }
 
 
   // Get a specific User from the Store
-  getProductById(id: string): Observable<User> {
-    return this.httpClient.get<User>(`${environment.server}/user/${id}`, this.httpOptions)
+  getUserByEmail(email: string): Observable<User> {
+    return this.httpClient.get<User>(`${environment.server}/user/${email}`, this.httpOptions)
       .pipe();
   }
 

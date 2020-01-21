@@ -6,6 +6,7 @@ import { BillMethod } from '../models/bill-method';
 import { Vendor } from 'src/models/vendor.model';
 import { ProductService } from './product.service';
 import { environment } from 'src/environments/environment';
+import { Wallet } from 'src/models/wallet.model';
 
 @Injectable()
 export class VendorService {
@@ -119,8 +120,6 @@ export class VendorService {
             this.localBag.push(v);
           }
        });
-        // console.log(this.localBag);
-
       });
   }
 
@@ -155,6 +154,23 @@ export class VendorService {
         this.snackBar.open('Error occurred during this process ', 'RETRY', { duration: 3000 });
         console.log(error.name + ' ' + error.message);
       });
+  }
+
+  onCreateWallet(wallet: Wallet) {
+    this.httpClient.post(environment.server + '/wallet/add', wallet, this.httpOptions).subscribe(() => {
+      this.snackBar.open('The Wallet was Successifuly created ', '', { duration: 4000 });
+      return;
+    },
+      (err: HttpErrorResponse) => {
+        this.snackBar.open('Error occurred during add a Wallet', 'RETRY', { duration: 4000 });
+        console.log(err);
+        return;
+      });
+  }
+
+  onCheckWallet(createAt: string): Observable<any> {
+    return this.httpClient.post(environment.server + '/wallet', createAt, this.httpOptions)
+    .pipe();
   }
 
 
