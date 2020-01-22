@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { HttpClient } from '@angular/common/http';
-import { fromEvent } from 'rxjs';
 
 
 // Depending on whether rollup is used, moment needs to be imported differently.
@@ -18,9 +17,9 @@ import { ProductService } from 'src/services/product.service';
 import { VendorService } from 'src/services/vendor.service';
 import { BillDataSource } from 'src/services/bill-data-source';
 import { WalletDialogComponent } from '../dialogs/wallet-dialog/wallet-dialog.component';
-import { AuthGuard } from 'src/guards/auth.guard';
 import { AuthService } from 'src/services/auth.service';
 import { User } from 'src/models/user.model';
+import { Wallet } from 'src/models/wallet.model';
 
 
 
@@ -43,7 +42,7 @@ export const MY_FORMATS = {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   providers: [
-     // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
+    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
     // application's root module. We provide it at the component level here, due to limitations of
     // our example generation script.
     {
@@ -52,7 +51,7 @@ export const MY_FORMATS = {
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
 export class HomeComponent implements OnInit, AfterContentInit {
@@ -86,7 +85,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
   @ViewChild('filter', { static: true }) filter: ElementRef;
 
   ngOnInit() {
-    this.onCheckWallet();
     if (this.auth.authenticated) {
       this.loading = false;
       this.user.fullName = this.auth.name;
@@ -94,6 +92,8 @@ export class HomeComponent implements OnInit, AfterContentInit {
     } else {
       this.loading = true;
     }
+    this.onCheckWallet();
+
     this.reportDayForm = this.formBuilder.group({
       dateDay: { value: '', disabled: true }
     });
@@ -110,7 +110,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
   ngAfterContentInit() {
     this.loadData();
     this.loadDataMethod();
-}
+  }
 
   refresh() {
     this.loadData();
@@ -120,12 +120,21 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
 
   addEvent(event: MatDatepickerInputEvent<Date>) {
-    this.dateValue = moment(event.value).locale('pt-br').format('l');
+    this.dateValue = moment(event.value).locale('pt-br').format('L');
   }
 
   onCheckWallet() {
-    this.vendorService.onCheckWallet(this.today).subscribe((wallet) => {
-      console.log(wallet.status);
+    this.vendorService.onCheckWallets().subscribe((wallets: Wallet[]) => {
+      wallets.map((wallet) => {
+        const day = moment(wallet.createdAt);
+        day.locale('pt-br').format('L');
+        if (wallet === null) {
+          this.walletOpen = false;
+          this.loading = true;
+        } else if (day.locale('pt-br').format('L') === this.today || wallet.finishValue === 0) {
+          this.walletOpen = wallet.status;
+        }
+      });
     });
   }
 
@@ -140,31 +149,32 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
   openCashier() {
     if (this.user) {
-      this.dialog.open(WalletDialogComponent, {data:  this.user })
-      .afterClosed()
-      .subscribe(() => {
-        this.walletOpen = true;
-      });
+      this.dialog.open(WalletDialogComponent, { data: this.user })
+        .afterClosed()
+        .subscribe(() => {
+          this.vendorService.onCheckWallets().subscribe((wallets: Wallet[]) => {
+            wallets.map((wallet) => {
+              const day = moment(wallet.createdAt);
+              if (wallet === null) {
+                this.walletOpen = false;
+                this.loading = true;
+              } else if (day.locale('pt-br').format('L') === this.today || wallet.finishValue === 0) {
+                this.walletOpen = wallet.status;
+              }
+            });
+          });
+        });
     }
-}
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(WalletDialogComponent);
-
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
-    });
   }
 
+  public loadData() {
+    this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.productService);
+    this.dataSource = new HomeDataSource(this.exampleDatabase, this.paginator, this.sort);
+  }
 
-public loadData() {
-  this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.productService);
-  this.dataSource = new HomeDataSource(this.exampleDatabase, this.paginator, this.sort);
-}
-
-public loadDataMethod() {
-  this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.productService);
-  this.dataMethod = new BillDataSource(this.exampleDatabase, this.paginator, this.sort);
-}
+  public loadDataMethod() {
+    this.exampleDatabase = new VendorService(this.httpClient, this.snackBar, this.productService);
+    this.dataMethod = new BillDataSource(this.exampleDatabase, this.paginator, this.sort);
+  }
 
 }

@@ -10,7 +10,7 @@ export class Wallet {
     finishValue ?= 0;
     createdAt?: Date;
     closeAt?: Date;
-    status?: boolean;
+    status ?= false;
 
     constructor(obj?: any) {
         if (!obj) {

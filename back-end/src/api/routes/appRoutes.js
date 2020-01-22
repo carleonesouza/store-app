@@ -16,10 +16,10 @@ router.post('/vendor/add', vendorsActionApi.createVendor);
 router.post('/method', billMethodAction.createABill);
 router.post('/create-user', userActionApi.createUser);
 router.post('/wallet/add', walletActionApi.createWallet);
+router.post('/wallet', walletActionApi.findAWallet);
 
 router.get('/products', productActionApi.findAllProducts);
 router.get('/wallets', walletActionApi.findAllWallets);
-router.get('/wallet', walletActionApi.findAWallet);
 router.get('/users', userActionApi.findAllUsers);
 router.get('/user/:id', userActionApi.findUserById);
 router.get('/vendors', vendorsActionApi.findAVendors);

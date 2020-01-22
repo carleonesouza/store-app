@@ -168,8 +168,8 @@ export class VendorService {
       });
   }
 
-  onCheckWallet(createAt: string): Observable<any> {
-    return this.httpClient.post(environment.server + '/wallet', createAt, this.httpOptions)
+  onCheckWallets(): Observable<Wallet[]> {
+    return this.httpClient.get<Wallet[]>(environment.server + '/wallets', this.httpOptions)
     .pipe();
   }
 

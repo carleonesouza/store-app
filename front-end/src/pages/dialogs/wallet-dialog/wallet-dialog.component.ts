@@ -107,6 +107,7 @@ NUMBERPATTERN = '^[0-9.,]+$';
         if (email) {
           const wallet = new Wallet();
           wallet.userId = user._id;
+          wallet.status = true;
           wallet.createdAt = day.toDate();
           wallet.openValue = entrance;
           this.vendorService.onCreateWallet(wallet);

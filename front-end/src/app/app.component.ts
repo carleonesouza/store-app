@@ -24,8 +24,6 @@ export class AppComponent {
     @ViewChild('start', { static: true})
     start: MatSidenav;
 
-    isTutor = false;
-    notUnderMtor = true;
     showProgress = false;
     navItems = {
         null: [],

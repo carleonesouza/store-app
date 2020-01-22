@@ -5,7 +5,7 @@ exports.createWallet = async (req, res) => {
       const localWallet = new Wallet(req.body);
       await localWallet
       .save()
-      .then((wallet)=> { return res.status().send(wallet)})
+      .then((wallet)=> { return res.status(200).send(wallet)})
       .catch((err) => {
         res.status(500).json({error: err });
       });
@@ -13,10 +13,10 @@ exports.createWallet = async (req, res) => {
 
 exports.findAllWallets = async (req, res) => {
     const localWallet = await Wallet.find({})
-    return res.status().send(localWallet);
+    return res.status(200).send(localWallet);
 }
 
 exports.findAWallet = async (req, res) => {
     const localWallet = await Wallet.findOne({createdAt: req.body.createdAt})
-    return res.status().send(localWallet);
+    return res.status(200).send(localWallet);
 }
