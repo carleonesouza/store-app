@@ -1,7 +1,10 @@
 <div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
-    <div class="card-header">Purchase List</div>
+    <div class="card-header">Purchase List</div>   
     <mat-dialog-content class="list-vender">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+        <div *ngIf="loading" fxLayoutAlign="center center">
+            <mat-spinner color="accent"></mat-spinner>
+        </div>
+        <table mat-table [dataSource]="data" *ngIf="!loading"  class="mat-elevation-z2">
             <!-- Name Column -->
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -21,7 +24,7 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let vender">
-                    <button mat-icon-button>
+                    <button mat-icon-button  (click)="onDelete(vender)">
                         <mat-icon color="warn">delete</mat-icon>
                     </button>
                 </td>
@@ -32,7 +35,7 @@
         <div class="item-buttons">
             <button mat-button class="style-button" (click)="onConfirmation()">Confirm</button>
             <span class="spacer"></span>
-            <button mat-button class="style-button" (click)="onNoClick()">Cancel</button>
+            <button mat-button class="style-button" (click)="onCancel()">Cancel</button>
         </div>
     </mat-dialog-content>
 </div>

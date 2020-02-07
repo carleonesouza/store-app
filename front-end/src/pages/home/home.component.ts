@@ -131,7 +131,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
         if (wallet === null) {
           this.walletOpen = false;
           this.loading = true;
-        } else if (day.locale('pt-br').format('L') === this.today || wallet.finishValue === 0) {
+        } else if (day.locale('pt-br').format('L') === this.today && wallet.finishValue === 0) {
           this.walletOpen = wallet.status;
         }
       });
@@ -158,7 +158,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
               if (wallet === null) {
                 this.walletOpen = false;
                 this.loading = true;
-              } else if (day.locale('pt-br').format('L') === this.today || wallet.finishValue === 0) {
+              } else if (day.locale('pt-br').format('L') === this.today && wallet.finishValue === 0) {
                 this.walletOpen = wallet.status;
               }
             });

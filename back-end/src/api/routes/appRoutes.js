@@ -16,6 +16,8 @@ router.post('/vendor/add', vendorsActionApi.createVendor);
 router.post('/method', billMethodAction.createABill);
 router.post('/create-user', userActionApi.createUser);
 router.post('/wallet/add', walletActionApi.createWallet);
+router.post('/wallet/add/vendor', walletActionApi.addAVendorAWallet);
+router.post('/wallet/add/bill', walletActionApi.addAVendorABill);
 router.post('/wallet', walletActionApi.findAWallet);
 
 router.get('/products', productActionApi.findAllProducts);

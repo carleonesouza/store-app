@@ -10,7 +10,7 @@ export class Product {
   name: string;
   price: number;
   description: string;
-  quantity = 0 ;
+  quantity: number;
 
   constructor(obj?: any) {
     if (!obj) {
@@ -21,6 +21,6 @@ export class Product {
     this.name = obj.name;
     this.description = obj.description;
     this.price = obj.price;
-    this.quantity = obj.quantity;
+    this.quantity = parseInt('', obj.quantity) || 0;
   }
 }

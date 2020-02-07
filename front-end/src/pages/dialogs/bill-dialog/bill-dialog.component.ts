@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material';
 import { CurrencyPipe } from '@angular/common';
 import { BillMethod } from 'src/models/bill-method';
 import { VendorService } from 'src/services/vendor.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'bill-dialog',
@@ -23,6 +24,7 @@ export class BillDialogComponent implements OnInit, OnDestroy {
   approval = false;
   payableValue = 0;
   updateTotal: string;
+  mySubscription: any;
   total = 0;
   localValue = 0;
   @Input() venderForm: FormGroup;
@@ -32,6 +34,7 @@ export class BillDialogComponent implements OnInit, OnDestroy {
               private venderService: VendorService,
               public productService: ProductService,
               public snackBar: MatSnackBar,
+              private router: Router,
               private formBuilder: FormBuilder,
               private currencyPipe: CurrencyPipe) {
     this.onCreateForm();
@@ -53,8 +56,7 @@ export class BillDialogComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy(): void {
-
+  ngOnDestroy() {
   }
 
   onCreateForm() {
@@ -112,12 +114,13 @@ export class BillDialogComponent implements OnInit, OnDestroy {
       this.venderService.onGetBillMehthod().subscribe(
         (methods: BillMethod []) => {
            methods.map((method) => {
-             this.venderService.addABMethod(method);
+             this.venderService.addBillOnWallet(method);
+             this.router.navigate(['/home']);
            }),
           this.dialogRef.disableClose = false;
         }
       );
-      this.snackBar.open('The Purchase was complete successfully!!', '', { duration: 3000 });
     }
   }
+
 }

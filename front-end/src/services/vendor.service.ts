@@ -50,13 +50,13 @@ export class VendorService {
       return;
     },
       (err: HttpErrorResponse) => {
-        this.snackBar.open('Error occurred during add a Vendor', 'RETRY', { duration: 4000 });
+        this.snackBar.open('Error occurred during add a Vendor', '', { duration: 4000 });
         console.log(err);
         return;
       });
   }
 
-  // Create a Vendor at the backend
+  // Create a Bill at the backend
   addABMethod(bill: BillMethod): void {
     this.httpClient.post(environment.server + '/method', bill, this.httpOptions)
       .subscribe(() => {
@@ -64,7 +64,7 @@ export class VendorService {
         return;
       },
         (err: HttpErrorResponse) => {
-          this.snackBar.open('Error occurred During add A bill', 'RETRY', { duration: 4000 });
+          this.snackBar.open('Error occurred During add A bill', '', { duration: 4000 });
           console.log(err);
           return;
         });
@@ -98,7 +98,7 @@ export class VendorService {
       this.dataChange.next(this.localBag);
     },
       (error: HttpErrorResponse) => {
-        this.snackBar.open('Error occurred list all Vendors', 'RETRY', { duration: 3000 });
+        this.snackBar.open('Error occurred list all Vendors', '', { duration: 3000 });
         console.log(error.name + ' ' + error.message);
       });
   }
@@ -151,7 +151,7 @@ export class VendorService {
       this.dataMethodChange.next(this.bagBill);
     },
       (error: HttpErrorResponse) => {
-        this.snackBar.open('Error occurred during this process ', 'RETRY', { duration: 3000 });
+        this.snackBar.open('Error occurred during this process ', '', { duration: 3000 });
         console.log(error.name + ' ' + error.message);
       });
   }
@@ -162,7 +162,7 @@ export class VendorService {
       return;
     },
       (err: HttpErrorResponse) => {
-        this.snackBar.open('Error occurred during add a Wallet', 'RETRY', { duration: 4000 });
+        this.snackBar.open('Error occurred during add a Wallet', '', { duration: 4000 });
         console.log(err);
         return;
       });
@@ -171,6 +171,48 @@ export class VendorService {
   onCheckWallets(): Observable<Wallet[]> {
     return this.httpClient.get<Wallet[]>(environment.server + '/wallets', this.httpOptions)
     .pipe();
+  }
+
+  onAddVendorsAWallet(vendor: Vendor) {
+    this.onCheckWallets().subscribe((wallets) => {
+      wallets.map((wallet) => {
+        if (wallet.status && wallet.finishValue === 0) {
+          this.httpClient.post(environment.server + '/wallet/add/vendor', {vendor, wallet}, this.httpOptions)
+          .subscribe(() => {
+            this.snackBar.open('The Vendor was Successifuly Add ', '', { duration: 4000 });
+            return;
+          },
+            (err: HttpErrorResponse) => {
+              this.snackBar.open('Error occurred during add a Vendor', '', { duration: 4000 });
+              console.log(err);
+              return;
+            });
+        } else {
+          console.log('Wallet not found!');
+        }
+      });
+    });
+  }
+
+  addBillOnWallet(bill: BillMethod) {
+    this.onCheckWallets().subscribe((wallets) => {
+      wallets.map((wallet) => {
+        if (wallet.status && wallet.finishValue === 0) {
+          this.httpClient.post(environment.server + '/wallet/add/bill', {bill, wallet}, this.httpOptions)
+          .subscribe(() => {
+            this.snackBar.open('The Bill was Successifuly Add ', '', { duration: 4000 });
+            return;
+          },
+            (err: HttpErrorResponse) => {
+              this.snackBar.open('Error occurred during add a Bill', '', { duration: 4000 });
+              console.log(err);
+              return;
+            });
+        } else {
+          console.log('Wallet not found!');
+        }
+      });
+    });
   }
 
 
@@ -203,7 +245,7 @@ export class VendorService {
 
   onGetVendor() {
       if (!this.bagVender) {
-      console.log('Todo is empty!');
+      console.log('Vendor is empty!');
     } else {
       this.bagVender.map((v) => {
         if (this.localBag.length === 0) {

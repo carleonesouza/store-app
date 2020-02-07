@@ -61,8 +61,8 @@ export class DeleteDialogComponent implements OnInit {
       const name = this.productForm.value.nameProduct;
       const price = this.productForm.value.priceProduct;
       const description = this.productForm.value.descriptionProduct;
-      const saveProduct = { _id, name, price, description };
-      this.productService.deleteProduct(new Product(saveProduct));
+      const product = { _id, name, price, description };
+      this.productService.deleteProduct(new Product(product));
       this.dialogRef.close();
     } else {
       this.dialogRef.close();

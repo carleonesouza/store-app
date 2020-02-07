@@ -14,17 +14,17 @@
         <mat-grid-tile> {{product.price | currency:"BRL" }} </mat-grid-tile>
         <mat-grid-tile>{{ product.quantity }}</mat-grid-tile>
         <mat-grid-tile>
-          <button mat-stroked-button class="payment-buttons" (click)="addAmount(product)">Add</button>
+          <button mat-icon-button aria-label="Example icon-button with a heart icon" (click)="addAmount(product)">
+            <mat-icon>add</mat-icon>
+          </button>
+          <span class="spacer"></span>
+          <button mat-icon-button aria-label="Example icon-button with a heart icon" (click)="onClean(product)">
+            <mat-icon>remove</mat-icon>
+          </button>
         </mat-grid-tile>
       </mat-grid-list>
       <mat-divider></mat-divider>
       <div fxLayout="row" fxLayoutAlign="end end" class="position-end">
-        <!-- <button mat-button aria-label="button clean amount" (click)="onClean(product)">
-        Clean <mat-icon>clear_all</mat-icon>
-      </button>
-      <button mat-button class="payment-buttons" aria-label="button finish purchase " (click)="openDialog(product)">
-        Finish <mat-icon>done_all</mat-icon>
-      </button> -->
       </div>
     </mat-card-content>
     <div class="corner-position">

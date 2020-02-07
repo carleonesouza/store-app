@@ -32,12 +32,14 @@ export class AppComponent {
             { name: 'Store', route: '/front-store', icon: 'store' },
             { name: 'Product', route: '/admin/product', icon: 'shopping_basket' },
             { name: 'Users Panel', route: '/admin/management-users', icon: 'supervisor_account' },
+            { name: 'Close Wallet', route: '/#', icon: 'attach_money' },
         ],
 
         vendor: [
             { name: 'Profile', route: '/vendor/user-profile', icon: 'account' },
             { name: 'Store', route: '/front-store', icon: 'store' },
             { name: 'Home', route: '/home', icon: 'home' },
+            { name: 'Close Wallet', route: '/#', icon: 'attach_money' },
         ]
     };
 

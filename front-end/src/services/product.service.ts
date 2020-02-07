@@ -146,6 +146,26 @@ export class ProductService {
         observer.complete();
     });
   }
+
+  onCleanQuantity(product: Product): Observable<Product> {
+    if (this.quantity !== null) {
+      this.quantity.map((element) => {
+        if (element.productId === product._id) {
+          element.quantity = element.quantity - 1;
+        }
+        this.quantity.map(item => {
+          if (item.productId === product._id && item.quantity >= 0) {
+            product.quantity = item.quantity;
+            this.onSelectedProducts(item);
+          }
+        });
+      });
+    }
+    return new Observable((observer) => {
+      observer.next(product),
+        observer.complete();
+    });
+  }
   // To set Vender
   onSelectedProducts(quant: Quantity) {
     this.getProductById(quant.productId)

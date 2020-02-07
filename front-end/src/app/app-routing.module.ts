@@ -13,6 +13,7 @@ import { FrontStoreComponent } from 'src/pages/front-store/front-store.component
 import { NotFoundComponent } from 'src/pages/not-found/not-found.component';
 
 
+
 export const AppRoutes: Routes = [
     { path: '', component: BaseComponent },
     { path: 'account', children: AccountModule.ROUTES },
@@ -24,6 +25,7 @@ export const AppRoutes: Routes = [
   { path: '**', redirectTo: '/404' }
 
 ];
+
 @NgModule({
   imports: [RouterModule.forRoot(AppRoutes)],
   exports: [RouterModule]
