@@ -38,6 +38,7 @@ import { ConfirmationDialogComponent } from 'src/pages/dialogs/confirmation/conf
 import { BillDialogComponent } from 'src/pages/dialogs/bill-dialog/bill-dialog.component';
 import { WalletDialogComponent } from 'src/pages/dialogs/wallet-dialog/wallet-dialog.component';
 import { UserService } from 'src/services/user.service';
+import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier.dialog.component';
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import { UserService } from 'src/services/user.service';
         HomeComponent,
         FrontStoreComponent,
         ConfirmationDialogComponent,
+        CloseCashierDialogComponent,
         BillDialogComponent,
         WalletDialogComponent,
         NotFoundComponent,
@@ -89,7 +91,9 @@ import { UserService } from 'src/services/user.service';
     ],
 
     entryComponents: [
-        AppComponent, ConfirmationDialogComponent, BillDialogComponent, WalletDialogComponent
+        AppComponent, CloseCashierDialogComponent,
+        ConfirmationDialogComponent, BillDialogComponent,
+        WalletDialogComponent
     ],
 
     exports: [ SplashComponent ],

@@ -44,5 +44,12 @@ export class UserService {
       .pipe();
   }
 
+   // Get a specific User from the Store
+   getUserById(id: string): Observable<User> {
+    return this.httpClient.get<User>(`${environment.server}/user/${id}`, this.httpOptions)
+      .pipe();
+  }
+
+
 
 }

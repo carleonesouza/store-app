@@ -173,6 +173,16 @@ export class VendorService {
     .pipe();
   }
 
+  getAWallet(wallet: Wallet): Observable <Wallet> {
+    return this.httpClient.get<Wallet>(environment.server + `/wallet/${wallet.createdAt}`, this.httpOptions)
+    .pipe();
+  }
+
+  getAWalletByUserId(userId: string): Observable <Wallet> {
+    return this.httpClient.get<Wallet>(environment.server + `/wallet/${userId}`, this.httpOptions)
+    .pipe();
+  }
+
   onAddVendorsAWallet(vendor: Vendor) {
     this.onCheckWallets().subscribe((wallets) => {
       wallets.map((wallet) => {
@@ -192,6 +202,16 @@ export class VendorService {
         }
       });
     });
+  }
+
+  onCloseAWallet(wallet: Wallet) {
+    this.httpClient.put(environment.server + '/' + wallet._id , wallet, this.httpOptions).subscribe(() => {
+      this.snackBar.open('The Product was Successifuly updated', '', { duration: 4000 });
+    },
+      (err: HttpErrorResponse) => {
+        this.snackBar.open('Error occurred during this process ', 'RETRY', { duration: 4000 });
+        console.log(err);
+      });
   }
 
   addBillOnWallet(bill: BillMethod) {

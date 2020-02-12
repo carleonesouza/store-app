@@ -34,9 +34,9 @@ export const MY_FORMATS = {
 
 
 @Component({
-  selector: 'wallet-dialog',
-  templateUrl: './wallet-dialog.component.html',
-  styleUrls: ['./wallet-dialog.component.scss'],
+  selector: 'close-cashier-dialog',
+  templateUrl: './close-cashier-dialog.component.html',
+  styleUrls: ['./close-cashier-dialog.component.scss'],
   providers: [
      // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
     // application's root module. We provide it at the component level here, due to limitations of
@@ -50,71 +50,72 @@ export const MY_FORMATS = {
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
   ],
 })
-export class WalletDialogComponent implements OnInit {
+export class CloseCashierDialogComponent implements OnInit {
 @Input() walletForm: FormGroup;
 loader = true;
+user: User;
+
 NUMBERPATTERN = '^[0-9.,]+$';
 
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: User,
-              public dialogRef: MatDialogRef<WalletDialogComponent>,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Wallet,
+              public dialogRef: MatDialogRef<CloseCashierDialogComponent>,
               private formBuilder: FormBuilder, private vendorService: VendorService,
               public snackBar: MatSnackBar, private userService: UserService) { }
 
 
               ngOnInit() {
                 if (!this.data) {
-                  this.snackBar.open('We can not get a User informations!', '', {duration: 3000});
+                  this.snackBar.open('We cannot get a User informations!', '', {duration: 3000});
                 } else {
                   this.loader = false;
+                  this.userService.getUserById(this.data.userId).subscribe((user) => {
+                    this.user.fullName = user.fullName;
+                  });
                   this.walletForm = this.formBuilder.group({
-                    userName: [{value: this.data.fullName, disabled: true}],
-                    userEmail: [{value: this.data.username, disabled: true}],
-                    walletDay: [{value: moment(), disabled: true}],
-                    entranceValue: ['', [Validators.compose([
+                    openAt: [{value: this.data.createdAt, disabled: true}],
+                    typedValue: ['', [Validators.compose([
+                        Validators.required, Validators.minLength(2),
+                        Validators.pattern(this.NUMBERPATTERN)])]],
+                    closeAt: [{value: moment(), disabled: true}],
+                    finishValue: ['', [Validators.compose([
                       Validators.required, Validators.minLength(2),
                       Validators.pattern(this.NUMBERPATTERN)])]],
                   });
                   this.walletForm.setValue({
-                    userName: this.data.fullName,
-                    userEmail: this.data.username,
-                    walletDay: moment(),
-                    entranceValue: '',
+                    openAt: this.data.createdAt,
+                    typedValue: '',
+                    closeAt: moment(),
+                    finishValue: '',
                   });
 
                 }
               }
 
 
-  get userEmail() {
-    return this.walletForm.get('userEmail');
+  get openAt() {
+    return this.walletForm.get('openAt');
   }
 
-  get userName() {
-    return this.walletForm.get('userName');
+  get typedValue() {
+    return this.walletForm.get('typedValue');
   }
 
-  get entranceValue() {
-    return this.walletForm.get('entranceValue');
+  get finishValue() {
+    return this.walletForm.get('finishValue');
   }
 
-  openwallet() {
+  closeWallet() {
     if (this.walletForm.valid.valueOf()) {
-      const email = this.walletForm.get('userEmail').value;
-      const day = this.walletForm.get('walletDay').value;
-      const entrance = this.walletForm.value.entranceValue;
-      this.userService.getUserByEmail(email).subscribe( (user) => {
-        if (email) {
-          const wallet = new Wallet();
-          wallet.userId = user._id;
-          wallet.status = true;
-          wallet.createdAt = day.toDate();
-          wallet.openValue = entrance;
-          this.vendorService.onCreateWallet(wallet);
-        }
-        this.dialogRef.afterClosed().subscribe(() => {
+      const closeAt = this.walletForm.get('closeAt').value;
+      const typedValue = this.walletForm.value.typedValue;
+      this.vendorService.getAWallet(this.data).subscribe((item) => {
+          item.closeAt = closeAt;
+          item.finishValue = typedValue - item.openValue;
+          console.log(item);
+          this.dialogRef.afterClosed().subscribe(() => {
         });
-        this.dialogRef.close();
+          this.dialogRef.close();
       });
       this.dialogRef.disableClose = true;
     } else {

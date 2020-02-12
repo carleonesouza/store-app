@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy} from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { ProductService } from '.././../services/product.service';
 import { Product } from 'src/models/product.model';
@@ -23,16 +23,16 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
 
   constructor(private dialog: MatDialog, private snackBar: MatSnackBar,
               private productService: ProductService) {
-                this.data = [];
-               }
+    this.data = [];
+  }
 
   ngOnInit() {
     this.productService.getProducts()
       .subscribe(
         (data: Product[]) => {
-        this.sellProducts = data,
-        this.loading = false;
-      },
+          this.sellProducts = data,
+            this.loading = false;
+        },
         () => this.snackBar.open('Sorry, occurred an error, try later', '', {
           duration: 3000,
         })
@@ -41,7 +41,7 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-  this.productService.onBackVender().subscribe().unsubscribe();
+    this.productService.onBackVender().subscribe().unsubscribe();
   }
 
   addAmount(product: Product) {
@@ -59,10 +59,14 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
   }
 
   openDialog(): void {
-    this.productService.onBackVender().subscribe((v: Vendor[]) => {
-    this.data = v;
+    this.productService.onBackVender().subscribe((vendor: Vendor[]) => {
+      vendor.map((p) => {
+        if (p.amount !== 0) {
+          this.data.push(p);
+        }
+      });
     });
-    if (this.data !== null) {
+    if (this.data.some(e => e.amount !== 0)) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         data: this.data
       });

@@ -18,12 +18,13 @@ router.post('/create-user', userActionApi.createUser);
 router.post('/wallet/add', walletActionApi.createWallet);
 router.post('/wallet/add/vendor', walletActionApi.addAVendorAWallet);
 router.post('/wallet/add/bill', walletActionApi.addAVendorABill);
-router.post('/wallet', walletActionApi.findAWallet);
 
+router.get('/wallet/:date', walletActionApi.findAWallet);
 router.get('/products', productActionApi.findAllProducts);
 router.get('/wallets', walletActionApi.findAllWallets);
 router.get('/users', userActionApi.findAllUsers);
 router.get('/user/:id', userActionApi.findUserById);
+router.get('/user/:email', userActionApi.findUserByEmail);
 router.get('/vendors', vendorsActionApi.findAVendors);
 router.get('/methods', billMethodAction.findABill);
 router.get('/product/:id', productActionApi.findByIdProduct);

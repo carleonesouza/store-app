@@ -65,9 +65,15 @@ exports.findAllUsers = async (req, res) => {
  return res.status(200).send(users);
 }
 
-exports.findUserById = async (req, res) => {
+exports.findUserByEmail = async (req, res) => {
   const user = await User.findOne({username: req.body.email});
   res.status(200).send(user);
 }
+
+exports.findUserById = async (req, res) => {
+  const user = await User.findOne({_id: req.body.id});
+  res.status(200).send(user);
+}
+
 
 

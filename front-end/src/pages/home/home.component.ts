@@ -124,18 +124,24 @@ export class HomeComponent implements OnInit, AfterContentInit {
   }
 
   onCheckWallet() {
-    this.vendorService.onCheckWallets().subscribe((wallets: Wallet[]) => {
-      wallets.map((wallet) => {
-        const day = moment(wallet.createdAt);
-        day.locale('pt-br').format('L');
-        if (wallet === null) {
-          this.walletOpen = false;
-          this.loading = true;
-        } else if (day.locale('pt-br').format('L') === this.today && wallet.finishValue === 0) {
-          this.walletOpen = wallet.status;
-        }
+    if (!localStorage.getItem('userOpenId')) {
+      this.openCashier();
+    } else {
+      this.walletOpen = true;
+      this.vendorService.onCheckWallets().subscribe((wallets: Wallet[]) => {
+        wallets.map((wallet) => {
+          const day = moment(wallet.createdAt);
+          day.locale('pt-br').format('L');
+          if (wallet === null) {
+            this.walletOpen = false;
+            this.loading = true;
+          } else if (day.locale('pt-br').format('L') === this.today) {
+            this.walletOpen = wallet.status;
+            console.log(wallet);
+          }
+        });
       });
-    });
+    }
   }
 
   onGenerate() {
@@ -160,6 +166,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
                 this.loading = true;
               } else if (day.locale('pt-br').format('L') === this.today && wallet.finishValue === 0) {
                 this.walletOpen = wallet.status;
+                localStorage.setItem('userOpenId', wallet.userId);
               }
             });
           });

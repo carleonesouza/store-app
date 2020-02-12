@@ -4,11 +4,13 @@ import { Component,
     ChangeDetectionStrategy,
     ChangeDetectorRef
 } from '@angular/core';
-import { MatMenu, MatSnackBar, MatSidenav } from '@angular/material';
+import { MatMenu, MatSnackBar, MatSidenav, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../services/auth.service';
 import { StoreAppService } from '../services/store-app.service';
+import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier.dialog.component';
+import { VendorService } from 'src/services/vendor.service';
 
 @Component({
     selector: 'app-root',
@@ -45,7 +47,9 @@ export class AppComponent {
 
     constructor(public auth: AuthService,
                 public Store: StoreAppService,
+                private vendorService: VendorService,
                 public SnackBar: MatSnackBar,
+                private dialog: MatDialog,
                 public router: Router,
                 private ref: ChangeDetectorRef) {
         setInterval(() => {
@@ -89,5 +93,14 @@ export class AppComponent {
                 this.showProgress = false;
                 this.SnackBar.open('An error ocurred while logging out.', null, { duration: 3000 });
             });
+    }
+
+    onClose() {
+        if (localStorage.getItem('userOpenId')) {
+            this.vendorService.getAWalletByUserId(localStorage.getItem('userOpenId'))
+            .subscribe((wallet) => {
+                this.dialog.open(CloseCashierDialogComponent, {data: wallet});
+            });
+        }
     }
 }
