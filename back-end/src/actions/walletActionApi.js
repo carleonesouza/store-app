@@ -46,3 +46,8 @@ exports.addAVendorABill = async (req, res) => {
   });
 }
 
+exports.findAWalletByUserId = async (req, res) => {
+  const localWallet = await Wallet.findOne({userId: req.params.userId})
+  return res.status(200).send(localWallet);
+}
+

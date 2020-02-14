@@ -9,7 +9,7 @@
     <div id="form">
       <mat-form-field class="half-width mr5">
         <mat-label>Open At</mat-label>
-        <input matInput placeholder="email" type="email" formControlName="openAt">
+        <input matInput placeholder="Open At" type="text" formControlName="openAt">
       </mat-form-field>
   
       <mat-form-field class="half-width ml5">
@@ -18,22 +18,22 @@
       </mat-form-field>
   
       <mat-form-field class="half-width mr5">
-        <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="closeAt">
+        <input matInput [matDatepicker]="picker" placeholder="Close At" formControlName="closeAt">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
   
       <mat-form-field class="half-width ml5">
         <mat-label>Total</mat-label>
-        <input matInput placeholder="Total" type="number" formControlName="finishValue">
-        <mat-error *ngIf="entranceValue.errors">Please, type a valid value</mat-error>
+        <input matInput placeholder="Total" type="text" formControlName="finishValue">
+        <mat-error *ngIf="finishValue.errors">Please, type a valid value</mat-error>
       </mat-form-field>
   
   
       <div class="flex mt10 dialog-actions item-buttons">
         <span class="spacer"></span>
         <button class="mr5" mat-button type="button" (click)="dialogRef.close()">CANCEL</button>
-        <button class="ml5" mat-raised-button type="button" (click)="openwallet()" color="primary">OPEN</button>
+        <button class="ml5" mat-raised-button type="button" (click)="closeWallet()" color="primary">CLOSE</button>
       </div>
     </div>
   </form>

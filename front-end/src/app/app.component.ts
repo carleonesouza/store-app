@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../services/auth.service';
 import { StoreAppService } from '../services/store-app.service';
-import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier.dialog.component';
+import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier-dialog.component';
 import { VendorService } from 'src/services/vendor.service';
 
 @Component({
@@ -99,6 +99,7 @@ export class AppComponent {
         if (localStorage.getItem('userOpenId')) {
             this.vendorService.getAWalletByUserId(localStorage.getItem('userOpenId'))
             .subscribe((wallet) => {
+                console.log(wallet);
                 this.dialog.open(CloseCashierDialogComponent, {data: wallet});
             });
         }

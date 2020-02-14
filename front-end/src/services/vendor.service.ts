@@ -179,7 +179,7 @@ export class VendorService {
   }
 
   getAWalletByUserId(userId: string): Observable <Wallet> {
-    return this.httpClient.get<Wallet>(environment.server + `/wallet/${userId}`, this.httpOptions)
+    return this.httpClient.get<Wallet>(environment.server + `/wallet/user/${userId}`, this.httpOptions)
     .pipe();
   }
 

@@ -14,6 +14,8 @@ import { MatSnackBar } from '@angular/material';
 import { UserService } from 'src/services/user.service';
 import { Wallet } from 'src/models/wallet.model';
 import { VendorService } from 'src/services/vendor.service';
+import { CurrencyPipe } from '@angular/common';
+import { debounceTime } from 'rxjs/operators';
 // tslint:disable-next-line:no-duplicate-imports
 
 const moment =  _moment;
@@ -38,6 +40,7 @@ export const MY_FORMATS = {
   templateUrl: './close-cashier-dialog.component.html',
   styleUrls: ['./close-cashier-dialog.component.scss'],
   providers: [
+    CurrencyPipe,
      // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
     // application's root module. We provide it at the component level here, due to limitations of
     // our example generation script.
@@ -54,12 +57,14 @@ export class CloseCashierDialogComponent implements OnInit {
 @Input() walletForm: FormGroup;
 loader = true;
 user: User;
+vlr = 0;
 
 NUMBERPATTERN = '^[0-9.,]+$';
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Wallet,
               public dialogRef: MatDialogRef<CloseCashierDialogComponent>,
+              private currencyPipe: CurrencyPipe,
               private formBuilder: FormBuilder, private vendorService: VendorService,
               public snackBar: MatSnackBar, private userService: UserService) { }
 
@@ -69,29 +74,41 @@ NUMBERPATTERN = '^[0-9.,]+$';
                   this.snackBar.open('We cannot get a User informations!', '', {duration: 3000});
                 } else {
                   this.loader = false;
-                  this.userService.getUserById(this.data.userId).subscribe((user) => {
-                    this.user.fullName = user.fullName;
-                  });
+
                   this.walletForm = this.formBuilder.group({
                     openAt: [{value: this.data.createdAt, disabled: true}],
+
                     typedValue: ['', [Validators.compose([
                         Validators.required, Validators.minLength(2),
                         Validators.pattern(this.NUMBERPATTERN)])]],
+
                     closeAt: [{value: moment(), disabled: true}],
-                    finishValue: ['', [Validators.compose([
-                      Validators.required, Validators.minLength(2),
-                      Validators.pattern(this.NUMBERPATTERN)])]],
+
+                    finishValue: [{ value: '', disabled: true },
+                    [Validators.pattern(this.NUMBERPATTERN)]],
                   });
+
                   this.walletForm.setValue({
-                    openAt: this.data.createdAt,
+                    openAt: moment(this.data.createdAt).locale('pt-br').format('L'),
                     typedValue: '',
                     closeAt: moment(),
-                    finishValue: '',
+                    finishValue:  this.currencyPipe.transform(this.data.openValue, 'BRL', 'symbol-narrow', '1.2-2'),
+                  });
+
+                  this.walletForm.get('typedValue').valueChanges.subscribe((valor) => {
+                    this.onChange(valor);
+                    console.log(this.walletForm.get('typedValue').value);
                   });
 
                 }
               }
 
+  onChange(valor) {
+    const total = valor + this.data.openValue;
+    const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow');
+    this.walletForm.get('finishValue').patchValue(formValue, { emitEvent: false });
+
+  }
 
   get openAt() {
     return this.walletForm.get('openAt');
@@ -107,8 +124,11 @@ NUMBERPATTERN = '^[0-9.,]+$';
 
   closeWallet() {
     if (this.walletForm.valid.valueOf()) {
-      const closeAt = this.walletForm.get('closeAt').value;
+      const closeAt = this.walletForm.value.closeAt;
       const typedValue = this.walletForm.value.typedValue;
+      const total = typedValue + this.data.openValue;
+      const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '1.2-2');
+      this.walletForm.get('finishValue').patchValue(formValue, { emitEvent: false });
       this.vendorService.getAWallet(this.data).subscribe((item) => {
           item.closeAt = closeAt;
           item.finishValue = typedValue - item.openValue;
