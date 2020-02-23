@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component, Inject, OnInit, Input } from '@angular/core';
+import { Component, Inject, OnInit, Input, LOCALE_ID } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -49,6 +49,10 @@ export const MY_FORMATS = {
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
+    {
+      provide: LOCALE_ID,
+      useValue: 'BRL' // 'de' for Germany, 'fr' for France ...
+     },
 
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
   ],
@@ -92,12 +96,11 @@ NUMBERPATTERN = '^[0-9.,]+$';
                     openAt: moment(this.data.createdAt).locale('pt-br').format('L'),
                     typedValue: '',
                     closeAt: moment(),
-                    finishValue:  this.currencyPipe.transform(this.data.openValue, 'BRL', 'symbol-narrow', '1.2-2'),
+                    finishValue:  this.currencyPipe.transform(this.data.openValue, 'BRL', 'symbol-narrow', '4.2-2'),
                   });
 
                   this.walletForm.get('typedValue').valueChanges.subscribe((valor) => {
                     this.onChange(valor);
-                    console.log(this.walletForm.get('typedValue').value);
                   });
 
                 }
@@ -105,7 +108,7 @@ NUMBERPATTERN = '^[0-9.,]+$';
 
   onChange(valor) {
     const total = valor + this.data.openValue;
-    const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow');
+    const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '4.2-2');
     this.walletForm.get('finishValue').patchValue(formValue, { emitEvent: false });
 
   }
@@ -124,18 +127,24 @@ NUMBERPATTERN = '^[0-9.,]+$';
 
   closeWallet() {
     if (this.walletForm.valid.valueOf()) {
-      const closeAt = this.walletForm.value.closeAt;
+      const closeAt = this.walletForm.get('closeAt').value;
       const typedValue = this.walletForm.value.typedValue;
       const total = typedValue + this.data.openValue;
-      const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '1.2-2');
+      const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '4.2-2');
       this.walletForm.get('finishValue').patchValue(formValue, { emitEvent: false });
       this.vendorService.getAWallet(this.data).subscribe((item) => {
-          item.closeAt = closeAt;
-          item.finishValue = typedValue - item.openValue;
-          console.log(item);
+        if (!item) {
+          this.snackBar.open('Error during processing your request!', '', { duration: 3000 });
+        } else {
+          item.closeAt = closeAt.format();
+          item.finishValue = typedValue;
+          this.vendorService.onCloseAWallet(item);
           this.dialogRef.afterClosed().subscribe(() => {
-        });
-          this.dialogRef.close();
+            localStorage.removeItem('userOpenId');
+          });
+
+        }
+        this.dialogRef.close();
       });
       this.dialogRef.disableClose = true;
     } else {

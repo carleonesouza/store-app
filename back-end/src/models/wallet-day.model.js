@@ -42,7 +42,7 @@ const walletSchema = new Schema({
   status: { type: Boolean, default: false },
   finishValue: { type: Number },
   createdAt: { type: Date, default: Date.now},
-  closedAt: { type: Date},
+  closeAt: { type: Date},
 
 },
 {

@@ -6,17 +6,12 @@ const bcrypt = require('bcryptjs');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  // _id: mongoose.Types.ObjectId,
+  _id: mongoose.Types.ObjectId,
   fullName: { type: String, required: true },
   email: { type: String, required: true, unique: true, 
            match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ },
-  // password: { type: String, required: true },
-  // role: {type: String, required: true },
   accessToken: { type: String },
   token: {type: String}
-  /* status: { type: Boolean, required: true },
-  loginAttempts: { type: Number, required: true, default: 0 },
-  lockUntil: { type: Number } */
 },
 {
   locale: { String },

@@ -98,25 +98,24 @@ NUMBERPATTERN = '^[0-9.,]+$';
     return this.walletForm.get('entranceValue');
   }
 
-  openwallet() {
+  openWallet() {
     if (this.walletForm.valid.valueOf()) {
       const email = this.walletForm.get('userEmail').value;
       const day = this.walletForm.get('walletDay').value;
       const entrance = this.walletForm.value.entranceValue;
-      this.userService.getUserByEmail(email).subscribe( (user) => {
-        if (email) {
-          const wallet = new Wallet();
-          wallet.userId = user._id;
-          wallet.status = true;
-          wallet.createdAt = day.toDate();
-          wallet.openValue = entrance;
-          this.vendorService.onCreateWallet(wallet);
-        }
-        this.dialogRef.afterClosed().subscribe(() => {
+      this.userService.getUsers().subscribe((users) => {
+        users.map((user) => {
+          if (user.email === this.data.username) {
+            const wallet = new Wallet();
+            wallet.userId = user._id;
+            wallet.status = true;
+            wallet.createdAt = day.format();
+            wallet.openValue = entrance;
+            this.vendorService.onCreateWallet(wallet);
+            this.dialogRef.close();
+          }
         });
-        this.dialogRef.close();
       });
-      this.dialogRef.disableClose = true;
     } else {
       this.snackBar.open('The form is empty, please fill it!!', '', { duration: 3000 });
     }

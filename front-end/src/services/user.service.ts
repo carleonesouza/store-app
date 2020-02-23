@@ -32,9 +32,8 @@ export class UserService {
       }
 
       // To get a list of Users
-  getUsers(): Observable<any> {
-        return this.httpClient.get<User[]>(
-          environment.server + '/users', this.httpOptions);
+  getUsers(): Observable<any[]> {
+        return this.httpClient.get<any[]>(environment.server + '/users', this.httpOptions);
       }
 
 

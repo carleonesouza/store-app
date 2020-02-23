@@ -125,7 +125,17 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
   onCheckWallet() {
     if (!localStorage.getItem('userOpenId')) {
-      this.openCashier();
+      this.vendorService.onCheckWallets().subscribe((wallets) => {
+        wallets.map((wallet) => {
+          console.log(wallet);
+          if (wallet.finishValue === 0) {
+            this.snackBar.open('Still there a wallet open that you have to close!', '', { duration: 3000 });
+            localStorage.setItem('userOpenId', wallet.userId);
+          } else {
+            this.openCashier();
+          }
+        });
+      });
     } else {
       this.walletOpen = true;
       this.vendorService.onCheckWallets().subscribe((wallets: Wallet[]) => {
@@ -137,7 +147,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
             this.loading = true;
           } else if (day.locale('pt-br').format('L') === this.today) {
             this.walletOpen = wallet.status;
-            console.log(wallet);
           }
         });
       });

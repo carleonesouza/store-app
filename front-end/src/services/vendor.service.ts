@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, from } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
 import { BillMethod } from '../models/bill-method';
@@ -178,8 +178,9 @@ export class VendorService {
     .pipe();
   }
 
-  getAWalletByUserId(userId: string): Observable <Wallet> {
-    return this.httpClient.get<Wallet>(environment.server + `/wallet/user/${userId}`, this.httpOptions)
+  getAWalletByDate(consult): Observable <Wallet> {
+    console.log(consult);
+    return this.httpClient.post<Wallet>(environment.server + `/wallet/${consult}`, this.httpOptions)
     .pipe();
   }
 
@@ -205,8 +206,8 @@ export class VendorService {
   }
 
   onCloseAWallet(wallet: Wallet) {
-    this.httpClient.put(environment.server + '/' + wallet._id , wallet, this.httpOptions).subscribe(() => {
-      this.snackBar.open('The Product was Successifuly updated', '', { duration: 4000 });
+    this.httpClient.put(environment.server + '/wallet/' + wallet._id , wallet, this.httpOptions).subscribe(() => {
+      this.snackBar.open('The Wallet was Successifuly closed!', '', { duration: 4000 });
     },
       (err: HttpErrorResponse) => {
         this.snackBar.open('Error occurred during this process ', 'RETRY', { duration: 4000 });

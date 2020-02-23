@@ -6,11 +6,15 @@ import { Component,
 } from '@angular/core';
 import { MatMenu, MatSnackBar, MatSidenav, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import * as _moment from 'moment';
+
+const moment =  _moment;
 
 import { AuthService } from '../services/auth.service';
 import { StoreAppService } from '../services/store-app.service';
 import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier-dialog.component';
 import { VendorService } from 'src/services/vendor.service';
+
 
 @Component({
     selector: 'app-root',
@@ -97,10 +101,14 @@ export class AppComponent {
 
     onClose() {
         if (localStorage.getItem('userOpenId')) {
-            this.vendorService.getAWalletByUserId(localStorage.getItem('userOpenId'))
-            .subscribe((wallet) => {
-                console.log(wallet);
-                this.dialog.open(CloseCashierDialogComponent, {data: wallet});
+            this.vendorService.onCheckWallets()
+            .subscribe((wallets) => {
+                    if (wallets.some(e => e.userId === localStorage.getItem('userOpenId'))) {
+                       const wallet = wallets.filter(e => e.finishValue === 0);
+                       console.log(wallet);
+                       // moment(e.createdAt).locale('pt-br').format('L') === moment().locale('pt-br').format('L'));
+                       // this.dialog.open(CloseCashierDialogComponent, {data: wallet});
+                    }
             });
         }
     }

@@ -19,19 +19,20 @@ router.post('/wallet/add', walletActionApi.createWallet);
 router.post('/wallet/add/vendor', walletActionApi.addAVendorAWallet);
 router.post('/wallet/add/bill', walletActionApi.addAVendorABill);
 
-router.get('/wallet/:date', walletActionApi.findAWallet);
+// router.get('/wallet/:date', walletActionApi.findAWallet);
+router.post('/wallet/:date', walletActionApi.findAWallet);
 router.get('/wallet/user/:userId', walletActionApi.findAWalletByUserId);
 router.get('/products', productActionApi.findAllProducts);
 router.get('/wallets', walletActionApi.findAllWallets);
 router.get('/users', userActionApi.findAllUsers);
 router.get('/user/:id', userActionApi.findUserById);
-router.get('/user/:email', userActionApi.findUserByEmail);
 router.get('/vendors', vendorsActionApi.findAVendors);
 router.get('/methods', billMethodAction.findABill);
 router.get('/product/:id', productActionApi.findByIdProduct);
 router.get('/vendors/populates', vendorsActionApi.findVendorsByProduct);
 
 router.put('/product/:id', productActionApi.updateProduct);
+router.put('/wallet/:id', walletActionApi.closeAWallet);
 
 router.delete('/product/:id', productActionApi.deleteProduct);
 
