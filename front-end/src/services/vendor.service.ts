@@ -174,12 +174,11 @@ export class VendorService {
   }
 
   getAWallet(wallet: Wallet): Observable <Wallet> {
-    return this.httpClient.get<Wallet>(environment.server + `/wallet/${wallet.createdAt}`, this.httpOptions)
+    return this.httpClient.get<Wallet>(environment.server + `/wallet/${wallet._id}`, this.httpOptions)
     .pipe();
   }
 
   getAWalletByDate(consult): Observable <Wallet> {
-    console.log(consult);
     return this.httpClient.post<Wallet>(environment.server + `/wallet/${consult}`, this.httpOptions)
     .pipe();
   }

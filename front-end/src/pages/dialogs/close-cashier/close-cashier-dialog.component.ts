@@ -15,8 +15,6 @@ import { UserService } from 'src/services/user.service';
 import { Wallet } from 'src/models/wallet.model';
 import { VendorService } from 'src/services/vendor.service';
 import { CurrencyPipe } from '@angular/common';
-import { debounceTime } from 'rxjs/operators';
-// tslint:disable-next-line:no-duplicate-imports
 
 const moment =  _moment;
 
@@ -80,7 +78,7 @@ NUMBERPATTERN = '^[0-9.,]+$';
                   this.loader = false;
 
                   this.walletForm = this.formBuilder.group({
-                    openAt: [{value: this.data.createdAt, disabled: true}],
+                    openAt: [{value: moment(this.data.createdAt).locale('pt-br').format('L'), disabled: true}],
 
                     typedValue: ['', [Validators.compose([
                         Validators.required, Validators.minLength(2),
@@ -88,7 +86,7 @@ NUMBERPATTERN = '^[0-9.,]+$';
 
                     closeAt: [{value: moment(), disabled: true}],
 
-                    finishValue: [{ value: '', disabled: true },
+                    finishValue: [{ value: this.data.openValue, disabled: true },
                     [Validators.pattern(this.NUMBERPATTERN)]],
                   });
 
@@ -96,7 +94,8 @@ NUMBERPATTERN = '^[0-9.,]+$';
                     openAt: moment(this.data.createdAt).locale('pt-br').format('L'),
                     typedValue: '',
                     closeAt: moment(),
-                    finishValue:  this.currencyPipe.transform(this.data.openValue, 'BRL', 'symbol-narrow', '4.2-2'),
+                    finishValue:
+                    this.currencyPipe.transform(this.data.openValue, 'BRL', 'symbol-narrow', '1.2-2', 'pt-BR'),
                   });
 
                   this.walletForm.get('typedValue').valueChanges.subscribe((valor) => {
@@ -106,9 +105,9 @@ NUMBERPATTERN = '^[0-9.,]+$';
                 }
               }
 
-  onChange(valor) {
+  onChange(valor: number) {
     const total = valor + this.data.openValue;
-    const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '4.2-2');
+    const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '1.2-2', 'pt-BR');
     this.walletForm.get('finishValue').patchValue(formValue, { emitEvent: false });
 
   }
@@ -130,7 +129,7 @@ NUMBERPATTERN = '^[0-9.,]+$';
       const closeAt = this.walletForm.get('closeAt').value;
       const typedValue = this.walletForm.value.typedValue;
       const total = typedValue + this.data.openValue;
-      const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '4.2-2');
+      const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '1.2-2', 'pt-BR');
       this.walletForm.get('finishValue').patchValue(formValue, { emitEvent: false });
       this.vendorService.getAWallet(this.data).subscribe((item) => {
         if (!item) {

@@ -19,7 +19,7 @@ exports.findAllWallets = async (req, res) => {
 }
 
 exports.findAWallet = async (req, res) => {
-  const localWallet = await Wallet.findOne({ createdAt: req.params.date })
+  const localWallet = await Wallet.findOne({ _id: req.params.id })
   return res.status(200).send(localWallet);
 }
 
@@ -75,7 +75,7 @@ exports.closeAWallet = async (req, res) => {
       $set: {
         status: false,
         finishValue: req.body.finishValue,
-        closedt: req.body.closeAt,
+        closedAt: req.body.closeAt,
       },
     })
     .then((data) => data)

@@ -17,7 +17,6 @@ exports.createProduct = async (req, res) => {
 // To list all products
 exports.findAllProducts = async (req, res) => {
   const products = await Product.find({})
-  .populate();
   res.status(200).send(products);
 };
 

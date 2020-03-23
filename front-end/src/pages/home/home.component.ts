@@ -127,7 +127,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
     if (!localStorage.getItem('userOpenId')) {
       this.vendorService.onCheckWallets().subscribe((wallets) => {
         wallets.map((wallet) => {
-          console.log(wallet);
           if (wallet.finishValue === 0) {
             this.snackBar.open('Still there a wallet open that you have to close!', '', { duration: 3000 });
             localStorage.setItem('userOpenId', wallet.userId);

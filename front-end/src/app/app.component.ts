@@ -100,14 +100,13 @@ export class AppComponent {
     }
 
     onClose() {
-        if (localStorage.getItem('userOpenId')) {
+          if (this.auth.authenticated && localStorage.getItem('userOpenId')) {
             this.vendorService.onCheckWallets()
             .subscribe((wallets) => {
                     if (wallets.some(e => e.userId === localStorage.getItem('userOpenId'))) {
-                       const wallet = wallets.filter(e => e.finishValue === 0);
-                       console.log(wallet);
+                       const wallet = wallets.find(e => e.finishValue === 0);
                        // moment(e.createdAt).locale('pt-br').format('L') === moment().locale('pt-br').format('L'));
-                       // this.dialog.open(CloseCashierDialogComponent, {data: wallet});
+                       this.dialog.open(CloseCashierDialogComponent, {data: wallet});
                     }
             });
         }

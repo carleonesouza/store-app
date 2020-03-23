@@ -41,7 +41,7 @@ export class ProductService {
   }
 
   // To get a list of Products
-  getProducts(): Observable<any> {
+  getProducts(): Observable<Product[]> {
     return this.httpClient.get<Product[]>(
       environment.server + '/products', this.httpOptions);
   }
