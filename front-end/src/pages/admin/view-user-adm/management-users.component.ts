@@ -28,7 +28,7 @@ export class ManagementUsersComponent implements OnInit, AfterViewInit {
                 private snackBar: MatSnackBar) { }
 
     ngOnInit() {
-        this.dataSource = new GenericDataSource(this.paginator, this.sort);
+        this.dataSource = new GenericDataSource();
         this.dataSource.setCallback((filter, pageIndex, pageSize) => {
             return this.StoreApp.fetchGenericDataList('/users', filter, pageIndex, pageSize);
         });

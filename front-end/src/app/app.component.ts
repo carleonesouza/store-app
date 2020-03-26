@@ -73,6 +73,7 @@ export class AppComponent {
                     })
                     .catch(err => {
                         console.error(err);
+                        this.SnackBar.open('An error ocurred ' + err, null, { duration: 3000 });
                         this.showProgress = false;
                     });
             }

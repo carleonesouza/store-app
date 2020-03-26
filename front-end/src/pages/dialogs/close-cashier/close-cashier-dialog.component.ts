@@ -14,7 +14,10 @@ import { MatSnackBar } from '@angular/material';
 import { UserService } from 'src/services/user.service';
 import { Wallet } from 'src/models/wallet.model';
 import { VendorService } from 'src/services/vendor.service';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
 
 const moment =  _moment;
 
@@ -49,7 +52,7 @@ export const MY_FORMATS = {
     },
     {
       provide: LOCALE_ID,
-      useValue: 'BRL' // 'de' for Germany, 'fr' for France ...
+      useValue: 'BRL'
      },
 
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
@@ -95,7 +98,7 @@ NUMBERPATTERN = '^[0-9.,]+$';
                     typedValue: '',
                     closeAt: moment(),
                     finishValue:
-                    this.currencyPipe.transform(this.data.openValue, 'BRL', 'symbol-narrow', '1.2-2', 'pt-BR'),
+                    this.currencyPipe.transform(this.data.openValue, 'BRL', 'symbol-narrow', '1.2-2', 'pt-br'),
                   });
 
                   this.walletForm.get('typedValue').valueChanges.subscribe((valor) => {
@@ -107,7 +110,7 @@ NUMBERPATTERN = '^[0-9.,]+$';
 
   onChange(valor: number) {
     const total = valor + this.data.openValue;
-    const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '1.2-2', 'pt-BR');
+    const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '1.2-2', 'pt-br');
     this.walletForm.get('finishValue').patchValue(formValue, { emitEvent: false });
 
   }
@@ -129,7 +132,7 @@ NUMBERPATTERN = '^[0-9.,]+$';
       const closeAt = this.walletForm.get('closeAt').value;
       const typedValue = this.walletForm.value.typedValue;
       const total = typedValue + this.data.openValue;
-      const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '1.2-2', 'pt-BR');
+      const formValue = this.currencyPipe.transform(total, 'BRL', 'symbol-narrow', '1.2-2', 'pt-br');
       this.walletForm.get('finishValue').patchValue(formValue, { emitEvent: false });
       this.vendorService.getAWallet(this.data).subscribe((item) => {
         if (!item) {

@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
 export class Wallet {
     _id?: string;
     userId: string;
-    bills?: string;
-    vendors?: string;
+    bills?: [];
+    vendors?: [];
     openValue = 0;
     finishValue ?= 0;
     createdAt?: Date;

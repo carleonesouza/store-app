@@ -20,6 +20,8 @@ import { WalletDialogComponent } from '../dialogs/wallet-dialog/wallet-dialog.co
 import { AuthService } from 'src/services/auth.service';
 import { User } from 'src/models/user.model';
 import { Wallet } from 'src/models/wallet.model';
+import { GenericDataSource } from 'src/datasources/generic-datasource';
+import { StoreAppService } from 'src/services/store-app.service';
 
 
 
@@ -58,12 +60,16 @@ export class HomeComponent implements OnInit, AfterContentInit {
   displayedColumns: string[] = ['name', 'quantity', 'total'];
   displayedColumns2: string[] = ['method', 'value'];
   displayedColumns3: string[] = ['name', 'description', 'value'];
+  displayedColumnsWallet = ['date', 'open', 'close', 'total'];
   exampleDatabase: VendorService | null;
   dataSource: HomeDataSource | null;
   user = new User();
   dataMethod: BillDataSource | null;
+  public errored = false;
+  public dataSour: GenericDataSource;
   loading = true;
   walletOpen = false;
+  total = 0;
   today = new Date().toLocaleDateString();
   @Input() reportDayForm: FormGroup;
   @Input() cashierForm: FormGroup;
@@ -77,12 +83,14 @@ export class HomeComponent implements OnInit, AfterContentInit {
   constructor(private formBuilder: FormBuilder, private managementService: ManagementService,
               private snackBar: MatSnackBar, public httpClient: HttpClient, private dialog: MatDialog,
               private productService: ProductService, private auth: AuthService,
-              private vendorService: VendorService) { }
+              private vendorService: VendorService,
+              private StoreApp: StoreAppService) { }
 
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild('filter', { static: true }) filter: ElementRef;
+  @ViewChild('input', {static: true}) input: ElementRef;
 
   ngOnInit() {
     if (this.auth.authenticated) {
@@ -105,6 +113,27 @@ export class HomeComponent implements OnInit, AfterContentInit {
       dateNow: this.today,
     });
 
+    this.dataSour = new GenericDataSource();
+    this.dataSour.setCallback((filter, pageIndex, pageSize) => {
+        return this.StoreApp.fetchGenericDataList('/wallets', filter, pageIndex, pageSize);
+    });
+
+    this.dataSour.setErrorHandler((err) => {
+        this.errored = true;
+        this.snackBar.open('Failed to load promo codes!', 'RETRY', { duration: 5000 })
+            .onAction().subscribe(() => {
+                this.loadPage();
+            });
+    });
+
+    this.dataSour.loadData('', 0, 25);
+    this.dataSour.dataSubject.pipe().subscribe( (itens) => {
+      itens.map((item) => {
+       this.total = item.openValue + item.finishValue;
+      });
+    });
+
+
   }
 
   ngAfterContentInit() {
@@ -117,6 +146,13 @@ export class HomeComponent implements OnInit, AfterContentInit {
     this.loadDataMethod();
   }
 
+  loadPage() {
+    this.errored = false;
+    this.dataSour.loadData(
+        this.input.nativeElement.value,
+        this.paginator.pageIndex,
+        this.paginator.pageSize);
+}
 
 
   addEvent(event: MatDatepickerInputEvent<Date>) {
@@ -130,6 +166,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
           if (wallet.finishValue === 0) {
             this.snackBar.open('Still there a wallet open that you have to close!', '', { duration: 3000 });
             localStorage.setItem('userOpenId', wallet.userId);
+            localStorage.setItem('walletId', wallet._id);
           } else {
             this.openCashier();
           }
@@ -146,6 +183,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
             this.loading = true;
           } else if (day.locale('pt-br').format('L') === this.today) {
             this.walletOpen = wallet.status;
+            this.vendorService.getAWalletVendor(wallet);
           }
         });
       });
@@ -175,6 +213,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
               } else if (day.locale('pt-br').format('L') === this.today && wallet.finishValue === 0) {
                 this.walletOpen = wallet.status;
                 localStorage.setItem('userOpenId', wallet.userId);
+                localStorage.setItem('walletId', wallet._id);
               }
             });
           });

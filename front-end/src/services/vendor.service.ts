@@ -178,7 +178,29 @@ export class VendorService {
     .pipe();
   }
 
-  getAWalletByDate(consult): Observable <Wallet> {
+  getAWalletVendor(wallet: Wallet) {
+    return this.httpClient.get<Wallet>(environment.server + `/wallet/${wallet._id}`, this.httpOptions)
+    .pipe()
+    .subscribe((data: Wallet) => {
+      data.vendors.map((v: Vendor) => {
+        if (this.localBag.length === 0) {
+          this.localBag.push(v);
+        } else if (this.localBag.some(e => e.productId === v.productId)) {
+          this.localBag.filter((lb) => {
+            if (lb.productId === v.productId) {
+              lb.amount = lb.amount + v.amount;
+              lb.total = lb.total + v.total;
+            }
+          });
+        } else {
+          this.localBag.push(v);
+        }
+     });
+      console.log(this.localBag);
+    });
+  }
+
+  getAWalletByDate(consult: any): Observable <Wallet> {
     return this.httpClient.post<Wallet>(environment.server + `/wallet/${consult}`, this.httpOptions)
     .pipe();
   }
@@ -281,7 +303,6 @@ export class VendorService {
           this.localBag.push(v);
         }
      });
-      console.log(this.localBag);
     }
 
   }
