@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const billMethodSchema = new Schema({
+const billSchema = new Schema({
   vendorId: { type: Schema.Types.ObjectId, ref: 'Vendor' },
-  paymentMethod: { type: String, required: true },
+  payMethod: { type: String, required: true },
   billValue: { type: Number, required: true },
 
 },
@@ -13,8 +13,8 @@ const billMethodSchema = new Schema({
 },
 {
   timestamps: true,
-  collation: 'billMethods',
+  collation: 'bills',
 
 });
 
-module.exports = mongoose.model('BillMethod', billMethodSchema);
+module.exports = mongoose.model('Bills', billSchema);

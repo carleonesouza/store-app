@@ -127,12 +127,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
     });
 
     this.dataSour.loadData('', 0, 25);
-    this.dataSour.dataSubject.pipe().subscribe( (itens) => {
-      itens.map((item) => {
-       this.total = item.openValue + item.finishValue;
-      });
-    });
-
 
   }
 

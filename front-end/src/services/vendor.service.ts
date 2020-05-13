@@ -15,6 +15,7 @@ export class VendorService {
   private billGroup: Array<BillMethod>;
   private localBill: BillMethod;
   today = new Date().toLocaleDateString();
+  localVendor;
   bagBill: Array<BillMethod>;
   bagVender: Array<Vendor>;
   localBag: Array<Vendor>;
@@ -126,24 +127,24 @@ export class VendorService {
   // To Get a list of Methods from backend
   getAllMethods() {
     this.httpClient.get<BillMethod[]>(`${environment.server}/methods`, this.httpOptions).subscribe(data => {
-      const billCredit = data.filter(element => element.paymentMethod === 'Credit');
-      const billCash = data.filter(element => element.paymentMethod === 'Cash');
-      const billDebit = data.filter(element => element.paymentMethod === 'Debit');
+      const billCredit = data.filter(element => element.payMethod === 'Credit');
+      const billCash = data.filter(element => element.payMethod === 'Cash');
+      const billDebit = data.filter(element => element.payMethod === 'Debit');
       const myBil = new BillMethod();
       billCredit.map((item) => {
-        myBil.paymentMethod = item.paymentMethod;
+        myBil.payMethod = item.payMethod;
         myBil.billValue = myBil.billValue + item.billValue;
       });
 
       const myBll = new BillMethod();
       billCash.map((item) => {
-        myBll.paymentMethod = item.paymentMethod;
+        myBll.payMethod = item.payMethod;
         myBll.billValue = myBll.billValue + item.billValue;
       });
 
       const myBill = new BillMethod();
       billDebit.map((item) => {
-        myBill.paymentMethod = item.paymentMethod;
+        myBill.payMethod = item.payMethod;
         myBill.billValue = myBill.billValue + item.billValue;
       });
 
@@ -206,25 +207,10 @@ export class VendorService {
   }
 
   onAddVendorsAWallet(vendor: Vendor) {
-    this.onCheckWallets().subscribe((wallets) => {
-      wallets.map((wallet) => {
-        if (wallet.status && wallet.finishValue === 0) {
-          this.httpClient.post(environment.server + '/wallet/add/vendor', {vendor, wallet}, this.httpOptions)
-          .subscribe(() => {
-            this.snackBar.open('The Vendor was Successifuly Add ', '', { duration: 4000 });
-            return;
-          },
-            (err: HttpErrorResponse) => {
-              this.snackBar.open('Error occurred during add a Vendor', '', { duration: 4000 });
-              console.log(err);
-              return;
-            });
-        } else {
-          console.log('Wallet not found!');
-        }
-      });
-    });
+
   }
+
+
 
   onCloseAWallet(wallet: Wallet) {
     this.httpClient.put(environment.server + '/wallet/' + wallet._id , wallet, this.httpOptions).subscribe(() => {
@@ -240,7 +226,7 @@ export class VendorService {
     this.onCheckWallets().subscribe((wallets) => {
       wallets.map((wallet) => {
         if (wallet.status && wallet.finishValue === 0) {
-          this.httpClient.post(environment.server + '/wallet/add/bill', {bill, wallet}, this.httpOptions)
+          this.httpClient.post(environment.server + '/wallet/add/bill', {bill, walletId: wallet._id}, this.httpOptions)
           .subscribe(() => {
             this.snackBar.open('The Bill was Successifuly Add ', '', { duration: 4000 });
             return;
@@ -259,12 +245,14 @@ export class VendorService {
 
 
   // Create an local [] of the BillMethod
-  onBillMethod(e: number, f: string) {
+  onBillMethod(e: number, f: string, vendorId: string) {
     this.localBill = new BillMethod();
+    console.log(vendorId);
     if (e !== 0) {
       this.localBill.id = Math.random() + e,
         this.localBill.billValue = e,
-        this.localBill.paymentMethod = f;
+        this.localBill.payMethod = f,
+        this.localBill.vendorId = vendorId;
     }
     if (this.billGroup.length === 0 && this.localBill !== null) {
       this.billGroup.push(this.localBill);

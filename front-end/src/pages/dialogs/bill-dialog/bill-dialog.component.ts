@@ -25,6 +25,7 @@ export class BillDialogComponent implements OnInit, OnDestroy {
   payableValue = 0;
   updateTotal: string;
   mySubscription: any;
+  vendorId: string;
   total = 0;
   localValue = 0;
   @Input() venderForm: FormGroup;
@@ -42,6 +43,8 @@ export class BillDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.data.map((e) => {
+      console.log(e);
+      this.vendorId = e._id;
       this.amount = e.amount + this.amount;
       this.total = e.total + this.total;
       this.updateTotal = this.currencyPipe.transform(this.total, 'BRL', 'symbol-narrow', '1.2-2');
@@ -98,7 +101,7 @@ export class BillDialogComponent implements OnInit, OnDestroy {
     if (this.localValue < this.total ) {
       this.dialogRef.disableClose = true;
       this.approval = false;
-      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble);
+      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble, this.vendorId);
       const formValue = this.currencyPipe.transform(this.localValue, 'BRL', 'symbol-narrow', '1.2-2');
       this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
       this.venderForm.get('formSold').reset();
@@ -107,7 +110,7 @@ export class BillDialogComponent implements OnInit, OnDestroy {
 
     if (this.localValue === this.total) {
       this.approval = true;
-      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble);
+      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble, this.vendorId);
       const formValue = this.currencyPipe.transform(this.localValue, 'BRL', 'symbol-narrow', '1.2-2');
       this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
       this.dialogRef.close();

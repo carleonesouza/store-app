@@ -1,15 +1,33 @@
 const Wallet = require('../models/wallet-day.model');
 const Vendor = require('../models/vendor.model');
+const Bill = require('../models/billMethod.model');
 const moment = require('moment');
 
 
 exports.createWallet = async (req, res) => {
-  const localWallet = new Wallet(req.body);
-  await localWallet
+  await new Wallet(req.body)
     .save()
-    .then((wallet) => { return res.status(200).send(wallet) })
+    .then((wallet) => { return res.status(201).send(wallet) })
     .catch((err) => {
       res.status(500).json({ error: err });
+    });
+}
+
+// To create a vendor
+exports.createVendor = async (req, res) => {
+  await new Vendor(req.body)
+    .save()
+    .then((vendor) => {
+      Wallet.findOne({ _id: req.body.walletId },
+        (err, wallet) => {
+          if (err) return err;
+          wallet.vendors.push(vendor)
+          wallet.save();
+        });
+      return res.status(201).json({ message: 'Vendor Sucessfully Save' });
+    })
+    .catch((err) => {
+      return res.status(500).json({ message: err });
     });
 }
 
@@ -23,32 +41,49 @@ exports.findAWallet = async (req, res) => {
   return res.status(200).send(localWallet);
 }
 
-exports.addAVendorAWallet = async (req, res) => {
-  await Wallet.findOne({ _id: req.body.wallet._id }, (err, wallet) => {
-    if (err) return err;
-    wallet.vendors.push({
-      amount: req.body.vendor.amount, total: req.body.vendor.total
-      , productId: req.body.vendor.productId
+exports.getAWalletWithBills = async (req, res) => {
+  await Wallet.find({ _id: '5e4e0a30927beb39773afa09' })
+    .populate('bills')
+    .exec((err, bills) => {
+      console.log(bills)
+      return res.status(200).send(bills);
     })
-    wallet.save(err, data => {
-      if (err) return err
-      return res.status(200).send(data)
+
+}
+
+// To add a vendorID on a current wallet
+exports.addAVendorAWallet = async (req, res) => {
+  await Wallet.findOne({ _id: req.body.walletId },
+    (err, wallet) => {
+      if (err) return err;
+      new Vendor(req.body.vendor)
+        .save()
+        .then((vendor) => {
+          wallet.vendors.push(vendor)
+          wallet.save();
+          return res.status(201).send(vendor)
+        })
+        .catch((err) => {
+          return res.status(500).json({ message: err });
+        });
     });
-  });
 }
 
 exports.addAVendorABill = async (req, res) => {
-  await Wallet.findOne({ _id: req.body.wallet._id }, (err, wallet) => {
-    if (err) return err;
-    wallet.bills.push({
-      vendorId: req.body.bill.vendorId, paymentMethod: req.body.bill.paymentMethod
-      , billValue: req.body.bill.billValue
-    })
-    wallet.save(err, data => {
-      if (err) return err
-      return res.status(200).send(data)
+  await Wallet.findOne({ _id: req.body.walletId },
+    (err, wallet) => {
+      if (err) return err;
+      new Bill(req.body.bill)
+        .save()
+        .then((billSaved) => {
+          wallet.bills.push(billSaved)
+          wallet.save();
+          return res.status(201).json({ message: 'The bill has been created successfully !' })
+        })
+        .catch((err) => {
+          res.status(500).json({ message: err });
+        });
     });
-  });
 }
 
 exports.findAWalletByUserId = async (req, res) => {
@@ -57,7 +92,6 @@ exports.findAWalletByUserId = async (req, res) => {
 }
 
 exports.findAWalletByDate = async (req, res) => {
-  console.log(req);
   const localWallet = await Wallet.find({})
   return res.status(200).send(localWallet);
 }

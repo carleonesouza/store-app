@@ -43,8 +43,7 @@ exports.updateProduct = async (req, res) => {
       $set: {
         name: req.body.name,
         description: req.body.description,
-        price: req.body.price,
-        amount: req.body.amount,
+        price: req.body.price
       },
     })
     .then((data) => data)

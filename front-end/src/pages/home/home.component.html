@@ -1,7 +1,7 @@
 <div fxLayout="column" fxLayoutAlign="center">
   <div id="form-error" *ngIf="!walletOpen" fxLayoutAlign="center center">
     <div id="form-error-content">
-      <p>You should open a wallet before sell anything!</p>
+      <p>You should open a wallet before sell something!</p>
       <button
         mat-raised-button
         color="primary"
@@ -305,7 +305,7 @@
 >
   <div class="item item-3" fxFlex>
     <mat-toolbar color="primary">
-      <span>List Solds of Products</span>
+      <span>Cashier</span>
       <span class="spacer"></span>
       <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
         <mat-icon>refresh</mat-icon>
@@ -373,3 +373,5 @@
     </div>
   </div>
 </div>
+
+<dinamic-table></dinamic-table>

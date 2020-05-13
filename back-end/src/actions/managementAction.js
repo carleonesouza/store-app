@@ -53,12 +53,10 @@ exports.logout = (req, res) => {
 
 }
 
-exports.check = (req, res) => {
-    return User.findOne({ email: req.body.email })
-    .exec()
-    .then((user) => {
-        res.status(200).send(user);
-    })
+exports.check = async (req, res) => {
+    const user = await User.findOne({ email: req.body.email })
+        .exec();
+    res.status(200).send(user);
 }
 
 

@@ -13,16 +13,15 @@ export class ProductService {
   dataChange: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
   // Temporarily stores data from dialogs
   dialogData: any;
-  tempProduc: Product;
-  quantity: Array<Quantity>;
-  localQuantity: Quantity;
-  vender: Array<Vendor>;
-  localVender: Vendor;
+  products: Array<Product>;
+  tempProduct: Product;
+  vendors: Array<Vendor>;
+  localVendor: Vendor;
   log: any;
 
   constructor(private httpClient: HttpClient, private snackBar: MatSnackBar) {
-    this.quantity = [];
-    this.vender = [];
+    this.products = [];
+    this.vendors = [];
   }
 
   httpOptions = {
@@ -112,30 +111,36 @@ export class ProductService {
     this.getProductById(product._id)
       .subscribe(
         (data: Product) => {
-          if (this.quantity.length === 0) {
-            this.localQuantity = new Quantity();
-            this.localQuantity.productId = data._id;
-            this.localQuantity.quantity = 0;
-            this.quantity.push(this.localQuantity);
+          if (this.products.length === 0) {
+            this.tempProduct = new Product();
+            this.tempProduct._id = data._id;
+            this.tempProduct.quantity =  product.quantity + 1;
+            this.tempProduct.name = product.name;
+            this.tempProduct.description = product.description;
+            this.tempProduct.price = product.price;
+            this.products.push(this.tempProduct);
 
-          } else if (this.quantity.length > 0) {
-            this.localQuantity = new Quantity();
-            this.localQuantity.productId = data._id;
-            this.localQuantity.quantity = 0;
+          } else if (this.products.length > 0) {
+            this.tempProduct = new Product();
+            this.tempProduct._id = data._id;
+            this.tempProduct.quantity =  product.quantity + 1;
+            this.tempProduct.name = product.name;
+            this.tempProduct.description = product.description;
+            this.tempProduct.price = product.price;
 
-            if (this.quantity.some(e => e.productId === data._id)) {
-              this.quantity.filter((item) => {
-                if (item.productId === data._id) {
+            if (this.products.some(e => e._id === data._id)) {
+              this.products.filter((item) => {
+                if (item._id === data._id) {
                   item.quantity = item.quantity + 1;
                 }
               });
             } else {
-              this.quantity.push(this.localQuantity);
+              this.products.push(this.tempProduct);
             }
           }
 
-          this.quantity.map(item => {
-            if (item.productId === data._id) {
+          this.products.map(item => {
+            if (item._id === data._id) {
               product.quantity = item.quantity;
               this.onSelectedProducts(item);
             }
@@ -147,14 +152,14 @@ export class ProductService {
     });
   }
 
-  onCleanQuantity(product: Product): Observable<Product> {
-    if (this.quantity !== null) {
-      this.quantity.map((element) => {
-        if (element.productId === product._id) {
+  onCleanList(product: Product): Observable<Product> {
+    if (this.products !== null) {
+      this.products.map((element) => {
+        if (element._id === product._id) {
           element.quantity = element.quantity - 1;
         }
-        this.quantity.map(item => {
-          if (item.productId === product._id && item.quantity >= 0) {
+        this.products.map(item => {
+          if (item._id === product._id && item.quantity >= 0) {
             product.quantity = item.quantity;
             this.onSelectedProducts(item);
           }
@@ -166,47 +171,53 @@ export class ProductService {
         observer.complete();
     });
   }
-  // To set Vender
-  onSelectedProducts(quant: Quantity) {
-    this.getProductById(quant.productId)
+
+  onCleanListVendor(vendor: Vendor) {
+    if (this.vendors !== null) {
+      this.vendors.splice(this.vendors.indexOf(this.vendors.find(element => element._id === vendor._id)), 1);
+    }
+  }
+  // To set vendor
+  onSelectedProducts(product: Product) {
+    this.getProductById(product._id)
       .subscribe(
         (data: Product) => {
-          if (this.vender.length === 0) {
-            this.localVender = new Vendor();
-            this.localVender.productId = data._id;
-            this.localVender.amount = 0;
-            this.localVender.total = 0;
-            this.vender.push(this.localVender);
+          if (this.vendors.length === 0) {
+            this.localVendor = new Vendor();
+            this.localVendor.productId = data._id;
+            this.localVendor.amount = product.quantity;
+            this.localVendor.total = product.quantity * product.price;
+            this.vendors.push(this.localVendor);
 
-          } else if (this.vender.length > 0) {
-            this.localVender = new Vendor();
-            this.localVender.productId = data._id;
-            this.localVender.amount = 0;
-            this.localVender.total = 0;
+          } else if (this.vendors.length > 0) {
+            this.localVendor = new Vendor();
+            this.localVendor.productId = data._id;
+            this.localVendor.amount = product.quantity;
+            this.localVendor.total = product.quantity * product.price;
 
-            if (this.vender.some(e => e.productId === data._id)) {
-              this.vender.filter((item) => {
+            if (this.vendors.some(e => e.productId === data._id)) {
+              this.vendors.filter((item) => {
                 if (item.productId === data._id) {
-                  item.amount = quant.quantity;
-                  item.total = item.amount * data.price;
+                  item.amount = product.quantity;
+                  item.total = product.quantity * product.price;
                 }
 
               });
             } else {
-              this.vender.push(this.localVender);
+              this.vendors.push(this.localVendor);
             }
           }
         });
 
   }
 
-  onBackVender(): Observable<Vendor[]> {
+  onBackVendor(): Observable<Vendor[]> {
     return new Observable((observer) => {
-      if (this.vender != null) {
-        observer.next(this.vender),
+      if (this.vendors != null) {
+        observer.next(this.vendors),
           observer.complete();
       } else {
-        console.log('Vender is empty!');
+        console.log('vendor is empty!');
       }
     });
   }

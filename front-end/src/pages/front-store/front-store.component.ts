@@ -33,33 +33,37 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
           this.sellProducts = data,
             this.loading = false;
         },
-        () => this.snackBar.open('Sorry, occurred an error, try later', '', {
-          duration: 3000,
-        })
+        () => this.snackBar.open('Sorry, occurred an error, try later', null, { duration: 3000 })
       );
 
   }
 
   ngOnDestroy(): void {
-    this.productService.onBackVender().subscribe().unsubscribe();
+    this.productService.onBackVendor().subscribe().unsubscribe();
   }
 
-  addAmount(product: Product) {
-    this.productService.changeQuantity(product);
+  addAmount(product: Product)  {
+      if (isNaN(product.quantity)) {
+       product.quantity = 0;
+       this.productService.changeQuantity(product);
+       return;
+      } else {
+        this.productService.changeQuantity(product);
+        return;
+      }
+
   }
 
   onClean(product: Product) {
-    this.productService.onCleanQuantity(product).subscribe((p) => {
+    this.productService.onCleanList(product).subscribe((p) => {
       if (p.quantity === 0) {
-        this.snackBar.open('The quantity is 0 already!', '', {
-          duration: 3000,
-        });
+        this.snackBar.open('The quantity is 0 already!', null, { duration: 3000 });
       }
     });
   }
 
   openDialog(): void {
-    this.productService.onBackVender().subscribe((vendor: Vendor[]) => {
+    this.productService.onBackVendor().subscribe((vendor: Vendor[]) => {
       vendor.map((p) => {
         if (p.amount !== 0) {
           this.data.push(p);
@@ -67,16 +71,11 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
       });
     });
     if (this.data.some(e => e.amount !== 0)) {
-      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        this.dialog.open(ConfirmationDialogComponent, {
         data: this.data
       });
-      dialogRef.afterClosed().subscribe(() => {
-        this.data.pop();
-      });
     } else {
-      this.snackBar.open('Sorry, you have to select a product!', '', {
-        duration: 3000,
-      });
+      this.snackBar.open('Sorry, you have to select a product!', null, { duration: 3000 });
     }
   }
 

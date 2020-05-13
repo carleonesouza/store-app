@@ -42,7 +42,7 @@ export class BillDataSource extends DataSource<BillMethod> {
     return merge(...displayDataChanges).pipe(map(() => {
       // Filter data
       this.filtertingData = this._exampleDatabase.dataMethod.slice().filter((bill: BillMethod) => {
-        const searchStr = (bill.paymentMethod);
+        const searchStr = (bill.payMethod);
         return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
       });
 
@@ -71,7 +71,7 @@ export class BillDataSource extends DataSource<BillMethod> {
 
       switch (this._sort.active) {
         case '_id': [propertyA, propertyB] = [a.id, b.id]; break;
-        case 'paymentMethod': [propertyA, propertyB] = [a.paymentMethod, b.paymentMethod]; break;
+        case 'payMethod': [propertyA, propertyB] = [a.payMethod, b.payMethod]; break;
         case 'billValue': [propertyA, propertyB] = [a.billValue, b.billValue]; break;
       }
 

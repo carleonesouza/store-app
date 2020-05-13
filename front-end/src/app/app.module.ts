@@ -39,6 +39,7 @@ import { BillDialogComponent } from 'src/pages/dialogs/bill-dialog/bill-dialog.c
 import { WalletDialogComponent } from 'src/pages/dialogs/wallet-dialog/wallet-dialog.component';
 import { UserService } from 'src/services/user.service';
 import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier-dialog.component';
+import { DinamicTableComponent } from '../pages/dinamic-table/dinamic-table.component';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/clo
         WalletDialogComponent,
         NotFoundComponent,
         DatepickerComponent,
+        DinamicTableComponent,
 
 
     ],

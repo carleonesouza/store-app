@@ -7,6 +7,7 @@ export class Vendor {
     name?: string;
     productId: string;
     amount = 0;
+    quantity: number;
     total = 0;
     createdAt?: Date;
 
@@ -19,6 +20,7 @@ export class Vendor {
         this.amount = obj.amount;
         this.total = obj.total;
         this.createdAt = obj.createdAt;
+        this.quantity = parseInt('', obj.quantity) || 0;
 
       }
 
