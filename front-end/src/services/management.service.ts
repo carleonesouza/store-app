@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { HandleError } from './handleError';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { BagVenders } from 'src/models/bag-venders';

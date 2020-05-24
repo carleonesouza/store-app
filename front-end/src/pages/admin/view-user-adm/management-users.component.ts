@@ -1,7 +1,10 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
-import { MatPaginator, MatSnackBar, MatDialog, MatSort } from '@angular/material';
-import { fromEvent } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { fromEvent, from } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 

@@ -1,10 +1,12 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import {  MatSnackBar } from '@angular/material/snack-bar';
 import { ProductService } from '.././../services/product.service';
 import { Product } from 'src/models/product.model';
 import { Quantity } from 'src/models/quantity.model';
 import { ConfirmationDialogComponent } from '../dialogs/confirmation/confirmation-dialog.component';
 import { Vendor } from 'src/models/vendor.model';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'front-store',

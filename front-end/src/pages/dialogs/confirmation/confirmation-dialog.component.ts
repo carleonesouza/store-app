@@ -1,12 +1,13 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { ProductService } from '../../../services/product.service';
-import { MatSnackBar, MatTableDataSource } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { Vendor } from 'src/models/vendor.model';
 import { BillDialogComponent } from '../bill-dialog/bill-dialog.component';
 import { VendorService } from 'src/services/vendor.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, from } from 'rxjs';
 
 @Component({
     selector: 'confirmation.dialog',

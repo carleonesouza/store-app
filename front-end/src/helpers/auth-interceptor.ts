@@ -6,7 +6,7 @@ import {
 import { throwError, Observable, BehaviorSubject, of } from 'rxjs';
 import { catchError, filter, take, switchMap, finalize } from 'rxjs/operators';
 import { AuthService } from 'src/services/auth.service';
-import { error } from 'util';
+
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -28,7 +28,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request);
   } else {
     return throwError(
-      console.log(error));
+      console.log());
   }
 
     }

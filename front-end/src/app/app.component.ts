@@ -4,16 +4,19 @@ import { Component,
     ChangeDetectionStrategy,
     ChangeDetectorRef
 } from '@angular/core';
-import { MatMenu, MatSnackBar, MatSidenav, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenu } from '@angular/material/menu';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import * as _moment from 'moment';
 
-const moment =  _moment;
 
 import { AuthService } from '../services/auth.service';
 import { StoreAppService } from '../services/store-app.service';
 import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier-dialog.component';
 import { VendorService } from 'src/services/vendor.service';
+import { from } from 'rxjs';
 
 
 @Component({

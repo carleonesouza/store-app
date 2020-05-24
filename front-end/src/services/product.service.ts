@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material';
-import { Quantity } from 'src/models/quantity.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Vendor } from 'src/models/vendor.model';
 import { environment } from 'src/environments/environment';
 

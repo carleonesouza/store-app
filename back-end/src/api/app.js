@@ -15,7 +15,7 @@ app.options('*', cors());
 app.use((req, res, next) => {
   req.trackId = req.id;
   res.header('Content-Type', 'application/vnd.api+json');
-  res.header('Access-Control-Allow-Origin', 'http://localhost:4200'); 
+  res.header('Access-Control-Allow-Origin', '*'); 
 
 
   if (req.method == 'OPTIONS') {

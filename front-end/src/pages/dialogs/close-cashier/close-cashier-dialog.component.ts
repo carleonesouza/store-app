@@ -10,7 +10,7 @@ import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/
 // the `default as` syntax.
 import * as _moment from 'moment';
 import { User } from 'src/models/user.model';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'src/services/user.service';
 import { Wallet } from 'src/models/wallet.model';
 import { VendorService } from 'src/services/vendor.service';

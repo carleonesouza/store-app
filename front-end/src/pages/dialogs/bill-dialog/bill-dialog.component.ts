@@ -4,7 +4,7 @@ import { ProductService } from '../../../services/product.service';
 import { Vendor } from '../../../models/vendor.model';
 import { Product } from '../../../models/product.model';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CurrencyPipe } from '@angular/common';
 import { BillMethod } from 'src/models/bill-method';
 import { VendorService } from 'src/services/vendor.service';

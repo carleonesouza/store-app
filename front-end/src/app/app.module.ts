@@ -1,12 +1,13 @@
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreAppMaterialModule} from '../store-app-material-module';
-import { MAT_DIALOG_DEFAULT_OPTIONS, MatNativeDateModule, MatIconRegistry, MAT_DIALOG_DATA } from '@angular/material';
+import { MatIconRegistry } from '@angular/material/icon'
+import { MAT_DIALOG_DEFAULT_OPTIONS, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { SplashComponent } from './splash.component';
@@ -40,6 +41,8 @@ import { WalletDialogComponent } from 'src/pages/dialogs/wallet-dialog/wallet-di
 import { UserService } from 'src/services/user.service';
 import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier-dialog.component';
 import { DinamicTableComponent } from '../pages/dinamic-table/dinamic-table.component';
+import { MatNativeDateModule } from '@angular/material/core';
+
 
 
 @NgModule({

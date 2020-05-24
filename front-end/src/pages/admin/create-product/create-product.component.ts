@@ -9,7 +9,7 @@ import { AddDialogComponent } from '../add/add-dialog.component';
 import { EditDialogComponent } from '../edit/edit-dialog.component';
 import { DeleteDialogComponent } from '../delete/delete-dialog.component';
 import { fromEvent } from 'rxjs';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'create-product',
