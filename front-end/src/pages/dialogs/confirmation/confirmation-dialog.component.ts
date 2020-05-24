@@ -17,27 +17,31 @@ import { Subscription, from } from 'rxjs';
 export class ConfirmationDialogComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['name', 'quantity', 'total', 'actions'];
     loading = true;
+    save = false;
+    localVendors: Array<Vendor>
     dataSource = new MatTableDataSource<Vendor>();
     private subscription: Subscription;
 
     constructor(public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: Vendor[], private vendorService: VendorService,
-                public productService: ProductService, private dialog: MatDialog, private router: Router,
-                public snackBar: MatSnackBar) { }
+        @Inject(MAT_DIALOG_DATA) public data: Vendor[], private vendorService: VendorService,
+        public productService: ProductService, private dialog: MatDialog, private router: Router,
+        public snackBar: MatSnackBar) {
+        this.localVendors = [];
+    }
 
     ngOnInit() {
-      if (this.data != null) {
-          this.dataSource.data = this.data;
-          this.subscription = this.productService.onBackVendor().subscribe();
-          this.dataSource.data.map((vendor) => {
-            this.loading = false;
-            this.productService.getProductById(vendor.productId).subscribe(
-                (base) => {
-                    vendor.name = base.name;
-                }
-            );
-        });
-      }
+        if (this.data != null) {
+            this.dataSource.data = this.data;
+            this.subscription = this.productService.onBackVendor().subscribe();
+            this.dataSource.data.map((vendor) => {
+                this.loading = false;
+                this.productService.getProductById(vendor.productId).subscribe(
+                    (base) => {
+                        vendor.name = base.name;
+                    }
+                );
+            });
+        }
     }
 
     onCancel(): void {
@@ -51,24 +55,28 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
     onConfirmation(): void {
         if (this.data.length !== 0) {
             this.data.map((vendor) => {
-                this.vendorService.onAddVendorsAWallet(vendor);
+                this.vendorService.onAddVendorsAWallet(vendor).subscribe((element) => {
+                    this.localVendors.push(element)
+                    if (this.localVendors.length !== 0) {
+                        this.dialogRef.close();
+                    }
+                })
+                this.save = true;
+            });
 
-                this.dialogRef.close();
-                this.dialogRef.afterClosed().subscribe(() => {
+            this.dialogRef.afterClosed().subscribe(() => {
                 this.dialog.open(BillDialogComponent, {
-                    data: vendor,
+                    data: this.localVendors,
                     disableClose: true,
                 });
-
             });
-        });
         } else {
-            this.snackBar.open('You must confirm just when have a product selected !', null, {duration: 4000});
+            this.snackBar.open('You must confirm just when have a product selected !', null, { duration: 4000 });
             this.dialogRef.close();
         }
-      }
+    }
 
-      onDelete(vendor: Vendor) {
+    onDelete(vendor: Vendor) {
         if (vendor != null) {
             const index = this.dataSource.data.indexOf(vendor);
             this.dataSource.data.splice(index, 1);
@@ -80,7 +88,7 @@ export class ConfirmationDialogComponent implements OnInit, OnDestroy {
 
         }
 
-      }
+    }
 
 
 }

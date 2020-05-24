@@ -51,7 +51,7 @@ exports.getAWalletWithBills = async (req, res) => {
 
 }
 
-// To add a vendorID on a current wallet
+// To Save and add a vendorID on a current wallet
 exports.addAVendorAWallet = async (req, res) => {
   await Wallet.findOne({ _id: req.body.walletId },
     (err, wallet) => {
@@ -68,8 +68,8 @@ exports.addAVendorAWallet = async (req, res) => {
         });
     });
 }
-
-exports.addAVendorABill = async (req, res) => {
+// To Save and Add a billMethod on a current wallet
+exports.addABillAWallet = async (req, res) => {
   await Wallet.findOne({ _id: req.body.walletId },
     (err, wallet) => {
       if (err) return err;

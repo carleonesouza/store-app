@@ -125,7 +125,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
     this.dataSour.setErrorHandler((err) => {
         this.errored = true;
-        this.snackBar.open('Failed to load promo codes!', 'RETRY', { duration: 5000 })
+        this.snackBar.open('Failed to load wallets!', 'RETRY', { duration: 5000 })
             .onAction().subscribe(() => {
                 this.loadPage();
             });

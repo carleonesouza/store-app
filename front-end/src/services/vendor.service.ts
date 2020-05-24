@@ -105,23 +105,8 @@ export class VendorService {
   }
 
   getVendors() {
-    this.httpClient.get<Vendor[]>(environment.server + '/vendors', this.httpOptions)
-      .subscribe((data) => {
-        data.map((v) => {
-          if (this.localBag.length === 0) {
-            this.localBag.push(v);
-          } else if (this.localBag.some(e => e.productId === v.productId)) {
-            this.localBag.filter((lb) => {
-              if (lb.productId === v.productId) {
-                lb.amount = lb.amount + v.amount;
-                lb.total = lb.total + v.total;
-              }
-            });
-          } else {
-            this.localBag.push(v);
-          }
-       });
-      });
+   this.httpClient.get<Vendor[]>(environment.server + '/vendors', this.httpOptions)
+    .pipe();
   }
 
   // To Get a list of Methods from backend
@@ -206,8 +191,12 @@ export class VendorService {
     .pipe();
   }
 
-  onAddVendorsAWallet(vendor: Vendor) {
-
+  onAddVendorsAWallet(vendor: Vendor): Observable<Vendor> {
+    if (localStorage.getItem('walletId') !== null) {
+    return this.httpClient.post<Vendor>(environment.server + `/wallet/add/vendor`, {vendor, walletId: localStorage.getItem('walletId')}
+     , this.httpOptions)
+      .pipe()
+    }
   }
 
 
@@ -222,7 +211,7 @@ export class VendorService {
       });
   }
 
-  addBillOnWallet(bill: BillMethod) {
+  addBillAWallet(bill: BillMethod) {
     this.onCheckWallets().subscribe((wallets) => {
       wallets.map((wallet) => {
         if (wallet.status && wallet.finishValue === 0) {
@@ -245,18 +234,18 @@ export class VendorService {
 
 
   // Create an local [] of the BillMethod
-  onBillMethod(e: number, f: string, vendorId: string) {
+  onBillMethod(e: number, f: string) {
     this.localBill = new BillMethod();
-    console.log(vendorId);
     if (e !== 0) {
       this.localBill.id = Math.random() + e,
         this.localBill.billValue = e,
-        this.localBill.payMethod = f,
-        this.localBill.vendorId = vendorId;
+        this.localBill.payMethod = f
     }
-    if (this.billGroup.length === 0 && this.localBill !== null) {
+    if (this.billGroup.length === 0 ) {
       this.billGroup.push(this.localBill);
+      console.log(this.billGroup);
     } else if (this.billGroup.some(d => d.id !== this.localBill.id)) {
+      console.log(this.billGroup);
       this.billGroup.push(this.localBill);
     }
   }

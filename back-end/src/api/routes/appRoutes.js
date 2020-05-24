@@ -13,11 +13,11 @@ router.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 router.post('/product/add', productActionApi.createProduct);
 // router.post('/vendor/add', vendorsActionApi.createVendor);
-router.post('/method', billMethodAction.createABill);
+// router.post('/method', billMethodAction.createABill);
 router.post('/create-user', userActionApi.createUser);
 router.post('/wallet/add', walletActionApi.createWallet);
 router.post('/wallet/add/vendor', walletActionApi.addAVendorAWallet);
-router.post('/wallet/add/bill', walletActionApi.addAVendorABill);
+router.post('/wallet/add/bill', walletActionApi.addABillAWallet);
 router.post('/wallets', walletActionApi.findAllWallets);
 router.post('/wallet/:date', walletActionApi.findAWallet);
 router.get('/wallet/bills', walletActionApi.getAWalletWithBills);

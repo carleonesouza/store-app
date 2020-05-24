@@ -105,7 +105,7 @@ export class ProductService {
       );
   }
 
-  // To set Quantity of the product by id
+  // To set Quantity of the product by id locally
   changeQuantity(product: Product): Observable<Product> {
     this.getProductById(product._id)
       .subscribe(

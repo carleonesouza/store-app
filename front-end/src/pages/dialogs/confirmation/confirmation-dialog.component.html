@@ -4,7 +4,7 @@
         <div *ngIf="loading" fxLayoutAlign="center center">
             <mat-spinner color="accent"></mat-spinner>
         </div>
-        <table mat-table [dataSource]="dataSource" *ngIf="!loading" [attr.id]="data._id"  class="mat-elevation-z2">
+        <table mat-table [dataSource]="dataSource" *ngIf="!loading && !save" [attr.id]="data._id"  class="mat-elevation-z2">
             <!-- Name Column -->
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -32,10 +32,14 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <div class="item-buttons">
+        <div *ngIf="!save" class="item-buttons">
             <button mat-button class="style-button" (click)="onConfirmation()">Confirm</button>
             <span class="spacer"></span>
             <button mat-button class="style-button" (click)="onCancel()">Cancel</button>
         </div>
     </mat-dialog-content>
 </div>
+<div *ngIf="save" class="container" fxLayout="column" fxLayoutAlign="space-evenly center">
+    <mat-spinner></mat-spinner>
+</div>
+

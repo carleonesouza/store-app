@@ -1,42 +1,3 @@
-<!-- <div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
-  <div class="card-header">Finish Purchase </div>
-  <mat-dialog-content [formGroup]="venderForm" (ngSubmit)="onSubmit()">
-    <div class="item">
-      <mat-form-field appearance="outline">
-        <mat-label>Amount</mat-label>
-        <input matInput placeholder="Amount" type="number" formControlName="formAmount">
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Purchase Total</mat-label>
-        <input matInput placeholder="Value" type="text" formControlName="formTotal">
-      </mat-form-field>
-    </div>
-    <div class="item-4">
-      <mat-form-field appearance="legacy">
-        <mat-label>Type a value of payment</mat-label>
-        <input matInput placeholder="Value" type="number" formControlName="formSold">
-        <mat-error *ngIf="f.formSold.errors">Please, type a valid value or number</mat-error>
-      </mat-form-field>
-    </div> 
-    <div class="item-4">
-      <mat-form-field appearance="outline">
-        <mat-label>Payable Total</mat-label>
-        <input matInput placeholder="Total" type="text" formControlName="formPayable">
-      </mat-form-field>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="end center" >  
-      <button mat-button class="style-button" (click)="onCancel()" tabindex="-1">Cancel</button>     
-      <button mat-button class="style-button"  aria-label="Cash button" [type]="submit" 
-      [disabled]="venderForm.invalid" [mat-dialog-close]="1"  (click)="onSubmit()">Cash</button>  
-      <button mat-button class="style-button" aria-label="Debit button" [type]="submit"
-       [disabled]="venderForm.invalid" [mat-dialog-close]="1"   (click)="onSubmit()">Debit </button>  
-      <button mat-button  class="style-button" aria-label="Credit button" [type]="submit"
-       [disabled]="venderForm.invalid" [mat-dialog-close]="1"  (click)="onSubmit()">Credit </button>
-    </div>
-  </mat-dialog-content>
-
-</div> -->
-
 <div fxLayout="column" fxLayoutAlign="center stretch" class="row">
   <div class="card-header">Finish Purchase </div>
   <mat-dialog-content [formGroup]="venderForm">
@@ -61,8 +22,8 @@
       <mat-form-field appearance="outline">
         <mat-label>Payable Total</mat-label>
         <input matInput placeholder="Total" type="text" formControlName="formPayable">
-          <mat-icon *ngIf="!approval" class="not-approval" matSuffix>close</mat-icon>  
-          <mat-icon *ngIf="approval" class="approval" matSuffix>done</mat-icon>
+        <mat-icon *ngIf="!approval" class="not-approval" matSuffix>close</mat-icon>
+        <mat-icon *ngIf="approval" class="approval" matSuffix>done</mat-icon>
       </mat-form-field>
     </div>
   </mat-dialog-content>
@@ -70,9 +31,9 @@
 <div fxLayout="row" fxLayoutAlign="end center">
   <button mat-button class="style-button" (click)="onCancel()" tabindex="-1">Cancel</button>
   <button mat-button class="style-button" aria-label="Cash button" [disabled]="venderForm.invalid"
-     (click)="onSubmit('Cash')">Cash</button>
-  <button mat-button class="style-button" aria-label="Debit button"  [disabled]="venderForm.invalid"
-     (click)="onSubmit('Debit')">Debit </button>
-  <button mat-button class="style-button" aria-label="Credit button"  [disabled]="venderForm.invalid"
-     (click)="onSubmit('Credit')">Credit </button>
+    (click)="onSubmit('Cash')">Cash</button>
+  <button mat-button class="style-button" aria-label="Debit button" [disabled]="venderForm.invalid"
+    (click)="onSubmit('Debit')">Debit </button>
+  <button mat-button class="style-button" aria-label="Credit button" [disabled]="venderForm.invalid"
+    (click)="onSubmit('Credit')">Credit </button>
 </div>

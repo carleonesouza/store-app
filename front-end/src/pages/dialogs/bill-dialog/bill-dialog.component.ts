@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./bill-dialog.component.scss'],
   providers: [CurrencyPipe]
 })
-export class BillDialogComponent implements OnInit, OnDestroy {
+export class BillDialogComponent implements OnInit {
   product: Product;
   localData: Vendor[];
   amount = 0;
@@ -37,14 +37,13 @@ export class BillDialogComponent implements OnInit, OnDestroy {
               public snackBar: MatSnackBar,
               private router: Router,
               private formBuilder: FormBuilder,
-              private currencyPipe: CurrencyPipe) {
+              private currencyPipe: CurrencyPipe)
+              {
     this.onCreateForm();
   }
 
   ngOnInit() {
-    this.data.map((e) => {
-      console.log(e);
-      this.vendorId = e._id;
+   this.data.map((e) => {
       this.amount = e.amount + this.amount;
       this.total = e.total + this.total;
       this.updateTotal = this.currencyPipe.transform(this.total, 'BRL', 'symbol-narrow', '1.2-2');
@@ -59,8 +58,6 @@ export class BillDialogComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy() {
-  }
 
   onCreateForm() {
     this.venderForm = this.formBuilder.group({
@@ -101,7 +98,7 @@ export class BillDialogComponent implements OnInit, OnDestroy {
     if (this.localValue < this.total ) {
       this.dialogRef.disableClose = true;
       this.approval = false;
-      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble, this.vendorId);
+      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble);
       const formValue = this.currencyPipe.transform(this.localValue, 'BRL', 'symbol-narrow', '1.2-2');
       this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
       this.venderForm.get('formSold').reset();
@@ -110,14 +107,14 @@ export class BillDialogComponent implements OnInit, OnDestroy {
 
     if (this.localValue === this.total) {
       this.approval = true;
-      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble, this.vendorId);
+      this.venderService.onBillMethod(this.venderForm.get('formSold').value, typePayble);
       const formValue = this.currencyPipe.transform(this.localValue, 'BRL', 'symbol-narrow', '1.2-2');
       this.venderForm.get('formPayable').patchValue(formValue, { emitEvent: false });
       this.dialogRef.close();
       this.venderService.onGetBillMehthod().subscribe(
         (methods: BillMethod []) => {
            methods.map((method) => {
-             this.venderService.addBillOnWallet(method);
+             this.venderService.addBillAWallet(method);
              this.router.navigate(['/home']);
            }),
           this.dialogRef.disableClose = false;
