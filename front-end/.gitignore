@@ -47,6 +47,9 @@ yarn-error.log
 testem.log
 /typings
 
+#private credentials
+/src/environments/
+
 # System Files
 .DS_Store
 Thumbs.db
