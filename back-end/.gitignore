@@ -22,7 +22,7 @@ speed-measure-plugin*.json
 *.launch
 .settings/
 *.sublime-workspace
-
+baseUtilite.js
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
@@ -41,6 +41,8 @@ yarn-error.log
 testem.log
 /typings
 
+#private credetials
+/baseUtilite.js
 # System Files
 .DS_Store
 Thumbs.db
