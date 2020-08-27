@@ -1,9 +1,20 @@
 <div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
-    <div class="card-header">Add a new Product</div>
-    <ngx-dropzone (change)="onSelect($event)">
-        <ngx-dropzone-label>Drop it, baby!</ngx-dropzone-label>
-        <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
-            <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-        </ngx-dropzone-preview>
-    </ngx-dropzone>
+    <mat-dialog-content>
+        <div class="card-header">Add Images to {{localData.name}}</div>
+        <ngx-dropzone 
+        [accept]="img" 
+        [maxFileSize]="5"
+        (change)="onSelect($event)">
+            <ngx-dropzone-label>Solte A Image Aqui</ngx-dropzone-label>
+            <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f">
+                <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+              </ngx-dropzone-image-preview>
+        </ngx-dropzone>
+        <span class="spacer"></span>
+        <div class="item-buttons">
+            <button mat-button class="style-button">Save</button>
+            <span class="spacer"></span>
+            <button mat-button class="style-button" (click)="onNoClick()">Cancel</button>
+        </div>
+    </mat-dialog-content>
 </div>
