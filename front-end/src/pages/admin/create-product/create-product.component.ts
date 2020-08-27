@@ -10,6 +10,7 @@ import { EditDialogComponent } from '../edit/edit-dialog.component';
 import { DeleteDialogComponent } from '../delete/delete-dialog.component';
 import { fromEvent } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ImagesComponent } from 'src/pages/upload/images/images.component';
 
 @Component({
   selector: 'create-product',
@@ -60,6 +61,26 @@ export class CreateProductComponent implements OnInit {
     // index row is used just for debugging proposes and can be removed
     this.index = i;
     const dialogRef = this.dialog.open(EditDialogComponent, {
+      data: { _id, name, description, price },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        // When using an edit things are little different, firstly we find record inside DataService by id
+        const foundIndex = this.exampleDatabase.dataChange.value.findIndex((x) => x._id === this.id);
+        // Then you update that record using data from dialogData (values you enetered)
+        this.exampleDatabase.dataChange.value[foundIndex] = this.productService.getDialogData();
+        // And lastly refresh table
+        this.refreshTable();
+      }
+    });
+  }
+
+  addImages(i: number, _id: string, name: string, description: string, price: number) {
+    this.id = _id;
+    // index row is used just for debugging proposes and can be removed
+    this.index = i;
+    const dialogRef = this.dialog.open(ImagesComponent, {
       data: { _id, name, description, price },
     });
 

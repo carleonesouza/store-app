@@ -62,7 +62,7 @@ export class DinamicTableComponent implements OnInit {
     });
 
     this.dataSour.setCallback((filter, pageIndex, pageSize) => {
-        return this.StoreApp.fetchGenericDataList('/wallets', filter, pageIndex, pageSize);
+        return this.StoreApp.fetchGenericDataList('/wallets');
     });
 
     this.dataSour.setErrorHandler((err) => {

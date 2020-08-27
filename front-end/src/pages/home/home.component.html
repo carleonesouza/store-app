@@ -2,25 +2,13 @@
   <div id="form-error" *ngIf="!walletOpen" fxLayoutAlign="center center">
     <div id="form-error-content">
       <p>You should open a wallet before sell something!</p>
-      <button
-        mat-raised-button
-        color="primary"
-        class="action-button"
-        (click)="openCashier()"
-      >
+      <button mat-raised-button color="primary" class="action-button" (click)="openCashier()">
         OPEN CASHIER
       </button>
     </div>
   </div>
   <span class="spacer"></span>
-  <div
-    class="container"
-    fxLayout
-    fxLayout.xs="column"
-    fxLayoutAlign="center"
-    fxLayoutGap="10px"
-    fxLayoutGap.xs="0"
-  >
+  <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
     <div class="item item-3" fxFlex>
       <mat-card>
         <mat-card-header>
@@ -29,18 +17,9 @@
         </mat-card-header>
         <mat-card-content class="card-inside" [formGroup]="cashierForm">
           <mat-form-field>
-            <input
-              matInput
-              [matDatepicker]="picker1"
-              placeholder="Date Chooser"
-              formControlName="dateNow"
-              (dateInput)="addEvent($event)"
-              (dateChange)="addEvent($event)"
-            />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker1"
-            ></mat-datepicker-toggle>
+            <input matInput [matDatepicker]="picker1" placeholder="Date Chooser" formControlName="dateNow"
+              (dateInput)="addEvent($event)" (dateChange)="addEvent($event)" />
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker touchUi #picker1 disabled="false"></mat-datepicker>
           </mat-form-field>
         </mat-card-content>
@@ -64,16 +43,8 @@
         </mat-card-header>
         <mat-card-content class="card-inside" [formGroup]="reportDayForm">
           <mat-form-field>
-            <input
-              matInput
-              [matDatepicker]="picker2"
-              placeholder="Select the day"
-              formControlName="dateDay"
-            />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker2"
-            ></mat-datepicker-toggle>
+            <input matInput [matDatepicker]="picker2" placeholder="Select the day" formControlName="dateDay" />
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker touchUi #picker2 disabled="false"></mat-datepicker>
           </mat-form-field>
         </mat-card-content>
@@ -106,14 +77,7 @@
     </div>
   </div>
   <span class="spacer"></span>
-  <div
-    class="container"
-    fxLayout
-    fxLayout.xs="column"
-    fxLayoutAlign="center"
-    fxLayoutGap="10px"
-    fxLayoutGap.xs="0"
-  >
+  <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
     <div class="item item-1" fxFlex>
       <mat-card class="example-card">
         <mat-card-header>
@@ -123,24 +87,14 @@
         </mat-card-header>
         <mat-card-content>
           <div>
-            <div>
-              <!--  <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
-                                [legend]="lineChartLegend" [chartType]="lineChartType"></canvas> -->
-            </div>
+            
           </div>
         </mat-card-content>
         <span class="spacer"></span>
       </mat-card>
     </div>
   </div>
-  <div
-    class="container"
-    fxLayout
-    fxLayout.xs="column"
-    fxLayoutAlign="center"
-    fxLayoutGap="10px"
-    fxLayoutGap.xs="0"
-  >
+  <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
     <div class="item item-3" fxFlex>
       <mat-toolbar color="primary">
         <span>List Solds of Products</span>
@@ -157,46 +111,31 @@
 
           <!-- Name Column -->
           <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef mat-sort-header
-              >Name</mat-header-cell
-            >
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
             <mat-cell *matCellDef="let row">{{ row.name }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="quantity">
-            <mat-header-cell *matHeaderCellDef mat-sort-header
-              >Quantity</mat-header-cell
-            >
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</mat-header-cell>
             <mat-cell *matCellDef="let row"> {{ row.amount }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="total">
-            <mat-header-cell *matHeaderCellDef mat-sort-header
-              >Total</mat-header-cell
-            >
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              {{ row.total | currency: "BRL" }}</mat-cell
-            >
+              {{ row.total | currency: "BRL" }}</mat-cell>
           </ng-container>
 
           <span class="example-spacer "></span>
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
         </mat-table>
-        <div
-          class="no-results"
-          [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'"
-        >
+        <div class="no-results" [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'">
           No results
         </div>
 
-        <mat-paginator
-          #paginator
-          [length]="dataSource.filteredData.length"
-          [pageIndex]="0"
-          [pageSize]="5"
-          [pageSizeOptions]="[5, 10, 25, 100]"
-        >
+        <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="5"
+          [pageSizeOptions]="[5, 10, 25, 100]">
         </mat-paginator>
       </div>
 
@@ -204,14 +143,7 @@
     </div>
   </div>
   <span class="spacer"></span>
-  <div
-    class="container"
-    fxLayout
-    fxLayout.xs="column"
-    fxLayoutAlign="center"
-    fxLayoutGap="10px"
-    fxLayoutGap.xs="0"
-  >
+  <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
     <div class="item item-3" fxFlex>
       <mat-toolbar color="primary">
         <span>Method of payment</span>
@@ -228,39 +160,26 @@
 
           <!-- ID Column -->
           <ng-container matColumnDef="method">
-            <mat-header-cell *matHeaderCellDef mat-sort-header
-              >Method</mat-header-cell
-            >
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Method</mat-header-cell>
             <mat-cell *matCellDef="let row">{{ row.paymentMethod }}</mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="value">
-            <mat-header-cell *matHeaderCellDef mat-sort-header
-              >Value</mat-header-cell
-            >
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Value</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              {{ row.billValue | currency: "BRL" }}</mat-cell
-            >
+              {{ row.billValue | currency: "BRL" }}</mat-cell>
           </ng-container>
 
           <span class="example-spacer "></span>
           <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns2"></mat-row>
         </mat-table>
-        <div
-          class="no-results"
-          [style.display]="dataMethod.renderedData.length == 0 ? '' : 'none'"
-        >
+        <div class="no-results" [style.display]="dataMethod.renderedData.length == 0 ? '' : 'none'">
           No results
         </div>
 
-        <mat-paginator
-          #paginator2
-          [length]="dataMethod.filtertingData.length"
-          [pageIndex]="0"
-          [pageSize]="5"
-          [pageSizeOptions]="[5, 10, 25, 100]"
-        >
+        <mat-paginator #paginator2 [length]="dataMethod.filtertingData.length" [pageIndex]="0" [pageSize]="5"
+          [pageSizeOptions]="[5, 10, 25, 100]">
         </mat-paginator>
       </div>
 
@@ -268,14 +187,7 @@
     </div>
   </div>
   <span class="spacer"></span>
-  <div
-    class="container"
-    fxLayout
-    fxLayout.xs="column"
-    fxLayoutAlign="center"
-    fxLayoutGap="10px"
-    fxLayoutGap.xs="0"
-  >
+  <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
     <div class="item item-3" fxFlex>
       <mat-card class="example-card">
         <mat-card-header>
@@ -293,85 +205,65 @@
     </div>
   </div>
   <span class="spacer"></span>
-</div>
 
-<div
-  class="container"
-  fxLayout
-  fxLayout.xs="column"
-  fxLayoutAlign="center"
-  fxLayoutGap="10px"
-  fxLayoutGap.xs="0"
->
-  <div class="item item-3" fxFlex>
-    <mat-toolbar color="primary">
-      <span>Cashier</span>
-      <span class="spacer"></span>
-      <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
-        <mat-icon>refresh</mat-icon>
-      </button>
-    </mat-toolbar>
+  <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+    <div class="item item-3" fxFlex>
+      <mat-toolbar color="primary">
+        <span>Cashier</span>
+        <span class="spacer"></span>
+        <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </mat-toolbar>
 
-    <div class="container mat-elevation-z8">
-      <mat-table [dataSource]="dataSour">
-        <ng-container matColumnDef="date">
-          <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
-          <mat-cell *matCellDef="let wallet">{{
+      <div class="container mat-elevation-z8">
+        <mat-table [dataSource]="dataSour">
+          <ng-container matColumnDef="date">
+            <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+            <mat-cell *matCellDef="let wallet">{{
             wallet.createdAt | date: "dd/MM/yyyy"
           }}</mat-cell>
-        </ng-container>
+          </ng-container>
 
-        <ng-container matColumnDef="open">
-          <mat-header-cell *matHeaderCellDef class="ham"
-            >Open Value</mat-header-cell
-          >
-          <mat-cell class="role-cell" *matCellDef="let wallet">{{
+          <ng-container matColumnDef="open">
+            <mat-header-cell *matHeaderCellDef class="ham">Open Value</mat-header-cell>
+            <mat-cell class="role-cell" *matCellDef="let wallet">{{
             wallet.openValue | currency: "BRL"
           }}</mat-cell>
-        </ng-container>
+          </ng-container>
 
-        <ng-container matColumnDef="close">
-          <mat-header-cell *matHeaderCellDef>Final Value</mat-header-cell>
-          <mat-cell class="user-cell" *matCellDef="let wallet">{{
+          <ng-container matColumnDef="close">
+            <mat-header-cell *matHeaderCellDef>Final Value</mat-header-cell>
+            <mat-cell class="user-cell" *matCellDef="let wallet">{{
             wallet.finishValue | currency: "BRL"
           }}</mat-cell>
-        </ng-container>
+          </ng-container>
 
-        <ng-container matColumnDef="total">
+          <ng-container matColumnDef="total">
             <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
             <mat-cell class="user-cell" *matCellDef="let wallet">{{
               total | currency: 'BRL'
             }}</mat-cell>
           </ng-container>
 
-        <mat-header-row
-          *matHeaderRowDef="displayedColumnsWallet"
-        ></mat-header-row>
-        <mat-row
-          class="row-clickable"
-          *matRowDef="let row; columns: displayedColumnsWallet"
-        ></mat-row>
-      </mat-table>
+          <mat-header-row *matHeaderRowDef="displayedColumnsWallet"></mat-header-row>
+          <mat-row class="row-clickable" *matRowDef="let row; columns: displayedColumnsWallet"></mat-row>
+        </mat-table>
 
-      <div class="imitate-row" *ngIf="dataSour?.empty">
-        There are no results.
-      </div>
-      <div class="imitate-row" *ngIf="dataSour.loading$ | async">
-        Please wait...
-      </div>
-      <div class="imitate-row" *ngIf="errored">
-        Failed to load data. <a (click)="loadPromoCodesPage()">Retry?</a>
-      </div>
+        <div class="imitate-row" *ngIf="dataSour?.empty">
+          There are no results.
+        </div>
+        <div class="imitate-row" *ngIf="dataSour.loading$ | async">
+          Please wait...
+        </div>
+        <div class="imitate-row" *ngIf="errored">
+          Failed to load data. <a (click)="loadPromoCodesPage()">Retry?</a>
+        </div>
 
-      <mat-paginator
-        [length]="dataSour?.count"
-        [pageSize]="25"
-        [pageSizeOptions]="[10, 25, 50, 75, 100]"
-        [hidePageSize]="dataSour.loading$ | async"
-        [showFirstLastButtons]="!dataSour.loading$ | async"
-      ></mat-paginator>
+        <mat-paginator [length]="dataSour?.count" [pageSize]="25" [pageSizeOptions]="[10, 25, 50, 75, 100]"
+          [hidePageSize]="dataSour.loading$ | async" [showFirstLastButtons]="!dataSour.loading$ | async">
+        </mat-paginator>
+      </div>
     </div>
   </div>
 </div>
-
-<dinamic-table></dinamic-table>

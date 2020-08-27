@@ -46,15 +46,9 @@ export class StoreAppService {
         );
     }
 
-    fetchGenericDataList(method, filter = null, pageNumber = null, pageSize = null): Observable<any> {
+    fetchGenericDataList(method): Observable<any> {
         return this.http.post(
-            environment.server + method,
-            {
-                filter,
-                pageNumber,
-                pageSize
-            },
-            this.httpOptions
+            environment.server + method, this.httpOptions
         );
     }
 

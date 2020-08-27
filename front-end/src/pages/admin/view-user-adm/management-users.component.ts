@@ -33,7 +33,7 @@ export class ManagementUsersComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.dataSource = new GenericDataSource();
         this.dataSource.setCallback((filter, pageIndex, pageSize) => {
-            return this.StoreApp.fetchGenericDataList('/users', filter, pageIndex, pageSize);
+            return this.StoreApp.fetchGenericDataList('/wallets');
         });
 
 

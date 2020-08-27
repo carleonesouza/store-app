@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, AfterContentInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterContentInit, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -26,7 +26,6 @@ import { User } from 'src/models/user.model';
 import { Wallet } from 'src/models/wallet.model';
 import { GenericDataSource } from 'src/datasources/generic-datasource';
 import { StoreAppService } from 'src/services/store-app.service';
-import { from } from 'rxjs';
 
 
 
@@ -76,6 +75,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
   walletOpen = false;
   total = 0;
   today = new Date().toLocaleDateString();
+  payLoad = '';
   @Input() reportDayForm: FormGroup;
   @Input() cashierForm: FormGroup;
   @Input() dateValue: string;
@@ -105,6 +105,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
     } else {
       this.loading = true;
     }
+
     this.onCheckWallet();
 
     this.reportDayForm = this.formBuilder.group({
@@ -120,7 +121,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
     this.dataSour = new GenericDataSource();
     this.dataSour.setCallback((filter, pageIndex, pageSize) => {
-        return this.StoreApp.fetchGenericDataList('/wallets', filter, pageIndex, pageSize);
+        return this.StoreApp.fetchGenericDataList('/wallets');
     });
 
     this.dataSour.setErrorHandler((err) => {
@@ -134,6 +135,7 @@ export class HomeComponent implements OnInit, AfterContentInit {
     this.dataSour.loadData('', 0, 25);
 
   }
+
 
   ngAfterContentInit() {
     this.loadData();

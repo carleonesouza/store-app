@@ -22,6 +22,7 @@
       <mat-error *ngIf="priceProduct.errors">Please, type a valid price</mat-error>
     </mat-form-field>
   </div>
+
   <div class="item-buttons">
     <button mat-button class="style-button" [disabled]="!productForm.valid" [mat-dialog-close]="1"
       (click)="onSubmit()">Save</button>
