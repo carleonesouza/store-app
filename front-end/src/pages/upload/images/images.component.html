@@ -2,13 +2,12 @@
     <mat-dialog-content>
         <div class="card-header">Add Images to {{localData.name}}</div>
         <ngx-dropzone 
-        [accept]="img" 
-        [maxFileSize]="5"
+        [accept]="'image/*'" 
         (change)="onSelect($event)">
             <ngx-dropzone-label>Solte A Image Aqui</ngx-dropzone-label>
-            <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f">
+            <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f" [removable]="true" (removed)="onRemove(f)">
                 <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-              </ngx-dropzone-image-preview>
+            </ngx-dropzone-image-preview>
         </ngx-dropzone>
         <span class="spacer"></span>
         <div class="item-buttons">

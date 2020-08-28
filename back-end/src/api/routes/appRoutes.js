@@ -20,6 +20,7 @@ router.post('/wallet/add/vendor', walletActionApi.addAVendorAWallet);
 router.post('/wallet/add/bill', walletActionApi.addABillAWallet);
 router.post('/wallets', walletActionApi.findAllWallets);
 router.post('/wallet/:date', walletActionApi.findAWallet);
+
 router.get('/wallet/bills', walletActionApi.getAWalletWithBills);
 router.get('/wallet/:id', walletActionApi.findAWallet);
 router.get('/wallet/user/:userId', walletActionApi.findAWalletByUserId);
