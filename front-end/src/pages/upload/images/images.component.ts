@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Product } from 'src/models/product.model';
 import { ProductService } from 'src/services/product.service';
@@ -14,29 +14,54 @@ export class ImagesComponent implements OnInit {
   action: string;
   localData: any;
   files: File[] = [];
-  @Input() productForm: FormGroup;
+  @Input() productImageForm: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<ImagesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Product,
     public productService: ProductService,
-    public snackBar: MatSnackBar) { }
+    public snackBar: MatSnackBar,  private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.localData = this.data;
+    if (this.data!== null){
+      this.productImageForm = this.formBuilder.group({
+        productId: [this.data._id],
+        productPhotos: ['', Validators.required],
+      });
+    }
+  }
+
+  get productId() {
+    return this.productImageForm.get('productId');
+  }
+
+  get productPhotos() {
+    return this.productImageForm.get('productPhotos');
   }
 
   onSelect(event) {
-    console.log(event);
-    this.files.push(...event.addedFiles);
+    this.files.push(...event.addedFiles)
+    this.productImageForm.patchValue({
+      productPhotos: this.files
+    });
   }
 
   onRemove(event) {
-    console.log(event);
     this.files.splice(this.files.indexOf(event), 1);
   }
 
-  onNoClick(): void {
+  onCancel(): void {
     this.dialogRef.close();
+  }
+
+  onSubmit() {
+    if (this.productImageForm.valid.valueOf()) {
+      console.log(this.productImageForm);
+      this.dialogRef.close();
+    } else {
+      this.dialogRef.close();
+      this.snackBar.open('The form is empty, please fill it!!', '', { duration: 3000 });
+    }
   }
 
 }

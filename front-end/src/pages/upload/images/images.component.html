@@ -1,9 +1,8 @@
 <div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
-    <mat-dialog-content>
+    <mat-dialog-content [formGroup]="productImageForm">
         <div class="card-header">Add Images to {{localData.name}}</div>
         <ngx-dropzone 
-        [accept]="'image/*'" 
-        (change)="onSelect($event)">
+        [accept]="'image/*'" (change)="onSelect($event)" >
             <ngx-dropzone-label>Solte A Image Aqui</ngx-dropzone-label>
             <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f" [removable]="true" (removed)="onRemove(f)">
                 <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
@@ -11,9 +10,9 @@
         </ngx-dropzone>
         <span class="spacer"></span>
         <div class="item-buttons">
-            <button mat-button class="style-button">Save</button>
+            <button mat-button class="style-button" [disabled]="!productImageForm.valid"  (click)="onSubmit()">Save</button>
             <span class="spacer"></span>
-            <button mat-button class="style-button" (click)="onNoClick()">Cancel</button>
+            <button mat-button class="style-button" (click)="onCancel()">Cancel</button>
         </div>
     </mat-dialog-content>
 </div>
