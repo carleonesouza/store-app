@@ -4,11 +4,9 @@ import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../models/product.model';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { StoreAppService } from 'src/services/store-app.service';
+import { Category } from 'src/models/category';
 
-interface Food {
-  value: string;
-  viewValue: string;
-}
 
 @Component({
   selector: 'add-dialog',
@@ -18,20 +16,29 @@ interface Food {
 export class AddDialogComponent implements OnInit {
   action: string;
   localData: any;
+  categories: Category[];
   @Input() productForm: FormGroup;
 
-  foods: Food[] = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'}
-  ];
+
   constructor(public dialogRef: MatDialogRef<AddDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Product,
-              public productService: ProductService,
+              private productService: ProductService,
+              private storeAppService: StoreAppService,
               public snackBar: MatSnackBar,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder) {
+                this.categories= [];
+              }
 
               ngOnInit() {
+
+                this.storeAppService.getGenericAction('/categories').subscribe(
+                  (categories) => {
+                     categories.map(
+                        (category: Category )=> {
+                            this.categories.push(category);
+                    });
+                });
+
                 this.productForm = this.formBuilder.group({
                   nameProduct: ['', [Validators.required, Validators.minLength(3)]],
                   descriptionProduct: ['', [Validators.required, Validators.minLength(3)]],
@@ -66,14 +73,15 @@ export class AddDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    const price = Number.parseInt(this.productForm.value.priceProduct,2);
+    const price = Number.parseInt(this.productForm.value.priceProduct);
 
     if (isNaN(price)) { return 0; }
 
     if (this.productForm.valid.valueOf() && price >= 0) {
       const name = this.productForm.value.nameProduct;
       const description = this.productForm.value.descriptionProduct;
-      const saveProduct = { name, price, description };
+      const categoryId = this.productForm.value.productCategory;
+      const saveProduct = { name, price, description, categoryId};
       this.productService.addProduct(new Product(saveProduct));
       this.dialogRef.close();
     } else {

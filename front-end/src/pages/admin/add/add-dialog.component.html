@@ -27,12 +27,11 @@
       <mat-form-field appearance="fill">
         <mat-label>Categories</mat-label>
         <mat-select formControlName="productCategory">
-          <mat-option *ngFor="let food of foods" [value]="food.value" >
-            {{food.viewValue}}
+          <mat-option *ngFor="let category of categories" [value]="category._id" >
+            {{category.name}}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="productCategory.errors">Please choose a Category</mat-error>
-        <mat-hint>{{productForm.value?.productCategory}}</mat-hint>
       </mat-form-field>
 
     </div>

@@ -14,11 +14,12 @@ import { AddDialogComponent } from './add/add-dialog.component';
 import { EditDialogComponent } from './edit/edit-dialog.component';
 import { DeleteDialogComponent } from './delete/delete-dialog.component';
 
-import { CreateProductComponent } from './create-product/create-product.component';
+import { DashboardAdmComponent } from '../admin/dashboard-adm/dashboard-adm.component'
 import { ManagementUsersComponent } from './view-user-adm/management-users.component';
 import { ImagesComponent } from '../upload/images/images.component';
 import { ManagementUsersViewEditComponent } from './view-user-adm/view-edit/management-users-view-edit.component';
 import { CategoryComponent } from './category/category.component';
+import { ListComponent } from './list/list.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     align: 'right',
@@ -35,11 +36,12 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
         AddDialogComponent,
         EditDialogComponent,
         DeleteDialogComponent,
-        CreateProductComponent,
+        DashboardAdmComponent,
         ManagementUsersComponent,
         ManagementUsersViewEditComponent,
         ImagesComponent,
         CategoryComponent,
+        ListComponent,
     ],
 
     imports: [
@@ -65,13 +67,14 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
         EditDialogComponent,
         ManagementUsersViewEditComponent,
         DeleteDialogComponent,
-        CreateProductComponent,
+        DashboardAdmComponent,
         ImagesComponent
     ]
 })
 export class AdminModule {
     static ROUTES: Routes = [
-        { path: 'product', component: CreateProductComponent},
+        { path: 'dashboard-adm', component: DashboardAdmComponent},
+        { path: 'list', component: ListComponent},
         { path: 'management-users', component: ManagementUsersComponent}
     ];
 }

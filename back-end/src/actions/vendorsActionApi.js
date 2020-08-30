@@ -15,6 +15,12 @@ exports.createCategory = async (req, res) => {
   res.status(201).send({ message: 'The category has been created successfully !', createCategory });
 };
 
+
+exports.findAllCategories = async (req, res) => {
+  const categories = await Category.find({});
+  res.status(200).send(categories);
+};
+
 // To list all Venders
 exports.findAllBags = async (req, res) => {
   const venders = await BagVendors.find({});

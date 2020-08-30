@@ -58,7 +58,7 @@ export class ProductService {
 
   // Get a specific Product from the Store
   getProductById(id: string): Observable<Product> {
-    return this.httpClient.get<Product>(`${environment.server}/product/${id}`, this.httpOptions)
+    return this.httpClient.get<Product>(`${environment.server}/products/${id}`, this.httpOptions)
       .pipe();
   }
 
@@ -70,7 +70,7 @@ export class ProductService {
 
   // To add a new Product
   addProduct(product: Product): void {
-    this.httpClient.post(environment.server + '/product/add', product, this.httpOptions).subscribe(() => {
+    this.httpClient.post(environment.server + '/products/add', product, this.httpOptions).subscribe(() => {
       this.dialogData = product;
       this.snackBar.open('The Product was Successifuly created ', '', { duration: 4000 });
     },
@@ -82,7 +82,7 @@ export class ProductService {
 
   // To upadate a Product by id
   updateProduct(product: Product): void {
-    this.httpClient.put(environment.server + '/' + product._id , product, this.httpOptions).subscribe(() => {
+    this.httpClient.put(environment.server + '/products/' + product._id , product, this.httpOptions).subscribe(() => {
       this.dialogData = product;
       this.snackBar.open('The Product was Successifuly updated', '', { duration: 4000 });
     },
@@ -94,7 +94,7 @@ export class ProductService {
 
   // To delete a Product by id
   deleteProduct(product: Product): void {
-    this.httpClient.request('delete', environment.server + '/' + product._id, this.httpOptions )
+    this.httpClient.request('delete', environment.server + '/products/' + product._id, this.httpOptions )
       .subscribe(() => {
         this.snackBar.open('The Product was Successifuly deleted', '', { duration: 4000 });
       },

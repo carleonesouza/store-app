@@ -47,7 +47,6 @@ import { ManagementService } from '../services/management.service';
 
 
 
-
 @NgModule({
     declarations: [
         SplashComponent,
@@ -63,7 +62,6 @@ import { ManagementService } from '../services/management.service';
         DatepickerComponent,
         DinamicTableComponent,
         CustomDirectiveDirective,
-
 
     ],
 

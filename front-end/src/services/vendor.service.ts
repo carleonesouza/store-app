@@ -143,7 +143,7 @@ export class VendorService {
   }
 
   onCreateWallet(wallet: Wallet) {
-    this.httpClient.post(environment.server + '/wallet/add', wallet, this.httpOptions).subscribe(() => {
+    this.httpClient.post(environment.server + '/wallets/add', wallet, this.httpOptions).subscribe(() => {
       this.snackBar.open('The Wallet was Successifuly created ', '', { duration: 4000 });
       return;
     },
@@ -164,12 +164,12 @@ export class VendorService {
   }
 
   getAWallet(wallet: Wallet): Observable <Wallet> {
-    return this.httpClient.get<Wallet>(environment.server + `/wallet/${wallet._id}`, this.httpOptions)
+    return this.httpClient.get<Wallet>(environment.server + `/wallets/${wallet._id}`, this.httpOptions)
     .pipe();
   }
 
   getAWalletVendor(wallet: Wallet) {
-    return this.httpClient.get<Wallet>(environment.server + `/wallet/${wallet._id}`, this.httpOptions)
+    return this.httpClient.get<Wallet>(environment.server + `/wallets/${wallet._id}`, this.httpOptions)
     .pipe()
     .subscribe((data: Wallet) => {
       data.vendors.map((v: Vendor) => {
@@ -191,13 +191,13 @@ export class VendorService {
   }
 
   getAWalletByDate(consult: any): Observable <Wallet> {
-    return this.httpClient.post<Wallet>(environment.server + `/wallet/${consult}`, this.httpOptions)
+    return this.httpClient.post<Wallet>(environment.server + `/wallets/${consult}`, this.httpOptions)
     .pipe();
   }
 
   onAddVendorsAWallet(vendor: Vendor): Observable<Vendor> {
     if (localStorage.getItem('walletId') !== null) {
-    return this.httpClient.post<Vendor>(environment.server + `/wallet/add/vendor`, {vendor, walletId: localStorage.getItem('walletId')}
+    return this.httpClient.post<Vendor>(environment.server + `/wallets/add/vendor`, {vendor, walletId: localStorage.getItem('walletId')}
      , this.httpOptions)
       .pipe()
     }
@@ -206,7 +206,7 @@ export class VendorService {
 
 
   onCloseAWallet(wallet: Wallet) {
-    this.httpClient.put(environment.server + '/wallet/' + wallet._id , wallet, this.httpOptions).subscribe(() => {
+    this.httpClient.put(environment.server + '/wallets/' + wallet._id , wallet, this.httpOptions).subscribe(() => {
       this.snackBar.open('The Wallet was Successifuly closed!', '', { duration: 4000 });
     },
       (err: HttpErrorResponse) => {
@@ -219,7 +219,7 @@ export class VendorService {
     this.onCheckWallets().subscribe((wallets) => {
       wallets.map((wallet) => {
         if (wallet.status && wallet.finishValue === 0) {
-          this.httpClient.post(environment.server + '/wallet/add/bill', {bill, walletId: wallet._id}, this.httpOptions)
+          this.httpClient.post(environment.server + '/wallets/add/bill', {bill, walletId: wallet._id}, this.httpOptions)
           .subscribe(() => {
             this.snackBar.open('The Bill was Successifuly Add ', '', { duration: 4000 });
             return;

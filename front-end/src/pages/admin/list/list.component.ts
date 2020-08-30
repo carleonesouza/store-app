@@ -1,26 +1,24 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ProductService } from '../../../services/product.service';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { ProductService } from 'src/services/product.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TableDataSource } from 'src/services/table-data-source';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { TableDataSource } from '../../../services/table-data-source';
-import { AddDialogComponent } from '../add/add-dialog.component';
+import { MatAccordion } from '@angular/material/expansion';
 import { EditDialogComponent } from '../edit/edit-dialog.component';
+import { ImagesComponent } from 'src/pages/upload/images/images.component';
 import { DeleteDialogComponent } from '../delete/delete-dialog.component';
 import { fromEvent } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ImagesComponent } from 'src/pages/upload/images/images.component';
-import { MatAccordion } from '@angular/material/expansion';
-import { CategoryComponent } from '../category/category.component';
 
 @Component({
-  selector: 'create-product',
-  templateUrl: './create-product.component.html',
-  styleUrls: ['./create-product.component.scss'],
+  selector: 'app-list',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss']
 })
+export class ListComponent implements OnInit {
 
-export class CreateProductComponent implements OnInit {
   displayedColumns = ['name', 'description', 'price', 'actions'];
   exampleDatabase: ProductService | null;
   snackBar: MatSnackBar |null;
@@ -43,49 +41,6 @@ export class CreateProductComponent implements OnInit {
 
   refresh() {
     this.loadData();
-  }
-
-
-  setStep(index: number) {
-    this.step = index;
-  }
-
-  nextStep() {
-    this.step++;
-  }
-
-  prevStep() {
-    this.step--;
-  }
-
-  addProduct() {
-    const dialogRef = this.dialog.open(AddDialogComponent, {
-      data: {  },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataService
-        this.exampleDatabase.dataChange.value.push(this.productService.getDialogData());
-        this.refreshTable();
-      }
-    });
-  }
-
-  addCategory() {
-    const dialogRef = this.dialog.open(CategoryComponent, {
-      data: {  },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result === 1) {
-        // After dialog is closed we're doing frontend updates
-        // For add we're just pushing a new row inside DataService
-        this.exampleDatabase.dataChange.value.push(this.productService.getDialogData());
-        this.refreshTable();
-      }
-    });
   }
 
   startEdit(i: number, _id: string, name: string, description: string, price: number) {
@@ -164,8 +119,8 @@ export class CreateProductComponent implements OnInit {
       this.dataSource._paginator.nextPage();
       // in all other cases including active filter we do it like this
     } else {
-      this.dataSource.filter = '';
-      this.dataSource.filter = this.filter.nativeElement.value;
+}
+is.filter.nativeElement.value;
     }*/
 
   public loadData() {
