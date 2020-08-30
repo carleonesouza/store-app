@@ -5,6 +5,11 @@ import { Product } from '../../../models/product.model';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+interface Food {
+  value: string;
+  viewValue: string;
+}
+
 @Component({
   selector: 'add-dialog',
   templateUrl: './add-dialog.component.html',
@@ -15,6 +20,11 @@ export class AddDialogComponent implements OnInit {
   localData: any;
   @Input() productForm: FormGroup;
 
+  foods: Food[] = [
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'}
+  ];
   constructor(public dialogRef: MatDialogRef<AddDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: Product,
               public productService: ProductService,
@@ -26,6 +36,7 @@ export class AddDialogComponent implements OnInit {
                   nameProduct: ['', [Validators.required, Validators.minLength(3)]],
                   descriptionProduct: ['', [Validators.required, Validators.minLength(3)]],
                   priceProduct: ['', [Validators.required, Validators.minLength(2)]],
+                  productCategory: ['', [Validators.required]]
                 });
               }
 
@@ -42,7 +53,11 @@ export class AddDialogComponent implements OnInit {
     return this.productForm.get('priceProduct');
   }
 
-  onNoClick(): void {
+  get productCategory() {
+    return this.productForm.get('productCategory');
+  }
+
+  onCancel(): void {
     this.dialogRef.close();
   }
 
@@ -51,9 +66,12 @@ export class AddDialogComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.productForm.valid.valueOf()) {
+    const price = Number.parseInt(this.productForm.value.priceProduct,2);
+
+    if (isNaN(price)) { return 0; }
+
+    if (this.productForm.valid.valueOf() && price >= 0) {
       const name = this.productForm.value.nameProduct;
-      const price = this.productForm.value.priceProduct;
       const description = this.productForm.value.descriptionProduct;
       const saveProduct = { name, price, description };
       this.productService.addProduct(new Product(saveProduct));

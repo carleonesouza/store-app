@@ -1,18 +1,18 @@
-const BagVendors = require('../models/bag-vendors.model');
+const Category = require('../models/category.model');
 const Vendor = require('../models/vendor.model');
 
-// To create a new Bag
-exports.createBag = async (req, res) => {
-  const newBag = new BagVendors(req.body);
-  const bag = await newBag
+// To create a new Category
+exports.createCategory = async (req, res) => {
+  const category = new Category(req.body);
+  const createCategory = await category
     .save()
-    .then(() => { console.log('Bag Save Successfully!'); })
+    .then(() => { console.log('Category Save Successfully!'); })
     .catch((err) => {
       res.status(500).json({
         error: err,
       });
     });
-  res.status(201).send({ message: 'The bags has been created successfully !', bag });
+  res.status(201).send({ message: 'The category has been created successfully !', createCategory });
 };
 
 // To list all Venders

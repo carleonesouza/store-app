@@ -1,33 +1,47 @@
-<div class="container" fxLayout="column" fxLayoutAlign="space-evenly none" >
+<div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
   <div class="card-header">Add a new Product</div>
   <mat-dialog-content [formGroup]="productForm" (ngSubmit)="onSubmit()">
-  <div class="item item-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Product Name</mat-label>
-      <input  matInput type="text" formControlName="nameProduct" class="form-control"/>
-      <mat-error *ngIf="nameProduct.errors">Please, type a valid name</mat-error>
-    </mat-form-field>
-  </div>
-  <div class="item item-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Product Description</mat-label>
-      <input matInput placeholder="Product Description" type="text" formControlName="descriptionProduct">
-      <mat-error *ngIf="descriptionProduct.errors">Please, type a valid description</mat-error>
-    </mat-form-field>
-  </div>
-  <div class="item item-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Product Price</mat-label>
-      <input matInput placeholder="Product Price" type="number" formControlName="priceProduct">
-      <mat-error *ngIf="priceProduct.errors">Please, type a valid price</mat-error>
-    </mat-form-field>
-  </div>
+    <div class="item item-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Product Name</mat-label>
+        <input matInput type="text" formControlName="nameProduct" class="form-control" />
+        <mat-error *ngIf="nameProduct.errors">Please, type a valid name</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="item item-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Product Description</mat-label>
+        <input matInput placeholder="Product Description" type="text" formControlName="descriptionProduct">
+        <mat-error *ngIf="descriptionProduct.errors">Please, type a valid description</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="item item-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Product Price</mat-label>
+        <input matInput placeholder="Product Price"  currencyMask type="text" formControlName="priceProduct">
+        <mat-error *ngIf="priceProduct.errors">Please, type a valid price</mat-error>
+      </mat-form-field>
+    </div>
 
-  <div class="item-buttons">
-    <button mat-button class="style-button" [disabled]="!productForm.valid" [mat-dialog-close]="1"
-      (click)="onSubmit()">Save</button>
+    <div class="item item-4">
+      <mat-form-field appearance="fill">
+        <mat-label>Categories</mat-label>
+        <mat-select formControlName="productCategory">
+          <mat-option *ngFor="let food of foods" [value]="food.value" >
+            {{food.viewValue}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="productCategory.errors">Please choose a Category</mat-error>
+        <mat-hint>{{productForm.value?.productCategory}}</mat-hint>
+      </mat-form-field>
+
+    </div>
+
+    <div class="item-buttons">
+      <button mat-button class="style-button" [disabled]="!productForm.valid" [mat-dialog-close]="1"
+        (click)="onSubmit()">Save</button>
       <span class="spacer"></span>
-    <button mat-button class="style-button" (click)="onNoClick()" tabindex="-1">Cancel</button>
-  </div>
-</mat-dialog-content>
+      <button mat-button class="style-button" (click)="onCancel()" tabindex="-1">Cancel</button>
+    </div>
+  </mat-dialog-content>
 </div>

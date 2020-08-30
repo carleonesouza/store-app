@@ -66,3 +66,26 @@ table {
 .mat-toolbar{
 	border-radius: 4px 4px 0 0;
 }
+
+.example-action-buttons {
+	padding-bottom: 20px;
+  }
+  
+  .example-headers-align .mat-expansion-panel-header-title,
+  .example-headers-align .mat-expansion-panel-header-description {
+	flex-basis: 0;
+  }
+  
+  .example-headers-align .mat-expansion-panel-header-description {
+	justify-content: space-between;
+	align-items: center;
+  }
+.button-category{
+	margin-left: 15px;
+	mat-icon{
+		margin-right: 15px;
+	}
+}
+ .add-category{
+	 margin-left: 15px;
+ }

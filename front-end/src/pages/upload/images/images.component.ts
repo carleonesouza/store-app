@@ -47,7 +47,9 @@ export class ImagesComponent implements OnInit {
   }
 
   onRemove(event) {
-    this.files.splice(this.files.indexOf(event), 1);
+    this.productImageForm.patchValue({
+      productPhotos: this.files.splice(this.files.indexOf(event), 1)
+    })
   }
 
   onCancel(): void {

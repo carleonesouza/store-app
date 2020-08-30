@@ -155,8 +155,12 @@ export class VendorService {
   }
 
   onCheckWallets(): Observable<Wallet[]> {
-    return this.httpClient.get<Wallet[]>(environment.server + '/wallets', this.httpOptions)
-    .pipe();
+    if(!this.httpOptions){
+      console.log('Headers Empity');
+    }else{
+      return this.httpClient.post<Wallet[]>(environment.server + '/wallets', this.httpOptions)
+      .pipe();
+    }
   }
 
   getAWallet(wallet: Wallet): Observable <Wallet> {

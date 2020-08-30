@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { MatCommonModule } from '@angular/material/core';
+import {MatRippleModule} from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -50,6 +51,7 @@ import { from } from 'rxjs';
         MatDividerModule,
         MatButtonToggleModule,
         MatCardModule,
+        MatRippleModule,
 //         MatCheckboxModule,
         MatChipsModule,
         MatTableModule,

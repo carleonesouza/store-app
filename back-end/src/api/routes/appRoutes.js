@@ -12,7 +12,7 @@ router.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 
 router.post('/product/add', productActionApi.createProduct);
-// router.post('/vendor/add', vendorsActionApi.createVendor);
+router.post('/category/add', vendorsActionApi.createCategory);
 // router.post('/method', billMethodAction.createABill);
 router.post('/create-user', userActionApi.createUser);
 router.post('/wallet/add', walletActionApi.createWallet);
@@ -25,7 +25,7 @@ router.get('/wallet/bills', walletActionApi.getAWalletWithBills);
 router.get('/wallet/:id', walletActionApi.findAWallet);
 router.get('/wallet/user/:userId', walletActionApi.findAWalletByUserId);
 router.get('/products', productActionApi.findAllProducts);
-router.get('/wallets', walletActionApi.findAllWallets);
+//router.get('/wallets', walletActionApi.findAllWallets);
 router.get('/users', userActionApi.findAllUsers);
 router.get('/user/:id', userActionApi.findUserById);
 router.get('/vendors', vendorsActionApi.findAVendors);

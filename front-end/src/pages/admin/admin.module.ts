@@ -7,6 +7,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { StoreAppMaterialModule } from '../../store-app-material-module';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import { NgxDropzoneModule } from 'ngx-dropzone';
+import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
+ 
 
 import { AddDialogComponent } from './add/add-dialog.component';
 import { EditDialogComponent } from './edit/edit-dialog.component';
@@ -16,9 +18,17 @@ import { CreateProductComponent } from './create-product/create-product.componen
 import { ManagementUsersComponent } from './view-user-adm/management-users.component';
 import { ImagesComponent } from '../upload/images/images.component';
 import { ManagementUsersViewEditComponent } from './view-user-adm/view-edit/management-users-view-edit.component';
+import { CategoryComponent } from './category/category.component';
 
-
-
+export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
+    align: 'right',
+    allowNegative: true,
+    decimal: ',',
+    precision: 2,
+    prefix: 'R$ ',
+    suffix: '',
+    thousands: '.'
+};
 
 @NgModule({
     declarations: [
@@ -29,6 +39,7 @@ import { ManagementUsersViewEditComponent } from './view-user-adm/view-edit/mana
         ManagementUsersComponent,
         ManagementUsersViewEditComponent,
         ImagesComponent,
+        CategoryComponent,
     ],
 
     imports: [
@@ -40,11 +51,13 @@ import { ManagementUsersViewEditComponent } from './view-user-adm/view-edit/mana
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        NgxDropzoneModule
+        NgxDropzoneModule,
+        CurrencyMaskModule
     ],
 
     providers: [
-       { provide: MatDialogRef, useValue: {}}
+       { provide: MatDialogRef, useValue: {}},
+       { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
 
     ],
     entryComponents: [

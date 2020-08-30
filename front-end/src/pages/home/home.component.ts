@@ -70,7 +70,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
   user = new User();
   dataMethod: BillDataSource | null;
   public errored = false;
-  public dataSour: GenericDataSource;
   loading = true;
   walletOpen = false;
   total = 0;
@@ -119,21 +118,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
       dateNow: this.today,
     });
 
-    this.dataSour = new GenericDataSource();
-    this.dataSour.setCallback((filter, pageIndex, pageSize) => {
-        return this.StoreApp.fetchGenericDataList('/wallets');
-    });
-
-    this.dataSour.setErrorHandler((err) => {
-        this.errored = true;
-        this.snackBar.open('Failed to load wallets!', 'RETRY', { duration: 5000 })
-            .onAction().subscribe(() => {
-                this.loadPage();
-            });
-    });
-
-    this.dataSour.loadData('', 0, 25);
-
   }
 
 
@@ -149,10 +133,6 @@ export class HomeComponent implements OnInit, AfterContentInit {
 
   loadPage() {
     this.errored = false;
-    this.dataSour.loadData(
-        this.input.nativeElement.value,
-        this.paginator.pageIndex,
-        this.paginator.pageSize);
 }
 
 

@@ -11,6 +11,8 @@ import { DeleteDialogComponent } from '../delete/delete-dialog.component';
 import { fromEvent } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImagesComponent } from 'src/pages/upload/images/images.component';
+import { MatAccordion } from '@angular/material/expansion';
+import { CategoryComponent } from '../category/category.component';
 
 @Component({
   selector: 'create-product',
@@ -25,12 +27,14 @@ export class CreateProductComponent implements OnInit {
   dataSource: TableDataSource | null;
   index: number;
   id: string;
+  step = 0;
 
   constructor(public httpClient: HttpClient, public dialog: MatDialog,
               public productService: ProductService) { }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatAccordion) accordion: MatAccordion;
   @ViewChild('filter', { static: true }) filter: ElementRef;
 
   ngOnInit() {
@@ -41,8 +45,36 @@ export class CreateProductComponent implements OnInit {
     this.loadData();
   }
 
-  addNew() {
+
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  nextStep() {
+    this.step++;
+  }
+
+  prevStep() {
+    this.step--;
+  }
+
+  addProduct() {
     const dialogRef = this.dialog.open(AddDialogComponent, {
+      data: {  },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 1) {
+        // After dialog is closed we're doing frontend updates
+        // For add we're just pushing a new row inside DataService
+        this.exampleDatabase.dataChange.value.push(this.productService.getDialogData());
+        this.refreshTable();
+      }
+    });
+  }
+
+  addCategory() {
+    const dialogRef = this.dialog.open(CategoryComponent, {
       data: {  },
     });
 
