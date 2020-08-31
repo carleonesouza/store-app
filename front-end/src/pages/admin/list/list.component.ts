@@ -1,54 +1,75 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, AfterContentInit } from '@angular/core';
 import { ProductService } from 'src/services/product.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TableDataSource } from 'src/services/table-data-source';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatAccordion } from '@angular/material/expansion';
 import { EditDialogComponent } from '../edit/edit-dialog.component';
 import { ImagesComponent } from 'src/pages/upload/images/images.component';
 import { DeleteDialogComponent } from '../delete/delete-dialog.component';
-import { fromEvent } from 'rxjs';
+import { BehaviorSubject, Observable, fromEvent } from 'rxjs';
+import { StoreAppService } from 'src/services/store-app.service';
+import { Product } from 'src/models/product.model';
+import { CurrencyPipe } from '@angular/common';
+import { TableDataSource } from 'src/services/table-data-source';
+
+
 
 @Component({
-  selector: 'app-list',
+  selector: 'list-component',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+  styleUrls: ['./list.component.scss'],
+  providers: [CurrencyPipe]
 })
-export class ListComponent implements OnInit {
-
-  displayedColumns = ['name', 'description', 'price', 'actions'];
+export class ListComponent implements OnInit, AfterContentInit {
   exampleDatabase: ProductService | null;
-  snackBar: MatSnackBar |null;
-  dataSource: TableDataSource | null;
-  index: number;
   id: string;
   step = 0;
+  displayedColumns: string[] = [];
+  cols: any[];
+  dataSource;
+  loading = true;
 
-  constructor(public httpClient: HttpClient, public dialog: MatDialog,
-              public productService: ProductService) { }
+  constructor(public httpClient: HttpClient, public dialog: MatDialog, private currencyPipe: CurrencyPipe,
+              private productService: ProductService, private storeAppService: StoreAppService) { }
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatAccordion) accordion: MatAccordion;
-  @ViewChild('filter', { static: true }) filter: ElementRef;
+@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+@ViewChild(MatSort, { static: true }) sort: MatSort;
+@ViewChild('filter', { static: true }) filter: ElementRef
 
-  ngOnInit() {
-    this.loadData();
+
+  ngOnInit() {}
+
+  ngAfterContentInit(){
+
+    this.storeAppService.getGenericAction('/products').subscribe((data) => {
+      if(!data){
+        this.loading = true;
+      }else {
+        data.map((product) => {
+            product.price = this.currencyPipe.transform(product.price, 'BRL', 'symbol-narrow', '1.2-2');
+          });
+        const forDeletion = ['quantity', '_id']
+        const product = new Product(data);
+        this.dataSource = new BehaviorSubject<Product[]>(data);
+        this.cols = Object.getOwnPropertyNames(product);
+        this.cols.push('actions');
+        this.displayedColumns = this.cols.filter(item => !forDeletion.includes(item));
+
+        this.loading = false;
+      }
+    });
+
   }
 
   refresh() {
     this.loadData();
   }
 
-  startEdit(i: number, _id: string, name: string, description: string, price: number) {
-    this.id = _id;
-    // index row is used just for debugging proposes and can be removed
-    this.index = i;
+  startEdit(element) {
     const dialogRef = this.dialog.open(EditDialogComponent, {
-      data: { _id, name, description, price },
+      data: element,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -63,12 +84,9 @@ export class ListComponent implements OnInit {
     });
   }
 
-  addImages(i: number, _id: string, name: string, description: string, price: number) {
-    this.id = _id;
-    // index row is used just for debugging proposes and can be removed
-    this.index = i;
+  addImages(element) {
     const dialogRef = this.dialog.open(ImagesComponent, {
-      data: { _id, name, description, price },
+      data: element
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -83,11 +101,9 @@ export class ListComponent implements OnInit {
     });
   }
 
-  deleteItem(i: number, _id: string, name: string, description: string, price: number) {
-    this.index = i;
-    this.id = _id;
+  deleteItem(element) {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
-      data: { _id, name, description, price },
+      data: element
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -107,7 +123,7 @@ export class ListComponent implements OnInit {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
 
-/*   // If you don't need a filter or a pagination this can be simplified, you just use code from else block
+/*   // If you don'tExampleDataSource need a filter or a pagination this can be simplified, you just use code from else block
     // OLD METHOD:
     // if there's a paginator active we're using it for refresh
     if (this.dataSource._paginator.hasNextPage()) {
@@ -123,17 +139,17 @@ export class ListComponent implements OnInit {
 is.filter.nativeElement.value;
     }*/
 
-  public loadData() {
-    this.exampleDatabase = new ProductService(this.httpClient, this.snackBar);
-    this.dataSource = new TableDataSource(this.exampleDatabase, this.paginator, this.sort);
-    fromEvent(this.filter.nativeElement, 'keyup')
-      // .debounceTime(150)
-      // .distinctUntilChanged()
-      .subscribe(() => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      });
-  }
+    public loadData() {
+      this.exampleDatabase = new ProductService(this.httpClient, null);
+      this.dataSource = new TableDataSource(this.exampleDatabase, this.paginator, this.sort);
+      fromEvent(this.filter.nativeElement, 'keyup')
+        // .debounceTime(150)
+        // .distinctUntilChanged()
+        .subscribe(() => {
+          if (!this.dataSource) {
+            return;
+          }
+          this.dataSource.filter = this.filter.nativeElement.value;
+        });
+    }
 }

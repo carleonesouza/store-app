@@ -39,7 +39,7 @@ export class AppComponent {
         admin: [
             { name: 'Home', route: '/home', icon: 'home' },
             { name: 'Store', route: '/front-store', icon: 'store' },
-            { name: 'Product', route: '/admin/product', icon: 'shopping_basket' },
+            { name: 'Product', route: '/admin/dashboard-adm', icon: 'shopping_basket' },
             { name: 'Users Panel', route: '/admin/management-users', icon: 'supervisor_account' },
             { name: 'Close Wallet', route: '/#', icon: 'attach_money' },
         ],

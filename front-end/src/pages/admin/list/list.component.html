@@ -1,83 +1,52 @@
 <div class="container">
-    <span class="example-spacer "></span>
+    <span class="example-spacer "></span>  
+    <mat-toolbar color="primary">
+      <span>List of Products</span>
+      <span class="spacer"></span>
+      <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </mat-toolbar>
 
-    <div class="example-container mat-elevation-z8">
-        <div class="example-loading-shade" *ngIf="isLoadingResults || isRateLimitReached">
-          <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-          <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
-            GitHub's API rate limit has been reached. It will be reset in one minute.
-          </div>
-        </div>
-        <mat-toolbar color="primary">
-          <span>List of Products</span>
-          <span class="spacer"></span>
-          <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
-            <mat-icon>refresh</mat-icon>
+  <div class="mat-elevation-z8 table-style">
+    <div class="form">
+      <mat-form-field floatPlaceholder="never" color="warn">
+        <input matInput #filter placeholder="Filter Products">
+      </mat-form-field>
+    </div>
+    <mat-spinner color="accent" *ngIf="loading"></mat-spinner>
+    <table cdk-table #table [dataSource]="dataSource" matSort class="mat-cell" *ngIf="!loading">
+
+      <ng-container *ngFor="let col of displayedColumns" cdkColumnDef={{col}}>
+        <th cdk-header-cell *cdkHeaderCellDef>{{col}}<hr></th>
+        <td cdk-cell *cdkCellDef="let element">  {{element[col] }}
+          <ng-container *ngIf="col === 'actions'">
+            <button mat-icon-button matTooltip="Insert photo"
+            (click)="addImages(element)">
+            <mat-icon color="primary" aria-label="Insert photo">insert_photo</mat-icon>
           </button>
-        </mat-toolbar>
-    
-        <div class="mat-elevation-z8 m-5">
-          <div class="form">
-            <mat-form-field floatPlaceholder="never" color="warn">
-              <input matInput #filter placeholder="Filter Products">
-            </mat-form-field>
-          </div>
-          <mat-table #table [dataSource]="dataSource" matSort class="mat-cell">
-            <!--- Note that these columns can be defined in any order.
-                The actual rendered columns are set as a property on the row definition" -->
-    
-            <!-- ID Column -->
-            <ng-container matColumnDef="name">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-              <mat-cell *matCellDef="let row">{{row.name}}</mat-cell>
-            </ng-container>
-    
-            <ng-container matColumnDef="description">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
-              <mat-cell *matCellDef="let row"> {{row.description}}</mat-cell>
-            </ng-container>
-    
-            <ng-container matColumnDef="price">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Price</mat-header-cell>
-              <mat-cell *matCellDef="let row"> {{row.price | currency:"BRL"}}</mat-cell>
-            </ng-container>
-    
-            <!-- actions -->
-            <ng-container matColumnDef="actions">
-              <mat-header-cell *matHeaderCellDef> <span class="example-spacer "></span>Actions </mat-header-cell>
-    
-              <mat-cell *matCellDef="let row; let i=index;">
-                <button mat-icon-button matTooltip="Insert photo"
-                (click)="addImages(i, row._id, row.name, row.description, row.price)">
-                <mat-icon color="primary" aria-label="Insert photo">insert_photo</mat-icon>
-              </button>
-              <span class="example-spacer "></span>
-    
-                <button mat-icon-button matTooltip="Edit button"
-                  (click)="startEdit(i, row._id, row.name, row.description, row.price)">
-                  <mat-icon color="accent" aria-label="Edit">edit</mat-icon>
-                </button>
-    
-                <span class="example-spacer "></span>
-    
-                <button mat-icon-button matTooltip="Delete button"
-                  (click)="deleteItem(i, row._id, row.name, row.description, row.price)">
-                  <mat-icon color="warn" aria-label="Delete">delete</mat-icon>
-                </button>
-              </mat-cell>
-            </ng-container>
+          <span class="example-spacer "></span>
+
+            <button mat-icon-button matTooltip="Edit button"
+              (click)="startEdit(element)">
+              <mat-icon color="accent" aria-label="Edit">edit</mat-icon>
+            </button>
+
             <span class="example-spacer "></span>
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          </mat-table>
-          <div class="no-results" [style.display]="dataSource.renderedData.length == 0 ? '' : 'none'">
-            No results
-          </div>
+
+            <button mat-icon-button matTooltip="Delete button"
+              (click)="deleteItem(element)">
+              <mat-icon color="warn" aria-label="Delete">delete</mat-icon>
+            </button>
+          </ng-container><hr></td>
+    </ng-container>    
     
-          <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="5"
-            [pageSizeOptions]="[5, 10, 25, 100]">
-          </mat-paginator>
-        </div>
-        
-      </div>
+      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    
+    <mat-paginator #paginator [length]="dataSource" [pageIndex]="0" [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
+  </div>
 </div>
