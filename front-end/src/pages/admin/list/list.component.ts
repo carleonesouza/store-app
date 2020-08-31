@@ -1,46 +1,69 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, AfterContentInit } from '@angular/core';
 import { ProductService } from 'src/services/product.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TableDataSource } from 'src/services/table-data-source';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatAccordion } from '@angular/material/expansion';
 import { EditDialogComponent } from '../edit/edit-dialog.component';
 import { ImagesComponent } from 'src/pages/upload/images/images.component';
 import { DeleteDialogComponent } from '../delete/delete-dialog.component';
-import { fromEvent } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { StoreAppService } from 'src/services/store-app.service';
+import { Product } from 'src/models/product.model';
+
+
 
 @Component({
-  selector: 'app-list',
+  selector: 'list-component',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
-
-  displayedColumns = ['name', 'description', 'price', 'actions'];
+export class ListComponent implements OnInit, AfterContentInit {
   exampleDatabase: ProductService | null;
   snackBar: MatSnackBar |null;
-  dataSource: TableDataSource | null;
   index: number;
   id: string;
   step = 0;
-
+  displayedColumns: string[] = [];
+  cols: any[];
+  dataSource;
+  pageIndex = 0;
+  pageSize = 25;
+  length;
+  loading = true;
   constructor(public httpClient: HttpClient, public dialog: MatDialog,
-              public productService: ProductService) { }
+              private productService: ProductService, private storeAppService: StoreAppService) { }
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatAccordion) accordion: MatAccordion;
   @ViewChild('filter', { static: true }) filter: ElementRef;
+  @Input() receivedData;
+  @Input() tableTitle: string;
+  @Input() columns: any[] = [];
+  @Input() metaCount: number;
+
+  @Output() clickedItem = new EventEmitter();
+  @Output() pageEvent = new EventEmitter<PageEvent>();
 
   ngOnInit() {
-    this.loadData();
   }
 
-  refresh() {
-    this.loadData();
+  ngAfterContentInit(){
+
+    this.storeAppService.getGenericAction('/products').subscribe((data) => {
+      if(!data){
+        this.loading = true;
+      }else {
+        this.loading = false;
+        this.dataSource = new BehaviorSubject<Product[]>(data);
+        const product = new Product(data);
+        this.cols = Object.getOwnPropertyNames(product);
+        let forDeletion = ['quantity', '_id']
+        this.displayedColumns = this.cols.filter(item => !forDeletion.includes(item));
+      }
+    });
+
   }
 
   startEdit(i: number, _id: string, name: string, description: string, price: number) {
@@ -107,7 +130,7 @@ export class ListComponent implements OnInit {
     this.paginator._changePageSize(this.paginator.pageSize);
   }
 
-/*   // If you don't need a filter or a pagination this can be simplified, you just use code from else block
+/*   // If you don'tExampleDataSource need a filter or a pagination this can be simplified, you just use code from else block
     // OLD METHOD:
     // if there's a paginator active we're using it for refresh
     if (this.dataSource._paginator.hasNextPage()) {
@@ -123,17 +146,4 @@ export class ListComponent implements OnInit {
 is.filter.nativeElement.value;
     }*/
 
-  public loadData() {
-    this.exampleDatabase = new ProductService(this.httpClient, this.snackBar);
-    this.dataSource = new TableDataSource(this.exampleDatabase, this.paginator, this.sort);
-    fromEvent(this.filter.nativeElement, 'keyup')
-      // .debounceTime(150)
-      // .distinctUntilChanged()
-      .subscribe(() => {
-        if (!this.dataSource) {
-          return;
-        }
-        this.dataSource.filter = this.filter.nativeElement.value;
-      });
-  }
 }
