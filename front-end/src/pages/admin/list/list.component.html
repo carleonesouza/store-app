@@ -15,16 +15,38 @@
       </mat-form-field>
     </div>
     <mat-spinner color="accent" *ngIf="loading"></mat-spinner>
-    <table cdk-table [dataSource]="dataSource" *ngIf="!loading">
-      <!-- Position Column -->
+    <table cdk-table #table [dataSource]="dataSource" matSort class="mat-cell" *ngIf="!loading">
+
       <ng-container *ngFor="let col of displayedColumns" cdkColumnDef={{col}}>
-        <th cdk-header-cell *cdkHeaderCellDef>{{col}} <hr> </th>
-      <td cdk-cell *cdkCellDef="let element">  {{element[col]}}  <hr>   </td>
-    
+        <th cdk-header-cell *cdkHeaderCellDef>{{col}}<hr></th>
+        <td cdk-cell *cdkCellDef="let element">  {{element[col] }}
+          <ng-container *ngIf="col === 'actions'">
+            <button mat-icon-button matTooltip="Insert photo"
+            (click)="addImages(element)">
+            <mat-icon color="primary" aria-label="Insert photo">insert_photo</mat-icon>
+          </button>
+          <span class="example-spacer "></span>
+
+            <button mat-icon-button matTooltip="Edit button"
+              (click)="startEdit(element)">
+              <mat-icon color="accent" aria-label="Edit">edit</mat-icon>
+            </button>
+
+            <span class="example-spacer "></span>
+
+            <button mat-icon-button matTooltip="Delete button"
+              (click)="deleteItem(element)">
+              <mat-icon color="warn" aria-label="Delete">delete</mat-icon>
+            </button>
+          </ng-container><hr></td>
     </ng-container>    
+    
       <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    
+    <mat-paginator #paginator [length]="dataSource" [pageIndex]="0" [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
   </div>
 </div>

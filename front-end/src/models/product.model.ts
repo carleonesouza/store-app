@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 export class Product {
   _id?: any;
   name: string;
-  price: number;
+  price: any;
   description: string;
   quantity = 0;
 

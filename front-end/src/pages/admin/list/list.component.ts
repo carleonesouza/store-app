@@ -8,46 +8,38 @@ import { MatSort } from '@angular/material/sort';
 import { EditDialogComponent } from '../edit/edit-dialog.component';
 import { ImagesComponent } from 'src/pages/upload/images/images.component';
 import { DeleteDialogComponent } from '../delete/delete-dialog.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, fromEvent } from 'rxjs';
 import { StoreAppService } from 'src/services/store-app.service';
 import { Product } from 'src/models/product.model';
+import { CurrencyPipe } from '@angular/common';
+import { TableDataSource } from 'src/services/table-data-source';
 
 
 
 @Component({
   selector: 'list-component',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+  styleUrls: ['./list.component.scss'],
+  providers: [CurrencyPipe]
 })
 export class ListComponent implements OnInit, AfterContentInit {
   exampleDatabase: ProductService | null;
-  snackBar: MatSnackBar |null;
-  index: number;
   id: string;
   step = 0;
   displayedColumns: string[] = [];
   cols: any[];
   dataSource;
-  pageIndex = 0;
-  pageSize = 25;
-  length;
   loading = true;
-  constructor(public httpClient: HttpClient, public dialog: MatDialog,
+
+  constructor(public httpClient: HttpClient, public dialog: MatDialog, private currencyPipe: CurrencyPipe,
               private productService: ProductService, private storeAppService: StoreAppService) { }
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild('filter', { static: true }) filter: ElementRef;
-  @Input() receivedData;
-  @Input() tableTitle: string;
-  @Input() columns: any[] = [];
-  @Input() metaCount: number;
+@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+@ViewChild(MatSort, { static: true }) sort: MatSort;
+@ViewChild('filter', { static: true }) filter: ElementRef
 
-  @Output() clickedItem = new EventEmitter();
-  @Output() pageEvent = new EventEmitter<PageEvent>();
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngAfterContentInit(){
 
@@ -55,23 +47,29 @@ export class ListComponent implements OnInit, AfterContentInit {
       if(!data){
         this.loading = true;
       }else {
-        this.loading = false;
-        this.dataSource = new BehaviorSubject<Product[]>(data);
+        data.map((product) => {
+            product.price = this.currencyPipe.transform(product.price, 'BRL', 'symbol-narrow', '1.2-2');
+          });
+        const forDeletion = ['quantity', '_id']
         const product = new Product(data);
+        this.dataSource = new BehaviorSubject<Product[]>(data);
         this.cols = Object.getOwnPropertyNames(product);
-        let forDeletion = ['quantity', '_id']
+        this.cols.push('actions');
         this.displayedColumns = this.cols.filter(item => !forDeletion.includes(item));
+
+        this.loading = false;
       }
     });
 
   }
 
-  startEdit(i: number, _id: string, name: string, description: string, price: number) {
-    this.id = _id;
-    // index row is used just for debugging proposes and can be removed
-    this.index = i;
+  refresh() {
+    this.loadData();
+  }
+
+  startEdit(element) {
     const dialogRef = this.dialog.open(EditDialogComponent, {
-      data: { _id, name, description, price },
+      data: element,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -86,12 +84,9 @@ export class ListComponent implements OnInit, AfterContentInit {
     });
   }
 
-  addImages(i: number, _id: string, name: string, description: string, price: number) {
-    this.id = _id;
-    // index row is used just for debugging proposes and can be removed
-    this.index = i;
+  addImages(element) {
     const dialogRef = this.dialog.open(ImagesComponent, {
-      data: { _id, name, description, price },
+      data: element
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -106,11 +101,9 @@ export class ListComponent implements OnInit, AfterContentInit {
     });
   }
 
-  deleteItem(i: number, _id: string, name: string, description: string, price: number) {
-    this.index = i;
-    this.id = _id;
+  deleteItem(element) {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
-      data: { _id, name, description, price },
+      data: element
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -146,4 +139,17 @@ export class ListComponent implements OnInit, AfterContentInit {
 is.filter.nativeElement.value;
     }*/
 
+    public loadData() {
+      this.exampleDatabase = new ProductService(this.httpClient, null);
+      this.dataSource = new TableDataSource(this.exampleDatabase, this.paginator, this.sort);
+      fromEvent(this.filter.nativeElement, 'keyup')
+        // .debounceTime(150)
+        // .distinctUntilChanged()
+        .subscribe(() => {
+          if (!this.dataSource) {
+            return;
+          }
+          this.dataSource.filter = this.filter.nativeElement.value;
+        });
+    }
 }
