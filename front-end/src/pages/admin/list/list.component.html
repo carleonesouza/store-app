@@ -1,19 +1,30 @@
 <div class="container">
     <span class="example-spacer "></span>  
+    <mat-toolbar color="primary">
+      <span>List of Products</span>
+      <span class="spacer"></span>
+      <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </mat-toolbar>
 
   <div class="mat-elevation-z8 table-style">
+    <div class="form">
+      <mat-form-field floatPlaceholder="never" color="warn">
+        <input matInput #filter placeholder="Filter Products">
+      </mat-form-field>
+    </div>
     <mat-spinner color="accent" *ngIf="loading"></mat-spinner>
     <table cdk-table [dataSource]="dataSource" *ngIf="!loading">
       <!-- Position Column -->
       <ng-container *ngFor="let col of displayedColumns" cdkColumnDef={{col}}>
-        <th cdk-header-cell *cdkHeaderCellDef  matLine> {{col}} </th>
-      <td cdk-cell *cdkCellDef="let element"> {{element[col]}} </td>
-      </ng-container>
+        <th cdk-header-cell *cdkHeaderCellDef>{{col}} <hr> </th>
+      <td cdk-cell *cdkCellDef="let element">  {{element[col]}}  <hr>   </td>
     
+    </ng-container>    
       <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-
-  </div>    
-
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
 </div>
