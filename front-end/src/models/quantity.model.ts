@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class Quantity {
-    productId: string;
+    productId?: string;
     quantity = 0;
 
     constructor(obj?: any) {

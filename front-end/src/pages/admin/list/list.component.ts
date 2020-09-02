@@ -13,6 +13,7 @@ import { StoreAppService } from 'src/services/store-app.service';
 import { Product } from 'src/models/product.model';
 import { CurrencyPipe } from '@angular/common';
 import { TableDataSource } from 'src/services/table-data-source';
+import { Category } from 'src/models/category';
 
 
 
@@ -25,6 +26,7 @@ import { TableDataSource } from 'src/services/table-data-source';
 export class ListComponent implements OnInit, AfterContentInit {
   exampleDatabase: ProductService | null;
   id: string;
+  title;
   step = 0;
   displayedColumns: string[] = [];
   cols: any[];
@@ -38,18 +40,59 @@ export class ListComponent implements OnInit, AfterContentInit {
 @ViewChild(MatSort, { static: true }) sort: MatSort;
 @ViewChild('filter', { static: true }) filter: ElementRef
 
+@Input('choose') choose: string;
 
-  ngOnInit() {}
+
+  ngOnInit() {
+  }
 
   ngAfterContentInit(){
+    if(this.choose !== null && this.choose ==='Products' ){
+      this.onLoadProductsList();
+    }else if(this.choose !== null && this.choose ==='Categories' ){
+      this.onLoadCategoriesList();
+  }
+  };
 
-    this.storeAppService.getGenericAction('/products').subscribe((data) => {
+  refresh() {
+    this.loadData();
+  }
+
+  onLoadCategoriesList(){
+    this.storeAppService.getGenericAction('/categories')
+    .pipe()
+    .subscribe((data) => {
       if(!data){
         this.loading = true;
       }else {
-        data.map((product) => {
+        this.title = 'Categories';
+        const category = new Category(data);
+        this.dataSource = new BehaviorSubject<Product[]>(data);
+        const forDeletion = ['productId', '_id']
+        this.displayedColumns = Object.getOwnPropertyNames(category);
+        this.cols = Object.getOwnPropertyNames(category);
+        this.cols.push('actions');
+        this.displayedColumns = this.cols.filter(item => !forDeletion.includes(item));
+        this.loading = false;
+      }
+    });
+  }
+
+  onChoose(event){
+    console.log(this.choose);
+  }
+
+  onLoadProductsList(){
+    this.storeAppService.getGenericAction('/products')
+    .pipe()
+    .subscribe((data) => {
+      if(!data){
+        this.loading = true;
+      }else {
+        data.map((product: Product) => {
             product.price = this.currencyPipe.transform(product.price, 'BRL', 'symbol-narrow', '1.2-2');
           });
+          this.title = 'Products';
         const forDeletion = ['quantity', '_id']
         const product = new Product(data);
         this.dataSource = new BehaviorSubject<Product[]>(data);
@@ -61,10 +104,6 @@ export class ListComponent implements OnInit, AfterContentInit {
       }
     });
 
-  }
-
-  refresh() {
-    this.loadData();
   }
 
   startEdit(element) {

@@ -1,7 +1,7 @@
 <div class="container">
     <span class="example-spacer "></span>  
     <mat-toolbar color="primary">
-      <span>List of Products</span>
+      <span>List of {{title}} </span>
       <span class="spacer"></span>
       <button mat-icon-button matTooltip="Refresh button" (click)="refresh()">
         <mat-icon>refresh</mat-icon>
@@ -9,11 +9,11 @@
     </mat-toolbar>
 
   <div class="mat-elevation-z8 table-style">
-    <div class="form">
+    <!-- <div class="form">
       <mat-form-field floatPlaceholder="never" color="warn">
         <input matInput #filter placeholder="Filter Products">
       </mat-form-field>
-    </div>
+    </div> -->
     <mat-spinner color="accent" *ngIf="loading"></mat-spinner>
     <table cdk-table #table [dataSource]="dataSource" matSort class="mat-cell" *ngIf="!loading">
 

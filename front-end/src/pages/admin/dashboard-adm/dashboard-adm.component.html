@@ -21,7 +21,7 @@
 
         <mat-divider></mat-divider>
 
-        <button mat-button aria-label="add product button" style="margin: 10px;" (click)="listCategory()">
+        <button mat-button aria-label="add product button" style="margin: 10px;" (click)="onList('Categories')">
           <mat-icon>list</mat-icon> <span class="add-category">List Categories</span>
         </button>
 
@@ -47,7 +47,7 @@
       
         <mat-divider></mat-divider>
 
-        <button mat-button aria-label="add product button" style="margin: 10px;" (click)="listProduct()">
+        <button mat-button aria-label="add product button" style="margin: 10px;" (click)="onList('Products')">
           <mat-icon>list</mat-icon> <span class="add-category">List Products</span>
         </button>
         <mat-action-row>
@@ -62,5 +62,5 @@
 
   <span class="example-spacer "></span>
 
-  <list-component></list-component>
+  <list-component *ngIf="showList" [choose]="message"></list-component>
 </div>

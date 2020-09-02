@@ -20,6 +20,7 @@ import { ImagesComponent } from '../upload/images/images.component';
 import { ManagementUsersViewEditComponent } from './view-user-adm/view-edit/management-users-view-edit.component';
 import { CategoryComponent } from './category/category.component';
 import { ListComponent } from './list/list.component';
+import { ChoosingDirective } from 'src/app/choosing.directive';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     align: 'right',
@@ -42,6 +43,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
         ImagesComponent,
         CategoryComponent,
         ListComponent,
+        ChoosingDirective
     ],
 
     imports: [

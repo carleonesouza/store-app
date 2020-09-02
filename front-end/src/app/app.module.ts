@@ -45,8 +45,6 @@ import { CustomDirectiveDirective } from './custom-directive.directive';
 import { ManagementService } from '../services/management.service';
 
 
-
-
 @NgModule({
     declarations: [
         SplashComponent,

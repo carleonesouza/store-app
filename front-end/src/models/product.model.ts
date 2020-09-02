@@ -9,8 +9,8 @@ export class Product {
   _id?: any;
   name: string;
   price: any;
+  category?:string;
   description: string;
-  quantity = 0;
 
 
   constructor(obj?: any) {
@@ -22,6 +22,7 @@ export class Product {
     this.name = obj.name;
     this.description = obj.description;
     this.price = obj.price;
-    this.quantity =  parseInt('', obj.quantity) || 0 ;
+    this.category = obj.category;
+
   }
 }
