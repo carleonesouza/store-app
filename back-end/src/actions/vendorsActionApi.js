@@ -21,6 +21,18 @@ exports.findAllCategories = async (req, res) => {
   res.status(200).send(categories);
 };
 
+// To find a category by id
+exports.findByIdCategory = async (req, res) => {
+  const category = await Category.findOne({ _id: req.params.id })
+    .then((data) =>  {console.log('Category found Successfully! ');
+    return res.status(200).send(data);
+   })
+    .catch((err) => {
+      res.status(400).json({error: err, status: 400, message: 'is a not id valid', _id: req.params._id }).end();
+    });  
+};
+
+
 // To list all Venders
 exports.findAllBags = async (req, res) => {
   const venders = await BagVendors.find({});

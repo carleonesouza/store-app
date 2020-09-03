@@ -80,8 +80,8 @@ export class AddDialogComponent implements OnInit {
     if (this.productForm.valid.valueOf() && price >= 0) {
       const name = this.productForm.value.nameProduct;
       const description = this.productForm.value.descriptionProduct;
-      const categoryId = this.productForm.value.productCategory;
-      const saveProduct = { name, price, description, categoryId};
+      const category = this.productForm.value.productCategory;
+      const saveProduct = { name, price, description, category};
       this.productService.addProduct(new Product(saveProduct));
       this.dialogRef.close();
     } else {

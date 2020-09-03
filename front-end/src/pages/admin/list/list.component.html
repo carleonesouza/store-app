@@ -9,17 +9,52 @@
     </mat-toolbar>
 
   <div class="mat-elevation-z8 table-style">
-    <!-- <div class="form">
+     <div class="form">
       <mat-form-field floatPlaceholder="never" color="warn">
         <input matInput #filter placeholder="Filter Products">
       </mat-form-field>
-    </div> -->
+    </div> 
     <mat-spinner color="accent" *ngIf="loading"></mat-spinner>
-    <table cdk-table #table [dataSource]="dataSource" matSort class="mat-cell" *ngIf="!loading">
 
-      <ng-container *ngFor="let col of displayedColumns" cdkColumnDef={{col}}>
-        <th cdk-header-cell *cdkHeaderCellDef>{{col}}<hr></th>
-        <td cdk-cell *cdkCellDef="let element">  {{element[col] }}
+    <mat-table #table [dataSource]="dataSource">
+  
+      <!-- Generic column definition -->
+      <ng-container *ngFor="let column of columns" [cdkColumnDef]="column.columnDef">
+        <mat-header-cell *cdkHeaderCellDef>{{ column.header }}</mat-header-cell>
+        <mat-cell *cdkCellDef="let row">{{ column.cell(row) }}
+
+          <ng-container *ngIf="column.header === 'Actions'">
+            <button mat-icon-button matTooltip="Insert photo"
+            (click)="addImages(row)">
+            <mat-icon color="primary" aria-label="Insert photo">insert_photo</mat-icon>
+          </button>        
+
+            <button mat-icon-button matTooltip="Edit button"
+            (click)="startEdit(row)">
+              <mat-icon color="accent" aria-label="Edit">edit</mat-icon>
+            </button>          
+
+            <button mat-icon-button matTooltip="Delete button"
+              (click)="deleteItem(row)">
+              <mat-icon color="warn" aria-label="Delete">delete</mat-icon>
+            </button>
+          </ng-container>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  
+    <mat-paginator #paginator [length]="dataSource" [pageIndex]="0" [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
+   <!--  <table cdk-table #table [dataSource]="dataSource" matSort class="mat-cell" *ngIf="!loading">
+
+      <ng-container *ngFor="let col of displayedColumns" cdkColumnDef="column">
+        <th cdk-header-cell *cdkHeaderCellDef>{{ column.header }}<hr></th>
+        <td cdk-cell *cdkCellDef="let element">  {{ column.cell(row) }}
+  
           <ng-container *ngIf="col === 'actions'">
             <button mat-icon-button matTooltip="Insert photo"
             (click)="addImages(element)">
@@ -47,6 +82,13 @@
     
     <mat-paginator #paginator [length]="dataSource" [pageIndex]="0" [pageSize]="5"
       [pageSizeOptions]="[5, 10, 25, 100]">
-    </mat-paginator>
+    </mat-paginator> -->
   </div>
+
+ 
+
+    <div class="example-container mat-elevation-z8">
+     
+    </div>
+  
 </div>

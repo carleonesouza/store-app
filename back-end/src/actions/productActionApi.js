@@ -1,4 +1,5 @@
 const Product = require('../models/product.model');
+const Category = require('../models/category.model');
 
 // To create a new Product
 exports.createProduct = async (req, res) => {
@@ -43,10 +44,17 @@ exports.updateProduct = async (req, res) => {
       $set: {
         name: req.body.name,
         description: req.body.description,
+        category: req.body.category,
         price: req.body.price
       },
     })
-    .then((data) => data)
+    .then(() => {
+      Category.findOne({ _id: req.body.category },
+        (err, category) => {
+          if (err) return err;
+            category.productId.push(req.body._id)
+            category.save();
+    })})
     .catch((err) => {
       res.status(500).json({
         error: err,

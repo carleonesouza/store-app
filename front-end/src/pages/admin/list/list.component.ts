@@ -14,6 +14,8 @@ import { Product } from 'src/models/product.model';
 import { CurrencyPipe } from '@angular/common';
 import { TableDataSource } from 'src/services/table-data-source';
 import { Category } from 'src/models/category';
+import { DataSource } from '@angular/cdk/table';
+import { of } from 'rxjs';
 
 
 
@@ -24,13 +26,23 @@ import { Category } from 'src/models/category';
   providers: [CurrencyPipe]
 })
 export class ListComponent implements OnInit, AfterContentInit {
+
+  columns = [
+    { columnDef: 'name', header: 'Name',    cell: (element: Product) => `${element.name}` },
+    { columnDef: 'description',     header: 'Description',   cell: (element: Product) => `${element.description}`     },
+    { columnDef: 'price',   header: 'Price', cell: (element: Product) => `${element.price}`   },
+    { columnDef: 'category',   header: 'Category', cell: (element: Product) => `${element.category.name}`   },
+    { columnDef: 'actions',   header: 'Actions', cell: (element: Product) => ``   },
+  ];
+
+  displayedColumns = this.columns.map(c => c.columnDef);
+  dataSource;
   exampleDatabase: ProductService | null;
   id: string;
   title;
   step = 0;
-  displayedColumns: string[] = [];
   cols: any[];
-  dataSource;
+
   loading = true;
 
   constructor(public httpClient: HttpClient, public dialog: MatDialog, private currencyPipe: CurrencyPipe,
@@ -67,19 +79,15 @@ export class ListComponent implements OnInit, AfterContentInit {
       }else {
         this.title = 'Categories';
         const category = new Category(data);
-        this.dataSource = new BehaviorSubject<Product[]>(data);
+        // this.dataSource = new BehaviorSubject<Product[]>(data);
         const forDeletion = ['productId', '_id']
-        this.displayedColumns = Object.getOwnPropertyNames(category);
+        // this.displayedColumns = Object.getOwnPropertyNames(category);
         this.cols = Object.getOwnPropertyNames(category);
         this.cols.push('actions');
-        this.displayedColumns = this.cols.filter(item => !forDeletion.includes(item));
+        // this.displayedColumns = this.cols.filter(item => !forDeletion.includes(item));
         this.loading = false;
       }
     });
-  }
-
-  onChoose(event){
-    console.log(this.choose);
   }
 
   onLoadProductsList(){
@@ -88,18 +96,21 @@ export class ListComponent implements OnInit, AfterContentInit {
     .subscribe((data) => {
       if(!data){
         this.loading = true;
-      }else {
+      } else {
         data.map((product: Product) => {
+          if(product.category !== null){
+            this.storeAppService.getGenericAction(`/categories/${product.category}`)
+            .pipe()
+            .subscribe((category: Category) =>{
+              if(category._id === product.category){
+                product.category = category;
+              }
+            });
+          }
             product.price = this.currencyPipe.transform(product.price, 'BRL', 'symbol-narrow', '1.2-2');
           });
-          this.title = 'Products';
-        const forDeletion = ['quantity', '_id']
-        const product = new Product(data);
+        this.title = 'Products';
         this.dataSource = new BehaviorSubject<Product[]>(data);
-        this.cols = Object.getOwnPropertyNames(product);
-        this.cols.push('actions');
-        this.displayedColumns = this.cols.filter(item => !forDeletion.includes(item));
-
         this.loading = false;
       }
     });
@@ -179,8 +190,6 @@ is.filter.nativeElement.value;
     }*/
 
     public loadData() {
-      this.exampleDatabase = new ProductService(this.httpClient, null);
-      this.dataSource = new TableDataSource(this.exampleDatabase, this.paginator, this.sort);
       fromEvent(this.filter.nativeElement, 'keyup')
         // .debounceTime(150)
         // .distinctUntilChanged()

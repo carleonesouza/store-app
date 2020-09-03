@@ -29,7 +29,7 @@ export class DeleteDialogComponent implements OnInit {
                   {
                     nameProduct: this.data.name,
                     descriptionProduct: this.data.description,
-                    priceProduct: this.data.price
+                    priceProduct: String(this.data.price).substring(2)
                   }
                 );
               }

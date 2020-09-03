@@ -18,7 +18,7 @@
   <div class="item item-4">
     <mat-form-field appearance="outline">
       <mat-label>Product Price</mat-label>
-      <input matInput placeholder="Product Price" type="number" formControlName="priceProduct">
+      <input matInput placeholder="Product Price"  currencyMask type="text" formControlName="priceProduct">
       <mat-error *ngIf="priceProduct.errors">Please, type a valid price</mat-error>
     </mat-form-field>
   </div>
