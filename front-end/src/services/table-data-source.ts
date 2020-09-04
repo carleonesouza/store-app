@@ -5,8 +5,9 @@ import { Product } from '../models/product.model';
 import { ProductService } from 'src/services/product.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { StoreAppService } from './store-app.service';
 
-export class TableDataSource extends DataSource<Product> {
+export class TableDataSource extends DataSource<any> {
   _filterChange = new BehaviorSubject('');
 
   get filter(): string {
@@ -17,10 +18,10 @@ export class TableDataSource extends DataSource<Product> {
     this._filterChange.next(filter);
   }
 
-  filteredData: Product[] = [];
-  renderedData: Product[] = [];
+  filteredData: any[] = [];
+  renderedData: any[] = [];
 
-  constructor(public _exampleDatabase: ProductService, public _paginator: MatPaginator,
+  constructor(private dataService: StoreAppService, public _paginator: MatPaginator,
               public _sort: MatSort) {
     super();
     // Reset to the first page when the user changes the filter.
@@ -28,24 +29,22 @@ export class TableDataSource extends DataSource<Product> {
   }
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<Product[]> {
+  connect(): Observable<any[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this._exampleDatabase.dataChange,
+     // this.dataService.dataChange,
       this._sort.sortChange,
       this._filterChange,
       this._paginator.page,
     ];
 
-    this._exampleDatabase.getAllProducts();
-
     return merge(...displayDataChanges).pipe(map(() => {
       // Filter data
-      this.filteredData = this._exampleDatabase.data.slice().filter((product: Product) => {
-        const searchStr = (product._id + product.description + product.name).toLowerCase();
+     /*  this.filteredData = this.dataService.data.slice().filter((property: any) => {
+        const searchStr = (property._id + property.name).toLowerCase();
         return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
       });
-
+ */
       // Sort filtered data
       const sortedData = this.sortData(this.filteredData.slice());
 
@@ -60,7 +59,7 @@ export class TableDataSource extends DataSource<Product> {
   disconnect() { }
 
   /** Returns a sorted copy of the database data. */
-  sortData(data: Product[]): Product[] {
+  sortData(data: any[]): any[] {
     if (!this._sort.active || this._sort.direction === '') {
       return data;
     }
@@ -72,8 +71,6 @@ export class TableDataSource extends DataSource<Product> {
       switch (this._sort.active) {
         case '_id': [propertyA, propertyB] = [a._id, b._id]; break;
         case 'name': [propertyA, propertyB] = [a.name, b.name]; break;
-        case 'description': [propertyA, propertyB] = [a.description, b.description]; break;
-        case 'price': [propertyA, propertyB] = [a.price, b.price]; break;
       }
 
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

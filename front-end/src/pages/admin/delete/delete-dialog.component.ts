@@ -47,7 +47,7 @@ export class DeleteDialogComponent implements OnInit {
     return this.productForm.get('priceProduct');
   }
 
-  onNoClick(): void {
+  onCancel(): void {
     this.dialogRef.close();
   }
 

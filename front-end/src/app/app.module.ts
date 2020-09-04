@@ -39,7 +39,6 @@ import { BillDialogComponent } from '../pages/dialogs/bill-dialog/bill-dialog.co
 import { WalletDialogComponent } from '../pages/dialogs/wallet-dialog/wallet-dialog.component';
 import { UserService } from 'src/services/user.service';
 import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier-dialog.component';
-import { DinamicTableComponent } from '../pages/dinamic-table/dinamic-table.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CustomDirectiveDirective } from './custom-directive.directive';
 import { ManagementService } from '../services/management.service';
@@ -58,7 +57,6 @@ import { ManagementService } from '../services/management.service';
         WalletDialogComponent,
         NotFoundComponent,
         DatepickerComponent,
-        DinamicTableComponent,
         CustomDirectiveDirective,
 
     ],

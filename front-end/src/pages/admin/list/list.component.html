@@ -11,16 +11,16 @@
   <div class="mat-elevation-z8 table-style">
      <div class="form">
       <mat-form-field floatPlaceholder="never" color="warn">
-        <input matInput #filter placeholder="Filter Products">
+        <input matInput #filter (keyup)="applyFilter($event)" placeholder="Filter {{title}} ">
       </mat-form-field>
     </div> 
     <mat-spinner color="accent" *ngIf="loading"></mat-spinner>
 
-    <mat-table #table [dataSource]="dataSource">
+    <mat-table #table [dataSource]="dataSource" matSort>
   
       <!-- Generic column definition -->
       <ng-container *ngFor="let column of columns" [cdkColumnDef]="column.columnDef">
-        <mat-header-cell *cdkHeaderCellDef>{{ column.header }}</mat-header-cell>
+        <mat-header-cell *cdkHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
         <mat-cell *cdkCellDef="let row">{{ column.cell(row) }}
 
           <ng-container *ngIf="column.header === 'Actions'">
@@ -44,11 +44,8 @@
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
-  
-    <mat-paginator #paginator [length]="dataSource" [pageIndex]="0" [pageSize]="5"
-      [pageSizeOptions]="[5, 10, 25, 100]">
-    </mat-paginator>
+    </mat-table> 
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
    <!--  <table cdk-table #table [dataSource]="dataSource" matSort class="mat-cell" *ngIf="!loading">
 
       <ng-container *ngFor="let col of displayedColumns" cdkColumnDef="column">
