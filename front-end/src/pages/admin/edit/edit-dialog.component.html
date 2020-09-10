@@ -1,6 +1,6 @@
 <div class="container" fxLayout="column" fxLayoutAlign="space-evenly none" >
-  <div class="card-header">Edit new Product</div>
-  <mat-dialog-content [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <div class="card-header">Edit Item</div>
+ <!--  <mat-dialog-content [formGroup]="productForm" (ngSubmit)="onSubmit()">
   <div class="item item-4">
     <mat-form-field appearance="outline">
       <mat-label>Product Name</mat-label>
@@ -41,5 +41,34 @@
       <span class="spacer"></span>
     <button mat-button class="style-button" (click)="onCancel()" tabindex="-1">Cancel</button>
   </div>
-</mat-dialog-content>
+</mat-dialog-content> -->
+<form [formGroup]="dinamicForm">
+  <div *ngFor="let form_elem of products.fields">
+  <div [ngSwitch]="form_elem.type">
+    <div *ngSwitchCase="'input'">
+    <mat-form-field appearance="outline">
+      <mat-label> {{form_elem.label}} </mat-label>
+      <input  matInput type="text" formControlName="{{form_elem.label}}" class="form-control"/>      
+      <mat-error *ngIf="getError(form_elem.label)" >Please, type a valid value</mat-error>
+    </mat-form-field>
+  </div>
+    <div *ngSwitchCase="'select'">
+      <mat-form-field appearance="fill">
+        <mat-label>{{form_elem.label}}</mat-label>
+        <mat-select [(ngModel)]="selectedCategory" formControlName="{{form_elem.label}}">
+          <mat-option *ngFor="let category of categories" [value]="category.name" >
+            {{category.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error  *ngIf="getError(form_elem.label)">Please choose a Category</mat-error>
+      </mat-form-field>
+    </div>
+  </div>  
+  </div>
+  <div class="item-buttons">
+    <button mat-button class="style-button" [disabled]="!dinamicForm.valid" (click)="onSubmit()">Save</button>
+      <span class="spacer"></span>
+    <button mat-button class="style-button" (click)="onCancel()" >Cancel</button>
+  </div>
+</form>
 </div>

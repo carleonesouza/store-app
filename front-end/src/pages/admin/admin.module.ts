@@ -8,7 +8,7 @@ import { StoreAppMaterialModule } from '../../store-app-material-module';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { CurrencyMaskConfig, CurrencyMaskModule, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
- 
+
 
 import { AddDialogComponent } from './add/add-dialog.component';
 import { EditDialogComponent } from './edit/edit-dialog.component';
@@ -21,6 +21,7 @@ import { ManagementUsersViewEditComponent } from './view-user-adm/view-edit/mana
 import { CategoryComponent } from './category/category.component';
 import { ListComponent } from './list/list.component';
 import { ChoosingDirective } from 'src/app/choosing.directive';
+
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
     align: 'right',
@@ -43,7 +44,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
         ImagesComponent,
         CategoryComponent,
         ListComponent,
-        ChoosingDirective
+        ChoosingDirective,
     ],
 
     imports: [
@@ -56,7 +57,7 @@ export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
         ReactiveFormsModule,
         HttpClientModule,
         NgxDropzoneModule,
-        CurrencyMaskModule
+        CurrencyMaskModule,
     ],
 
     providers: [
