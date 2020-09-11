@@ -59,7 +59,7 @@ export class DeleteDialogComponent implements OnInit, AfterContentInit {
   }
 
   onLoadCategories() {
-    this.title = CATEGORY;
+    this.title = 'Are you sure about DELETE a '+ CATEGORY;
     this.fields = Object.getOwnPropertyNames(categoryFields[0]);
 
     this.fields = this.fields.filter(item => !fieldsDeletion.includes(item));
@@ -77,7 +77,7 @@ export class DeleteDialogComponent implements OnInit, AfterContentInit {
       this.snackBar.open('We cannot loading the data!!', '', { duration: 3000 });
     }else {
 
-      this.title = PRODUCT;
+      this.title = 'Are you sure about DELETE a '+PRODUCT;
       this.fields = Object.getOwnPropertyNames(productFields[0]);
       this.fields = this.fields.filter(item => !fieldsDeletion.includes(item));
       this.fields.forEach(e => {

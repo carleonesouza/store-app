@@ -60,7 +60,7 @@ export class EditDialogComponent implements OnInit, AfterContentInit {
   }
 
   onLoadCategories() {
-    this.title = CATEGORY;
+    this.title = 'Edit a '+ CATEGORY;
     this.fields = Object.getOwnPropertyNames(categoryFields[0]);
 
     this.fields = this.fields.filter(item => !fieldsDeletion.includes(item));
@@ -78,7 +78,7 @@ export class EditDialogComponent implements OnInit, AfterContentInit {
       this.snackBar.open('We cannot loading the data!!', '', { duration: 3000 });
     }else {
 
-      this.title = PRODUCT;
+      this.title =  'Edit a '+ PRODUCT;
       this.fields = Object.getOwnPropertyNames(productFields[0]);
       this.fields = this.fields.filter(item => !fieldsDeletion.includes(item));
       this.fields.forEach(e => {
