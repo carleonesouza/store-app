@@ -7,7 +7,10 @@
 mat-form-field {
 	width: 100%;
 }
-
+mat-spinner {
+	display: block;
+	margin: 45px auto 0;
+  }
 .item-buttons{
 	display: table-row;
 	float: right;

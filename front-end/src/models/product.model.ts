@@ -10,10 +10,9 @@ export class Product {
   _id?: any;
   name: string;
   price: any;
-  category?:Category;
+  category?: Category;
   description: string;
   quantity?= 0;
-
 
   constructor(obj?: any) {
     if (!obj) {
@@ -28,4 +27,5 @@ export class Product {
     this.quantity = obj.quantity;
 
   }
+
 }

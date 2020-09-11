@@ -1,32 +1,40 @@
-<div class="container" fxLayout="column" fxLayoutAlign="space-evenly none" >
-  <div class="card-header">Are you sure about DELETE a Product ?</div>
-  <mat-dialog-content [formGroup]="productForm" (ngSubmit)="onSubmit()">
-  <div class="item item-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Product Name</mat-label>
-      <input  matInput type="text" formControlName="nameProduct" class="form-control"/>
-      <mat-error *ngIf="nameProduct.errors">Please, type a valid name</mat-error>
-    </mat-form-field>
-  </div>
-  <div class="item item-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Product Description</mat-label>
-      <input matInput placeholder="Product Description" type="text" formControlName="descriptionProduct">
-      <mat-error *ngIf="descriptionProduct.errors">Please, type a valid description</mat-error>
-    </mat-form-field>
-  </div>
-  <div class="item item-4">
-    <mat-form-field appearance="outline">
-      <mat-label>Product Price</mat-label>
-      <input matInput placeholder="Product Price"  currencyMask type="text" formControlName="priceProduct">
-      <mat-error *ngIf="priceProduct.errors">Please, type a valid price</mat-error>
-    </mat-form-field>
-  </div>
-  <div class="item-buttons">
-    <button mat-button class="style-button" [disabled]="!productForm.valid" [mat-dialog-close]="1"
-      (click)="onSubmit()">Delete</button>
+<div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
+  <div class="card-header">Are you sure about DELETE a {{title}} ?</div>
+  <form [formGroup]="dinamicContent">
+    <div *ngFor="let form_elem of fields">
+      <div [ngSwitch]="form_elem">
+        <div *ngIf="form_elem !=='price' && form_elem !== 'category'">
+          <mat-form-field appearance="outline">
+            <mat-label> {{form_elem}} </mat-label>
+            <input matInput type="text" formControlName="{{form_elem}}" type="text" class="form-control" />
+            <mat-error *ngIf="getError(form_elem)">Please, type a valid value</mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngSwitchCase="'price'">
+          <mat-form-field appearance="outline">
+            <mat-label> {{form_elem}} </mat-label>
+            <input matInput type="text" formControlName="{{form_elem}}" currencyMask class="form-control" />
+            <mat-error *ngIf="getError(form_elem)">Please, type a valid value</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div *ngSwitchCase="'category'">
+          <mat-form-field appearance="fill">
+            <mat-label>{{form_elem.label}}</mat-label>
+            <mat-select [(ngModel)]="selectedCategory" formControlName="{{form_elem}}">
+              <mat-option *ngFor="let category of categories" [value]="category.name">
+                {{category.name}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="getError(form_elem)">Please choose a Category</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="item-buttons">
+      <button mat-button class="style-button" [disabled]="!dinamicContent.valid" (click)="onSubmit()">DELETE</button>
       <span class="spacer"></span>
-    <button mat-button class="style-button" (click)="onCancel()" tabindex="-1">Cancel</button>
-  </div>
-</mat-dialog-content>
+      <button mat-button class="style-button" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
 </div>

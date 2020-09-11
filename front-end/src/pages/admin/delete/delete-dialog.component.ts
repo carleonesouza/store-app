@@ -1,72 +1,112 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component, Inject, OnInit, Input } from '@angular/core';
+import { Component, Inject, OnInit, Input, AfterContentInit } from '@angular/core';
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../models/product.model';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Category } from 'src/models/category';
+import { categoryFields, fieldsDeletion, productFields } from 'src/models/formFields.model';
+import { StoreAppService } from 'src/services/store-app.service';
+import { PRODUCT, CATEGORY } from 'src/utils/constants';
 
 @Component({
   selector: 'delete-dialog',
-  templateUrl: './delete-dialog.component.html',
+  templateUrl: '../crud-templete/crud.component.html',
   styleUrls: ['./delete-dialog.component.scss']
 })
-export class DeleteDialogComponent implements OnInit {
-  action: string;
-  localData: any;
-  @Input() productForm: FormGroup;
+export class DeleteDialogComponent implements OnInit, AfterContentInit {
+
+  selectedCategory: any;
+  loading: boolean;
+  title: string;
+  group = {};
+  fields: string[];
+  categories: Category[];
+
+  @Input() dinamicContent: FormGroup;
 
   constructor(public dialogRef: MatDialogRef<DeleteDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Product,
-              public productService: ProductService, public snackBar: MatSnackBar, private formBuilder: FormBuilder) { }
-
-              ngOnInit() {
-                this.productForm = this.formBuilder.group({
-                  nameProduct: ['', [Validators.required, Validators.minLength(3)]],
-                  descriptionProduct: ['', [Validators.required, Validators.minLength(3)]],
-                  priceProduct: ['', [Validators.required, Validators.minLength(2)]],
-                });
-                this.productForm.setValue(
-                  {
-                    nameProduct: this.data.name,
-                    descriptionProduct: this.data.description,
-                    priceProduct: String(this.data.price).substring(2)
-                  }
-                );
-              }
-
-
-  get nameProduct() {
-    return this.productForm.get('nameProduct');
+    @Inject(MAT_DIALOG_DATA) public data: any, private storeAppService: StoreAppService,
+    public snackBar: MatSnackBar) {
+    this.categories = [];
   }
 
-  get descriptionProduct() {
-    return this.productForm.get('descriptionProduct');
+  ngOnInit() {
+
+    this.storeAppService.getGenericAction('/categories').subscribe(
+      (categories) => {
+        categories.map(
+          (category: Category) => {
+            this.loading = false;
+            this.categories.push(category);
+          });
+      });
+
   }
 
-  get priceProduct() {
-    return this.productForm.get('priceProduct');
+  ngAfterContentInit() {
+    if (new Product(this.data).category) {
+      this.onLoadProducts();
+    } else if (new Category(this.data).name) {
+      this.onLoadCategories();
+    }
+
+  };
+
+
+  getError(event) {
+    return this.dinamicContent.controls[event].hasError;
+  }
+
+  onLoadCategories() {
+    this.title = CATEGORY;
+    this.fields = Object.getOwnPropertyNames(categoryFields[0]);
+
+    this.fields = this.fields.filter(item => !fieldsDeletion.includes(item));
+    this.fields.forEach(e => {
+      this.group[e] = new FormControl('', Validators.required);
+    });
+
+    this.dinamicContent = new FormGroup(this.group);
+    this.dinamicContent.patchValue(this.data);
+
+  }
+
+  onLoadProducts() {
+    if(!this.data){
+      this.snackBar.open('We cannot loading the data!!', '', { duration: 3000 });
+    }else {
+
+      this.title = PRODUCT;
+      this.fields = Object.getOwnPropertyNames(productFields[0]);
+      this.fields = this.fields.filter(item => !fieldsDeletion.includes(item));
+      this.fields.forEach(e => {
+        this.group[e] = new FormControl('', Validators.required);
+      });
+
+      this.data.price = String(this.data.price).substring(2);
+
+      this.dinamicContent = new FormGroup(this.group);
+      this.dinamicContent.patchValue(this.data);
+
+      this.selectedCategory = this.data.category.name;
+    }
+
+
   }
 
   onCancel(): void {
     this.dialogRef.close();
   }
 
-  public confirmAdd(): void {
-    this.productService.addProduct(this.data);
-  }
 
   onSubmit() {
-    if (this.productForm.valid.valueOf()) {
-      const _id = this.data._id;
-      const name = this.productForm.value.nameProduct;
-      const price = this.productForm.value.priceProduct;
-      const description = this.productForm.value.descriptionProduct;
-      const product = { _id, name, price, description };
-      this.productService.deleteProduct(new Product(product));
+    if (this.dinamicContent.valid.valueOf()) {
+
+      console.log(this.dinamicContent.value);
       this.dialogRef.close();
     } else {
       this.dialogRef.close();
-      this.snackBar.open('There is not a Product to delete!!', '', { duration: 3000 });
     }
   }
 }

@@ -1,79 +1,103 @@
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Component, Inject, OnInit, Input } from '@angular/core';
-import { ProductService } from '../../../services/product.service';
-import { Product } from '../../../models/product.model';
-import { Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, Input, Inject, AfterContentInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StoreAppService } from 'src/services/store-app.service';
 import { Category } from 'src/models/category';
+import { CATEGORY, PRODUCT } from 'src/utils/constants';
+import { categoryFields, fieldsDeletion, productFields } from 'src/models/formFields.model';
 
 
 @Component({
   selector: 'add-dialog',
-  templateUrl: './add-dialog.component.html',
+  templateUrl: '../crud-templete/crud.component.html',
   styleUrls: ['./add-dialog.component.scss']
 })
-export class AddDialogComponent implements OnInit {
-  action: string;
-  localData: any;
+export class AddDialogComponent implements OnInit, AfterContentInit {
   categories: Category[];
-  @Input() productForm: FormGroup;
+  title: any;
+  group = {};
+  fields: string[];
 
 
-  constructor(public dialogRef: MatDialogRef<AddDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Product,
-              private productService: ProductService,
-              private storeAppService: StoreAppService,
-              public snackBar: MatSnackBar,
-              private formBuilder: FormBuilder) {
-                this.categories= [];
-              }
+  @Input() dinamicContent: FormGroup;
 
-              ngOnInit() {
-
-                this.storeAppService.getGenericAction('/categories').subscribe(
-                  (categories) => {
-                     categories.map(
-                        (category: Category )=> {
-                            this.categories.push(category);
-                    });
-                });
-
-                this.productForm = this.formBuilder.group({
-                  nameProduct: ['', [Validators.required, Validators.minLength(3)]],
-                  descriptionProduct: ['', [Validators.required, Validators.minLength(3)]],
-                  priceProduct: ['', [Validators.required, Validators.minLength(2)]],
-                  productCategory: ['', [Validators.required]]
-                });
-              }
-
-
-  get nameProduct() {
-    return this.productForm.get('nameProduct');
+  constructor(public dialogRef: MatDialogRef<AddDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
+    private storeAppService: StoreAppService,
+     public snackBar: MatSnackBar) {
+    this.categories = [];
   }
 
-  get descriptionProduct() {
-    return this.productForm.get('descriptionProduct');
+  ngOnInit() {
+
+    this.storeAppService.getGenericAction('/categories').subscribe(
+      (categories) => {
+        categories.map(
+          (category: Category) => {
+            this.categories.push(category);
+          });
+      });
+
   }
 
-  get priceProduct() {
-    return this.productForm.get('priceProduct');
+  ngAfterContentInit() {
+    if (this.data === PRODUCT) {
+      this.onLoadProducts();
+    } else {
+      this.onLoadCategories();
+    }
+
+  };
+
+  onLoadCategories() {
+    this.title = 'Add a new '+ CATEGORY;
+    this.fields = Object.getOwnPropertyNames(categoryFields[0]);
+
+    this.fields = this.fields.filter(item => !fieldsDeletion.includes(item));
+
+    this.fields.forEach(e => {
+      this.group[e] = new FormControl('', Validators.required);
+    });
+
+    this.dinamicContent = new FormGroup(this.group);
+
   }
 
-  get productCategory() {
-    return this.productForm.get('productCategory');
+  onLoadProducts() {
+    this.title =  'Add a new '+PRODUCT;
+
+    this.fields = Object.getOwnPropertyNames(productFields[0]);
+
+    this.fields = this.fields.filter(item => !fieldsDeletion.includes(item));
+
+    this.fields.forEach(e => {
+      this.group[e] = new FormControl('', Validators.required);
+    });
+
+    this.dinamicContent = new FormGroup(this.group);
+
+  }
+
+  getError(event) {
+    return this.dinamicContent.controls[event].hasError;
   }
 
   onCancel(): void {
     this.dialogRef.close();
   }
 
-  public confirmAdd(): void {
-    this.productService.addProduct(this.data);
-  }
-
   onSubmit() {
-    const price = Number.parseInt(this.productForm.value.priceProduct);
+    if (this.dinamicContent.valid.valueOf()) {
+
+      console.log(this.dinamicContent.value);
+      this.dialogRef.close();
+    } else {
+      this.dialogRef.close();
+      this.snackBar.open('The form is empty, please fill it!!', '', { duration: 3000 });
+    }
+  }
+/*   onSubmit() {
+    const price = Number.parseInt(this.productForm.value.priceProduct,0);
 
     if (isNaN(price)) { return 0; }
 
@@ -81,12 +105,12 @@ export class AddDialogComponent implements OnInit {
       const name = this.productForm.value.nameProduct;
       const description = this.productForm.value.descriptionProduct;
       const category = this.productForm.value.productCategory;
-      const saveProduct = { name, price, description, category};
+      const saveProduct = { name, price, description, category };
       this.productService.addProduct(new Product(saveProduct));
       this.dialogRef.close();
     } else {
       this.dialogRef.close();
       this.snackBar.open('The form is empty, please fill it!!', '', { duration: 3000 });
     }
-  }
+  } */
 }

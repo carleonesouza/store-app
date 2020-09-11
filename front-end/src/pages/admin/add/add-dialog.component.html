@@ -1,4 +1,4 @@
-<div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
+<!-- <div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
   <div class="card-header">Add a new Product</div>
   <mat-dialog-content [formGroup]="productForm" (ngSubmit)="onSubmit()">
     <div class="item item-4">
@@ -43,4 +43,76 @@
       <button mat-button class="style-button" (click)="onCancel()" tabindex="-1">Cancel</button>
     </div>
   </mat-dialog-content>
+</div>
+ -->
+<div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
+  <div class="card-header">Add a new {{title}} </div>
+  <mat-spinner color="accent" *ngIf="loading"></mat-spinner>
+
+  <!--   <form [formGroup]="dinamicContent">
+    <div *ngFor="let form_elem of fields">
+      <div *ngIf="form_elem !== 'category'">
+        <mat-form-field appearance="outline">
+          <mat-label> {{form_elem}} </mat-label>
+          <input matInput type="text" formControlName="{{form_elem}}" class="form-control" />
+          <mat-error *ngIf="getError(form_elem)">Please, type a valid value</mat-error>
+        </mat-form-field>
+      </div>
+      <div *ngIf="form_elem ==='category'">
+        <mat-form-field appearance="fill">
+          <mat-label>{{form_elem}}</mat-label>
+          <mat-select [(ngModel)]="selectedCategory" formControlName="{{form_elem}}">
+            <mat-option *ngFor="let category of categories" [value]="category.name">
+              {{category.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="getError(form_elem)">Please choose a Category</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="item-buttons">
+      <button mat-button class="style-button" [disabled]="!dinamicContent.valid" (click)="onSubmit()">Save</button>
+      <span class="spacer"></span>
+      <button mat-button class="style-button" (click)="onCancel()">Cancel</button>
+    </div>
+  </form> -->
+
+  <form [formGroup]="dinamicContent">
+    <div *ngFor="let form_elem of fields">
+      <div [ngSwitch]="form_elem">
+        <div *ngIf="form_elem !=='price' && form_elem !== 'category'">
+          <mat-form-field appearance="outline">
+            <mat-label> {{form_elem}} </mat-label>
+            <input matInput type="text" formControlName="{{form_elem}}" type="text" class="form-control" />
+            <mat-error *ngIf="getError(form_elem)">Please, type a valid value</mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngSwitchCase="'price'">
+          <mat-form-field appearance="outline">
+            <mat-label> {{form_elem}} </mat-label>
+            <input matInput type="text" formControlName="{{form_elem}}" currencyMask class="form-control" />
+            <mat-error *ngIf="getError(form_elem)">Please, type a valid value</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div *ngSwitchCase="'category'">
+          <mat-form-field appearance="fill">
+            <mat-label>{{form_elem.label}}</mat-label>
+            <mat-select [(ngModel)]="selectedCategory" formControlName="{{form_elem}}">
+              <mat-option *ngFor="let category of categories" [value]="category.name">
+                {{category.name}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="getError(form_elem)">Please choose a Category</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="item-buttons">
+      <button mat-button class="style-button" [disabled]="!dinamicContent.valid" (click)="onSubmit()">Save</button>
+      <span class="spacer"></span>
+      <button mat-button class="style-button" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
 </div>

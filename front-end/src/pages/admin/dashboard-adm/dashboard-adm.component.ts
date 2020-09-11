@@ -1,9 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProductService } from '../../../services/product.service';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent } from '../add/add-dialog.component';
-import { CategoryComponent } from '../category/category.component';
+import { PRODUCT, CATEGORY } from '../../../utils/constants'
 
 @Component({
   selector: 'dashboard-adm',
@@ -20,13 +18,9 @@ export class DashboardAdmComponent implements OnInit {
   message: string;
 
 
-  constructor(public httpClient: HttpClient, public dialog: MatDialog,
-              public productService: ProductService) { }
-
-
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit() {  }
-
 
   setStep(index: number) { this.step = index; }
 
@@ -35,25 +29,30 @@ export class DashboardAdmComponent implements OnInit {
   prevStep() {this.step--; }
 
   addProduct() {
-    this.dialog.open(AddDialogComponent);
+    this.dialog.open(AddDialogComponent, {
+      data: PRODUCT
+    });
   }
 
   addCategory() {
-    this.dialog.open(CategoryComponent);
+    this.dialog.open(AddDialogComponent, {
+      data: CATEGORY
+    });
   }
 
   onList(item: string){
-    if(item.toString().toLowerCase() === 'products') {
+
+    if(item.toString().toLowerCase() === PRODUCT.toString().toLowerCase()) {
       if(this.showList=== false){
-        this.message='Products'
+        this.message=PRODUCT;
         this.showList=true;
       }else{
         this.showList = false;
       }
 
-    } else if(item.toString().toLowerCase() === 'categories'){
+    } else if(item.toString().toLowerCase() === CATEGORY.toString().toLowerCase()){
       if(this.showList=== false){
-        this.message = 'Categories'
+        this.message = CATEGORY;
         this.showList=true;
       }else{
         this.showList = false;

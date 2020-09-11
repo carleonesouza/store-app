@@ -1,22 +1,16 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, AfterContentInit } from '@angular/core';
-import { ProductService } from 'src/services/product.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterContentInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { EditDialogComponent } from '../edit/edit-dialog.component';
 import { ImagesComponent } from 'src/pages/upload/images/images.component';
 import { DeleteDialogComponent } from '../delete/delete-dialog.component';
-import { BehaviorSubject, Observable, fromEvent } from 'rxjs';
 import { StoreAppService } from 'src/services/store-app.service';
 import { Product } from 'src/models/product.model';
 import { CurrencyPipe } from '@angular/common';
-import { TableDataSource } from 'src/services/table-data-source';
 import { Category } from 'src/models/category';
-import { DataSource } from '@angular/cdk/table';
-import { of } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
+import { CATEGORY, PRODUCT } from 'src/utils/constants';
 
 
 
@@ -33,7 +27,7 @@ export class ListComponent implements OnInit, AfterContentInit {
     { columnDef: 'description', header: 'Description', cell: (element: Product) => `${element.description}` },
     { columnDef: 'price', header: 'Price', cell: (element: Product) => `${element.price}` },
     { columnDef: 'category', header: 'Category', cell: (element: Product) => `${element.category.name}` },
-    { columnDef: 'actions', header: 'Actions', cell: (element: Product) => `` },
+    { columnDef: 'actions', header: 'Actions', cell: () => `` },
   ];
 
   displayedColumns = this.columns.map(c => c.columnDef);
@@ -41,7 +35,6 @@ export class ListComponent implements OnInit, AfterContentInit {
   title: string;
   step = 0;
   cols: any[];
-
   loading = true;
 
   constructor(public dialog: MatDialog, private currencyPipe: CurrencyPipe, private storeAppService: StoreAppService) { }
@@ -53,12 +46,12 @@ export class ListComponent implements OnInit, AfterContentInit {
   @Input('choose') choose: string;
 
 
-  ngOnInit() {  }
+  ngOnInit() { }
 
   ngAfterContentInit() {
-    if (this.choose !== null && this.choose === 'Products') {
+    if (this.choose !== null && this.choose === 'Product') {
       this.onLoadProductsList();
-    } else if (this.choose !== null && this.choose === 'Categories') {
+    } else if (this.choose !== null && this.choose === 'Category') {
       this.onLoadCategoriesList();
     }
 
@@ -80,10 +73,10 @@ export class ListComponent implements OnInit, AfterContentInit {
         if (!data) {
           this.loading = true;
         } else {
-          this.title = 'Categories';
+          this.title = CATEGORY;
           const category = new Category(data);
           this.dataSource = new MatTableDataSource(data);
-          const forDeletion = ['productId', '_id']
+          const forDeletion = ['productId', '_id', 'categoryFields']
           this.displayedColumns = Object.getOwnPropertyNames(category);
           this.cols = Object.getOwnPropertyNames(category);
           this.cols.push('actions');
@@ -115,7 +108,7 @@ export class ListComponent implements OnInit, AfterContentInit {
             }
             product.price = this.currencyPipe.transform(product.price, 'BRL', 'symbol-narrow', '1.2-2');
           });
-          this.title = 'Products';
+          this.title = PRODUCT;
           this.dataSource = new MatTableDataSource(data);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;

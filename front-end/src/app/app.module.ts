@@ -40,7 +40,6 @@ import { WalletDialogComponent } from '../pages/dialogs/wallet-dialog/wallet-dia
 import { UserService } from 'src/services/user.service';
 import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier-dialog.component';
 import { MatNativeDateModule } from '@angular/material/core';
-import { CustomDirectiveDirective } from './custom-directive.directive';
 import { ManagementService } from '../services/management.service';
 
 
@@ -57,7 +56,6 @@ import { ManagementService } from '../services/management.service';
         WalletDialogComponent,
         NotFoundComponent,
         DatepickerComponent,
-        CustomDirectiveDirective,
 
     ],
 
