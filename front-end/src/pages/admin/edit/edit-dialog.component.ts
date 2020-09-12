@@ -28,7 +28,7 @@ export class EditDialogComponent implements OnInit, AfterContentInit {
 
 
   constructor(public dialogRef: MatDialogRef<EditDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any, private storeAppService: StoreAppService,
+    @Inject(MAT_DIALOG_DATA) private data: any, private storeAppService: StoreAppService,
     public snackBar: MatSnackBar) {
     this.categories = [];
   }
@@ -84,8 +84,9 @@ export class EditDialogComponent implements OnInit, AfterContentInit {
       this.fields.forEach(e => {
         this.group[e] = new FormControl('', Validators.required);
       });
-
-      this.data.price = String(this.data.price).substring(2);
+      if(String(this.data.price).startsWith('R$')){
+        this.data.price = String(this.data.price).trim().substring(2);
+      }else{this.data.price = String(this.data.price)}
 
       this.dinamicContent = new FormGroup(this.group);
       this.dinamicContent.patchValue(this.data);

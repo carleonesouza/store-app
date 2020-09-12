@@ -19,8 +19,9 @@
     <mat-table #table [dataSource]="dataSource" matSort>
       <!-- Generic column definition -->
       <ng-container *ngFor="let column of columns" [cdkColumnDef]="column.columnDef">
+        
         <mat-header-cell *cdkHeaderCellDef mat-sort-header>{{ column.header }}</mat-header-cell>
-        <mat-cell *cdkCellDef="let row">{{ column.cell(row) }}
+        <mat-cell *cdkCellDef="let row">{{ column.cell(row)}}
 
           <ng-container *ngIf="column.header === 'Actions'">
             <button mat-icon-button matTooltip="Insert photo" (click)="addImages(row)">
@@ -36,6 +37,7 @@
             </button>
           </ng-container>
         </mat-cell>
+     
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

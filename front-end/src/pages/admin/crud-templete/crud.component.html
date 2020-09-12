@@ -1,6 +1,6 @@
 <div class="container" fxLayout="column" fxLayoutAlign="space-evenly none">
     <div class="card-header">{{title}} </div>
-    
+    <mat-spinner color="accent" *ngIf="loading"></mat-spinner>
     <form [formGroup]="dinamicContent">
       <div *ngFor="let form_elem of fields">
         <div [ngSwitch]="form_elem">

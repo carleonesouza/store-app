@@ -16,6 +16,7 @@ import { categoryFields, fieldsDeletion, productFields } from 'src/models/formFi
 export class AddDialogComponent implements OnInit, AfterContentInit {
   categories: Category[];
   title: any;
+  loading = true;
   group = {};
   fields: string[];
 
@@ -28,17 +29,7 @@ export class AddDialogComponent implements OnInit, AfterContentInit {
     this.categories = [];
   }
 
-  ngOnInit() {
-
-    this.storeAppService.getGenericAction('/categories').subscribe(
-      (categories) => {
-        categories.map(
-          (category: Category) => {
-            this.categories.push(category);
-          });
-      });
-
-  }
+  ngOnInit() {  }
 
   ngAfterContentInit() {
     if (this.data === PRODUCT) {
@@ -51,6 +42,7 @@ export class AddDialogComponent implements OnInit, AfterContentInit {
 
   onLoadCategories() {
     this.title = 'Add a new '+ CATEGORY;
+    this.loading = false;
     this.fields = Object.getOwnPropertyNames(categoryFields[0]);
 
     this.fields = this.fields.filter(item => !fieldsDeletion.includes(item));
@@ -65,6 +57,15 @@ export class AddDialogComponent implements OnInit, AfterContentInit {
 
   onLoadProducts() {
     this.title =  'Add a new '+PRODUCT;
+
+    this.storeAppService.getGenericAction('/categories').subscribe(
+      (categories) => {
+        categories.map(
+          (category: Category) => {
+            this.loading = false;
+            this.categories.push(category);
+          });
+      });
 
     this.fields = Object.getOwnPropertyNames(productFields[0]);
 

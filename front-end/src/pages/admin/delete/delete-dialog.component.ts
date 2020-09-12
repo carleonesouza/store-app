@@ -31,18 +31,7 @@ export class DeleteDialogComponent implements OnInit, AfterContentInit {
     this.categories = [];
   }
 
-  ngOnInit() {
-
-    this.storeAppService.getGenericAction('/categories').subscribe(
-      (categories) => {
-        categories.map(
-          (category: Category) => {
-            this.loading = false;
-            this.categories.push(category);
-          });
-      });
-
-  }
+  ngOnInit() {  }
 
   ngAfterContentInit() {
     if (new Product(this.data).category) {
@@ -78,13 +67,19 @@ export class DeleteDialogComponent implements OnInit, AfterContentInit {
     }else {
 
       this.title = 'Are you sure about DELETE a '+PRODUCT;
+      this.checkCategory();
+
       this.fields = Object.getOwnPropertyNames(productFields[0]);
       this.fields = this.fields.filter(item => !fieldsDeletion.includes(item));
+
       this.fields.forEach(e => {
         this.group[e] = new FormControl('', Validators.required);
       });
 
-      this.data.price = String(this.data.price).substring(2);
+      if(String(this.data.price).startsWith('R$')){
+        this.data.price = String(this.data.price).trim().substring(2);
+      }else{  this.data.price = String(this.data.price)}
+
 
       this.dinamicContent = new FormGroup(this.group);
       this.dinamicContent.patchValue(this.data);
@@ -92,6 +87,19 @@ export class DeleteDialogComponent implements OnInit, AfterContentInit {
       this.selectedCategory = this.data.category.name;
     }
 
+
+  }
+
+  checkCategory(){
+
+    this.storeAppService.getGenericAction('/categories').subscribe(
+      (categories) => {
+        categories.map(
+          (category: Category) => {
+            this.loading = false;
+            this.categories.push(category);
+          });
+      });
 
   }
 

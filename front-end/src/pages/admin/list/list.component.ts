@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, AfterContentInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterContentInit, LOCALE_ID } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,6 +11,7 @@ import { CurrencyPipe } from '@angular/common';
 import { Category } from 'src/models/category';
 import { MatTableDataSource } from '@angular/material/table';
 import { CATEGORY, PRODUCT } from 'src/utils/constants';
+import { fieldsDeletion, categoryFields } from 'src/models/formFields.model';
 
 
 
@@ -73,14 +74,15 @@ export class ListComponent implements OnInit, AfterContentInit {
         if (!data) {
           this.loading = true;
         } else {
+
           this.title = CATEGORY;
-          const category = new Category(data);
+
           this.dataSource = new MatTableDataSource(data);
-          const forDeletion = ['productId', '_id', 'categoryFields']
-          this.displayedColumns = Object.getOwnPropertyNames(category);
-          this.cols = Object.getOwnPropertyNames(category);
-          this.cols.push('actions');
-          this.displayedColumns = this.cols.filter(item => !forDeletion.includes(item));
+
+          this.displayedColumns = Object.getOwnPropertyNames(categoryFields[0]);
+          this.displayedColumns.push('actions');
+          this.displayedColumns = this.displayedColumns.filter(item => !fieldsDeletion.includes(item));
+
           this.loading = false;
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
@@ -105,16 +107,22 @@ export class ListComponent implements OnInit, AfterContentInit {
                     this.loading = false;
                   }
                 });
+                product.price = this.currencyPipe.transform(product.price, 'BRL', 'symbol-narrow', '1.2-2');
             }
-            product.price = this.currencyPipe.transform(product.price, 'BRL', 'symbol-narrow', '1.2-2');
+
+            this.dataSource = new MatTableDataSource(data);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
           });
           this.title = PRODUCT;
-          this.dataSource = new MatTableDataSource(data);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
+
         }
       });
 
+  }
+
+  refresh() {
+   this.ngAfterContentInit();
   }
 
   startEdit(element: any) {
