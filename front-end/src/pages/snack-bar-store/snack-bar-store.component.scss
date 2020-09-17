@@ -1,0 +1,29 @@
+.snack-store {
+    position: fixed;
+    min-width: 100%;
+    bottom: 0.1px;
+    margin-left: -16px;
+    padding: 15px;
+  &.success {
+    border-radius: 4px;
+    background-color: rgb(0, 173, 72);
+  }
+  &.error {
+    border-radius: 4px;
+    background-color: rgb(173, 35, 0);
+  }
+  &.warn{
+    border-radius: 4px;
+    background-color: rgb(255, 102, 0);
+  }
+  .snack-text {
+    text-align: center;
+    font-size: 1em;
+    color: #ffffff;
+    margin: 0;
+  }
+  .example-spacer {
+	position: fixed;
+	right: 1.6rem;
+  }
+}

@@ -41,6 +41,8 @@ import { UserService } from 'src/services/user.service';
 import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/close-cashier-dialog.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ManagementService } from '../services/management.service';
+import { SnackBarStoreComponent } from '../pages/snack-bar-store/snack-bar-store.component';
+import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -56,6 +58,7 @@ import { ManagementService } from '../services/management.service';
         WalletDialogComponent,
         NotFoundComponent,
         DatepickerComponent,
+        SnackBarStoreComponent,
 
     ],
 
@@ -78,6 +81,8 @@ import { ManagementService } from '../services/management.service';
     ],
 
     providers: [
+        {provide: MatSnackBarRef, useValue: {}},
+        {provide: MAT_SNACK_BAR_DATA, useValue: {}},
         { provide: MAT_DIALOG_DATA, useValue: { minWidth: 325, hasBackdrop: true } },
         { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { minWidth: 325, hasBackdrop: true } },
         VendorService,
@@ -94,7 +99,7 @@ import { ManagementService } from '../services/management.service';
     entryComponents: [
         AppComponent, CloseCashierDialogComponent,
         ConfirmationDialogComponent, BillDialogComponent,
-        WalletDialogComponent
+        WalletDialogComponent, SnackBarStoreComponent
     ],
 
     exports: [ SplashComponent],

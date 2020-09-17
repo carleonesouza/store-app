@@ -1,0 +1,8 @@
+<div  fxLayout="row" fxLayoutAlign="space-evenly center"[ngClass]="['snack-store', data.message]">
+    <div class="snack-text">{{data.message}}</div>
+    <div class="example-spacer">
+        <button mat-icon-button (click)="snackBarRef.dismiss()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>

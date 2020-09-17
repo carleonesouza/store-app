@@ -39,6 +39,7 @@ exports.onFileChages = functions.storage.object().onFinalize(event => {
     const metadata = {contentType: contentType};
 
     
+    // eslint-disable-next-line consistent-return
     return destBucket.file(filePath).download({
         destination: tmpFilePath
     }).then(() => {

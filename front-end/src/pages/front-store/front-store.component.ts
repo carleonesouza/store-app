@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {  MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductService } from '.././../services/product.service';
 import { Product } from 'src/models/product.model';
 import { Quantity } from 'src/models/quantity.model';
 import { ConfirmationDialogComponent } from '../dialogs/confirmation/confirmation-dialog.component';
 import { Vendor } from 'src/models/vendor.model';
-import { from } from 'rxjs';
+import { SnackBarStoreComponent } from '../snack-bar-store/snack-bar-store.component';
 
 @Component({
   selector: 'front-store',
@@ -17,14 +17,14 @@ import { from } from 'rxjs';
 export class FrontStoreComponent implements OnInit, OnDestroy {
 
   sellProducts = [];
-  data: Vendor[];
-  @Input() sellQuantity: Quantity[];
   loading = true;
-
+  data: Vendor[];
+  message= {message: 'error'}
+  @Input() sellQuantity: Quantity[];
 
 
   constructor(private dialog: MatDialog, private snackBar: MatSnackBar,
-              private productService: ProductService) {
+    private productService: ProductService) {
     this.data = [];
   }
 
@@ -44,15 +44,15 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
     this.productService.onBackVendor().subscribe().unsubscribe();
   }
 
-  addAmount(product: Product)  {
-      if (isNaN(product.quantity)) {
-       product.quantity = 0;
-       this.productService.changeQuantity(product);
-       return;
-      } else {
-        this.productService.changeQuantity(product);
-        return;
-      }
+  addAmount(product: Product) {
+    if (isNaN(product.quantity)) {
+      product.quantity = 0;
+      this.productService.changeQuantity(product);
+      return;
+    } else {
+      this.productService.changeQuantity(product);
+      return;
+    }
 
   }
 
@@ -73,12 +73,17 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
       });
     });
     if (this.data.some(e => e.amount !== 0)) {
-        this.dialog.open(ConfirmationDialogComponent, {
+      this.dialog.open(ConfirmationDialogComponent, {
         data: this.data
       });
     } else {
-      this.snackBar.open('Sorry, you have to select a product!', null, { duration: 3000 });
+      this.snackBar.openFromComponent(SnackBarStoreComponent, {
+        data: this.message,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        duration: 5000
+      });
     }
-  }
 
+  }
 }
