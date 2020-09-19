@@ -7,6 +7,9 @@ import { Quantity } from 'src/models/quantity.model';
 import { ConfirmationDialogComponent } from '../dialogs/confirmation/confirmation-dialog.component';
 import { Vendor } from 'src/models/vendor.model';
 import { SnackBarStoreComponent } from '../snack-bar-store/snack-bar-store.component';
+import { FormControl } from '@angular/forms';
+import { StoreAppService } from 'src/services/store-app.service';
+import { Category } from 'src/models/category';
 
 @Component({
   selector: 'front-store',
@@ -17,6 +20,7 @@ import { SnackBarStoreComponent } from '../snack-bar-store/snack-bar-store.compo
 export class FrontStoreComponent implements OnInit, OnDestroy {
 
   sellProducts = [];
+  categories: Category[];
   loading = true;
   data: Vendor[];
   message= {message: 'error'}
@@ -24,19 +28,24 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
 
 
   constructor(private dialog: MatDialog, private snackBar: MatSnackBar,
-    private productService: ProductService) {
+    private productService: ProductService, private storeAppService: StoreAppService) {
     this.data = [];
+    this.categories=[];
   }
 
   ngOnInit() {
-    this.productService.getProducts()
+    this.storeAppService.getGenericAction('/categories').pipe().subscribe(
+      (categories: Category[]) => {
+        this.storeAppService.getGenericAction('/products').pipe()
       .subscribe(
         (data: Product[]) => {
           this.sellProducts = data,
-            this.loading = false;
+          this.categories=categories,
+          this.loading = false;
         },
         () => this.snackBar.open('Sorry, occurred an error, try later', null, { duration: 3000 })
       );
+    });
 
   }
 
@@ -54,6 +63,10 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
       return;
     }
 
+  }
+
+  onSelect(element){
+    console.log(element);
   }
 
   onClean(product: Product) {
@@ -78,11 +91,7 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
       });
     } else {
       this.snackBar.openFromComponent(SnackBarStoreComponent, {
-        data: this.message,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-        duration: 5000
-      });
+        data: this.message  });
     }
 
   }

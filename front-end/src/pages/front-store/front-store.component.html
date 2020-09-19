@@ -1,37 +1,70 @@
-<div fxLayout="column" fxLayoutAlign="space-evenly center" >
-  <h2>List of Product to sell</h2>
-  <div *ngIf="loading" fxLayoutAlign="center center">
-    <mat-spinner color="accent"></mat-spinner>
-</div>
-  <mat-card class="example-card" *ngFor="let product of sellProducts">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>{{product.name }}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-grid-list cols="5" class="grid" rowHeight="100px">
-        <mat-grid-tile> {{product.description }}</mat-grid-tile>
-        <mat-grid-tile> {{product.price | currency:"BRL" }} </mat-grid-tile>
-        <mat-grid-tile>{{ product.quantity }}</mat-grid-tile>
-        <mat-grid-tile>
-          <button mat-icon-button aria-label="Example icon-button with a heart icon" (click)="addAmount(product)">
-            <mat-icon>add</mat-icon>
-          </button>
-          <span class="spacer"></span>
-          <button mat-icon-button aria-label="Example icon-button with a heart icon" (click)="onClean(product)">
-            <mat-icon>remove</mat-icon>
-          </button>
-        </mat-grid-tile>
-      </mat-grid-list>
-      <mat-divider></mat-divider>
-      <div fxLayout="row" fxLayoutAlign="end end" class="position-end">
-      </div>
-    </mat-card-content>
-    <div class="corner-position">
-      <button mat-fab matTooltip="finish purchase" (click)="openDialog()">
-        <mat-icon color="primary" aria-label="finish purchase">done_all</mat-icon>
-      </button>
+<div class="container">
+
+  <div class="content" fxLayout="row" fxLayout.xs="column" fxFlexFill>
+
+    <div fxFlex="50" class="box-form-select">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Sort by Default</mat-label>
+        <mat-select>
+          <mat-option value="red">Default</mat-option>
+          <mat-option value="green">Green</mat-option>
+          <mat-option value="blue">Blue</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
-  </mat-card>
-  <span class="spacer"></span>
+    <div fxFlex="50" class="box-toggle-group">
+      <mat-button-toggle-group #group="matButtonToggleGroup">
+        <span>View</span>
+        <button mat-icon-button aria-label="Text align left">
+          <mat-icon>view_list</mat-icon>
+        </button>
+        <button mat-icon-button aria-label="Text align center">
+          <mat-icon>view_module</mat-icon>
+        </button>
+      </mat-button-toggle-group>
+    </div>
+
+  </div>
+
+  <div class="content" fxLayout="row" fxLayout.xs="column" fxFlexFill>
+
+    <div fxFlex="30" fxFlex.xs="70" class="card-categories">
+      <mat-card class="mat-elevation-z8 my-card">
+        <mat-card-header>
+          <mat-card-title>CATEGORIES</mat-card-title>
+          <span class="example-spacer"></span>
+          <span>
+            <mat-icon style="color: gray; margin-right: 15px; text-align: center;">add</mat-icon>
+          </span>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-selection-list #category [multiple]="false">
+            <mat-list-option *ngFor="let category of categories" [value]="category.name" (click)="onSelect(category)">
+              {{category.name}}
+            </mat-list-option>
+          </mat-selection-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div fxFlex="70" fxFlex.xs="30">
+      <div *ngIf="loading" fxLayoutAlign="center center">
+        <mat-spinner color="accent"></mat-spinner>
+      </div>
+      <div class="cardList">
+        <ng-container *ngFor="let product of sellProducts">
+          <mat-card class="mat-elevation-z8 cardListItem" matRipple matRippleColor="blue">
+            <img mat-card-image matTooltip="{{product.name}}" style="height: 7rem; width: 7rem; margin-bottom: -10px;" [src]="product.image"
+              onError="this.src='/assets/img/broken_image-black.svg'" alt="product photo" />
+            <p>{{product.name}}</p>
+            <hr>
+            <span>{{product.price  | currency:'BRL'}} </span>
+          </mat-card>
+        </ng-container>
+      </div>
+    </div>
+
+  </div>
+
 </div>

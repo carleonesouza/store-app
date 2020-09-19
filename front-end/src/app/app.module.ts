@@ -42,7 +42,8 @@ import { CloseCashierDialogComponent } from 'src/pages/dialogs/close-cashier/clo
 import { MatNativeDateModule } from '@angular/material/core';
 import { ManagementService } from '../services/management.service';
 import { SnackBarStoreComponent } from '../pages/snack-bar-store/snack-bar-store.component';
-import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { MatSnackBarRef, MAT_SNACK_BAR_DATA, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import { ProductDetailsComponent } from '../pages/product-details/product-details.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar'
         NotFoundComponent,
         DatepickerComponent,
         SnackBarStoreComponent,
+        ProductDetailsComponent,
 
     ],
 
@@ -81,6 +83,9 @@ import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar'
     ],
 
     providers: [
+        {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue:{horizontalPosition: 'center',
+        verticalPosition: 'top',
+        duration: 5000}},
         {provide: MatSnackBarRef, useValue: {}},
         {provide: MAT_SNACK_BAR_DATA, useValue: {}},
         { provide: MAT_DIALOG_DATA, useValue: { minWidth: 325, hasBackdrop: true } },
