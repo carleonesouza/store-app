@@ -81,6 +81,9 @@ mat-card-content{
 	margin: 5px;
 	
   }
+  .cardListItem:hover{
+	box-shadow: 1px 20px 20px 0 rgba(5, 83, 251, 0.445);
+  }
 
 .box-toggle-group{
 	padding-right: 15px;

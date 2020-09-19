@@ -10,6 +10,7 @@ import { SnackBarStoreComponent } from '../snack-bar-store/snack-bar-store.compo
 import { FormControl } from '@angular/forms';
 import { StoreAppService } from 'src/services/store-app.service';
 import { Category } from 'src/models/category';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'front-store',
@@ -27,7 +28,7 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
   @Input() sellQuantity: Quantity[];
 
 
-  constructor(private dialog: MatDialog, private snackBar: MatSnackBar,
+  constructor(private dialog: MatDialog, private snackBar: MatSnackBar, private router: Router,
     private productService: ProductService, private storeAppService: StoreAppService) {
     this.data = [];
     this.categories=[];
@@ -67,6 +68,11 @@ export class FrontStoreComponent implements OnInit, OnDestroy {
 
   onSelect(element){
     console.log(element);
+  }
+
+  productDetails(product){
+    ;
+  // this.router.navigate(['/products:id'], product);
   }
 
   onClean(product: Product) {

@@ -11,6 +11,8 @@ import { LoggedInGuard } from '../guards/logged-in.guard';
 import { HomeComponent } from 'src/pages/home/home.component';
 import { FrontStoreComponent } from 'src/pages/front-store/front-store.component';
 import { NotFoundComponent } from 'src/pages/not-found/not-found.component';
+import { ProductDetailsComponent } from 'src/pages/product-details/product-details.component';
+
 
 
 
@@ -19,6 +21,7 @@ export const AppRoutes: Routes = [
     { path: 'account', children: AccountModule.ROUTES },
     { path: 'home', component: HomeComponent, canActivate: [LoggedInGuard] },
     { path: 'front-store', component: FrontStoreComponent, canActivate: [LoggedInGuard] },
+    { path: 'products/:id', component: ProductDetailsComponent, canActivate: [LoggedInGuard] },
     { path: 'admin', children: AdminModule.ROUTES, canActivate: [AuthGuard], data: { role: 'admin' } },
     { path: 'vendor', children: VendorModule.ROUTES, canActivate: [AuthGuard], data: { role: 'vendor' } },
     { path: '404', component: NotFoundComponent },

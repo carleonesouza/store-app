@@ -54,7 +54,7 @@
       </div>
       <div class="cardList">
         <ng-container *ngFor="let product of sellProducts">
-          <mat-card class="mat-elevation-z8 cardListItem" matRipple matRippleColor="blue">
+          <mat-card class="mat-elevation-z8 cardListItem" matRipple matRippleColor="blue" [routerLink]="['/products',product._id]">
             <img mat-card-image matTooltip="{{product.name}}" style="height: 7rem; width: 7rem; margin-bottom: -10px;" [src]="product.image"
               onError="this.src='/assets/img/broken_image-black.svg'" alt="product photo" />
             <p>{{product.name}}</p>
