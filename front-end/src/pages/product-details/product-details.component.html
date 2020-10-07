@@ -1,18 +1,24 @@
 <div class="content" fxLayout="row" fxLayout.xs="column" fxFlexFill>
 
-    <div fxFlex="15"  fxFlex.xs="55">
-        <mat-grid-list cols="1" rowHeight="2:1">
-            <mat-grid-tile>1</mat-grid-tile>
-            <mat-grid-tile>2</mat-grid-tile>
-            <mat-grid-tile>3</mat-grid-tile>
-            <mat-grid-tile>4</mat-grid-tile>
-          </mat-grid-list>
-    </div>
-    <div fxFlex="30">
-      
-    </div>
-    <div fxFlex="55" fxFlex.xs="15">
-        third-section
-    </div>
+    <div fxFlex="15" fxFlex.xs="55" class="photos-section">
+        <div class="row row-image" *ngFor="let image of images">
+            <img mat-card-image class="demo cursor responsive " (click)="currentSlide(image.number)" src={{image.src}}  alt="The Woods">
+        </div>
 
+    </div>
+    <div fxFlex="55" style="margin-top: 10px;">
+
+        <div class="mySlides fade" *ngFor="let image of images">
+            <img src={{image.src}} class="demo cursor responsive" (click)="currentSlide(image.number)">
+            <a class="prev" (click)="plusSlides(image.number)">❮</a>
+            <a class="next" (click)="plusSlides(image.number)">❯</a>
+        </div>
+
+
+       
+
+    </div>
+    <div fxFlex="30" fxFlex.xs="15">
+        <h3>Description</h3>
+    </div>
 </div>

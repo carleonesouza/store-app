@@ -3,6 +3,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {IvyCarouselModule} from 'angular-responsive-carousel';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreAppMaterialModule} from '../store-app-material-module';
@@ -80,6 +81,7 @@ import { ProductDetailsComponent } from '../pages/product-details/product-detail
         AccountModule,
         AdminModule,
         VendorModule,
+        IvyCarouselModule,
     ],
 
     providers: [
